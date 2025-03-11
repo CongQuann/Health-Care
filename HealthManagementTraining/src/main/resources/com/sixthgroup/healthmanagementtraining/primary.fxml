@@ -1,26 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@styles.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.sixthgroup.healthmanagementtraining.PrimaryController">
-  <columnConstraints>
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="227.0" />
-    <ColumnConstraints hgrow="SOMETIMES" maxWidth="373.0" minWidth="10.0" prefWidth="373.0" />
-  </columnConstraints>
-  <rowConstraints>
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-  </rowConstraints>
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="349.0" stylesheets="@styles.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Test">
+      <Text layoutX="69.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Training&amp;Food App" textAlignment="CENTER" wrappingWidth="209.33670043945312">
          <font>
-            <Font name="System Bold" size="36.0" />
+            <Font name="System Bold" size="29.0" />
          </font>
       </Text>
+      <Text fill="#696464" layoutX="84.0" layoutY="198.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chưa có tài khoản?">
+         <font>
+            <Font size="15.0" />
+         </font>
+         <effect>
+            <DropShadow offsetY="8.0">
+               <color>
+                  <Color red="0.7803921699523926" green="0.7803921699523926" blue="0.7803921699523926" />
+               </color>
+            </DropShadow>
+         </effect>
+      </Text>
+      <Hyperlink ellipsisString="_" layoutX="211.0" layoutY="179.0" text="Đăng Ký" textFill="#696565" underline="true">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <font>
+            <Font size="15.0" />
+         </font>
+         <effect>
+            <DropShadow offsetY="8.0">
+               <color>
+                  <Color red="0.7789473533630371" green="0.7789473533630371" blue="0.7789473533630371" />
+               </color>
+            </DropShadow>
+         </effect>
+      </Hyperlink>
+      <Hyperlink ellipsisString="" layoutX="117.0" layoutY="144.0" text="Đăng nhập" textFill="#202020">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <font>
+            <Font name="System Bold" size="20.0" />
+         </font>
+         <effect>
+            <DropShadow offsetY="8.0">
+               <color>
+                  <Color red="0.7789473533630371" green="0.7789473533630371" blue="0.7789473533630371" />
+               </color>
+            </DropShadow>
+         </effect>
+      </Hyperlink>
    </children>
-</GridPane>
+</Pane>

@@ -1,0 +1,7 @@
+TextField{
+    -fx-border-width: 0px !important;
+    -fx-padding-left:7px; 
+}
+PasswordField{
+        -fx-border-width: 0px !important;
+}

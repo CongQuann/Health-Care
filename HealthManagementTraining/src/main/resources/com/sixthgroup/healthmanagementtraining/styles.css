@@ -1,1 +1,16 @@
+Pane{
+    -fx-background-color:white;
+}
+hyperlink {
+    -fx-underline: false; /* Tắt gạch chân mặc định */
+    -fx-text-fill: black; /* Màu chữ (có thể thay đổi) */
+}
 
+.hyperlink:hover {
+    -fx-underline: false; /* Không gạch chân khi hover */
+}
+
+.hyperlink:focused {
+    -fx-border-color: transparent; /* Tắt viền xanh khi chọn */
+    -fx-outline: none;
+}
