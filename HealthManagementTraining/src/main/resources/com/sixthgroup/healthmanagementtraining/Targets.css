@@ -1,0 +1,92 @@
+/* Targets.css */
+
+/* Thiết lập màu nền chung cho AnchorPane */
+#AnchorPane {
+    -fx-background-color: #f4f4f4;
+}
+
+/* Thiết lập style cho Label có class là Subject */
+.Subject {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+    -fx-padding: 10px 0;
+}
+
+/* Thiết lập style cho TableView */
+.table-view {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #bdc3c7;
+    -fx-border-radius: 5px;
+    -fx-padding: 10px;
+}
+
+/* Thiết lập style cho các cột trong TableView */
+.table-column {
+    -fx-alignment: CENTER;
+    -fx-font-size: 14px;
+    -fx-text-fill: #34495e;
+}
+
+/* Thiết lập style cho các hàng trong TableView */
+.table-row-cell {
+    -fx-background-color: #ffffff;
+    -fx-border-color: #bdc3c7;
+}
+
+/* Thiết lập style cho các hàng được chọn trong TableView */
+.table-row-cell:selected {
+    -fx-background-color: #3498db;
+    -fx-text-fill: #ffffff;
+}
+
+/* Thiết lập style cho các nút Button */
+.button {
+    -fx-background-color: #3498db;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Thiết lập style cho các nút Button khi hover */
+.button:hover {
+    -fx-background-color: #2980b9;
+}
+
+/* Thiết lập style cho HBox có class là nav_bar */
+.nav-bar {
+    -fx-background-color: #2c3e50;
+    -fx-padding: 10px;
+}
+
+/* Thiết lập style cho Label có class là app_name */
+.app-name {
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #ffffff;
+    -fx-padding: 0 20px;
+}
+
+/* Thiết lập style cho các nút Button trong nav_bar */
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Thiết lập style cho các nút Button trong nav_bar khi hover */
+.nav-btn:hover {
+    -fx-background-color: #34495e;
+}
+
+.spacing_hbox{
+    -fx-spacing: 20px; /* Khoảng cách giữa các phần tử con */
+    
+}
