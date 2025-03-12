@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+
 <?import javafx.scene.control.TextField?>
+
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="349.0" stylesheets="@Login_Style.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="349.0" stylesheets="@Login_Style.css" fx:controller="com.sixthgroup.healthmanagementtraining.SignUpController" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Text layoutX="22.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Training&amp;Food App" wrappingWidth="152.53671264648438">
          <font>
@@ -47,6 +50,6 @@
          </opaqueInsets>
       </TextField>
       <DatePicker layoutX="23.0" layoutY="295.0" prefHeight="37.0" prefWidth="282.0" promptText="Ngày sinh:" style="-fx-background-image: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;" />
-      <ComboBox id="TypeExercise" editable="true" layoutX="23.0" layoutY="341.0" prefHeight="37.0" prefWidth="282.0" promptText="Cường độ luyện tập:" style="-fx-background-color: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;" />
+      <ComboBox id="TypeExercise" fx:id="TypeExercise" editable="true" layoutX="23.0" layoutY="341.0" prefHeight="37.0" prefWidth="282.0" promptText="Cường độ luyện tập:" />
    </children>
 </Pane>
