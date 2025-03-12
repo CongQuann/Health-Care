@@ -47,6 +47,6 @@
          </opaqueInsets>
       </TextField>
       <DatePicker layoutX="23.0" layoutY="295.0" prefHeight="37.0" prefWidth="282.0" promptText="Ngày sinh:" style="-fx-background-image: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;" />
-      <ComboBox id="TypeExercise" fx:id="TypeExercise" editable="true" layoutX="23.0" layoutY="341.0" prefHeight="37.0" prefWidth="282.0" promptText="Cường độ luyện tập:" style="-fx-background-color: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;" />
+      <ComboBox id="TypeExercise" fx:id="TypeExercise" editable="true" layoutX="23.0" layoutY="341.0" prefHeight="37.0" prefWidth="282.0" promptText="Cường độ luyện tập:" />
    </children>
 </Pane>
