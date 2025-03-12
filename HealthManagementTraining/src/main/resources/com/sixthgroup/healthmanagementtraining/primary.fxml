@@ -27,7 +27,7 @@
             </DropShadow>
          </effect>
       </Text>
-      <Hyperlink ellipsisString="_" layoutX="211.0" layoutY="179.0" text="Đăng Ký" textFill="#696565" underline="true">
+      <Hyperlink ellipsisString="_" layoutX="211.0" layoutY="179.0" text="Đăng Ký" textFill="#696565">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -42,7 +42,7 @@
             </DropShadow>
          </effect>
       </Hyperlink>
-      <Hyperlink ellipsisString="" layoutX="117.0" layoutY="144.0" text="Đăng nhập" textFill="#202020">
+      <Hyperlink ellipsisString="" layoutX="117.0" layoutY="144.0" stylesheets="@styles.css" text="Đăng nhập" textFill="#202020">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
