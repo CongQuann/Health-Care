@@ -1,4 +1,4 @@
-package com.sixthgroup.healthmanagementtraining;
+package com.sixthgroup.mavenproject1;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +17,7 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("theodoidinhduong"), 349, 482);
+        scene = new Scene(loadFXML("primary"), 640, 480);
         stage.setScene(scene);
         stage.show();
     }
