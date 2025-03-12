@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="899.0" stylesheets="@Targets.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox alignment="CENTER" layoutX="8.0" layoutY="72.0" prefHeight="520.0" prefWidth="882.0">
+         <children>
+            <Label styleClass="Subject" text="Danh sách mục tiêu" />
+            <TableView prefHeight="390.0" prefWidth="858.0">
+              <columns>
+                <TableColumn prefWidth="103.99996757507324" text="Ngày kết thúc" />
+                <TableColumn prefWidth="107.20001983642578" text="Ngày bắt đầu" />
+                  <TableColumn prefWidth="154.4000244140625" text="Cân nặng hiện tại(kg)" />
+                  <TableColumn prefWidth="164.79995727539062" text="Cân nặng mục tiêu(kg)" />
+                  <TableColumn prefWidth="96.0" text="Tiến trình(%)" />
+                  <TableColumn prefWidth="154.4000244140625" text="Calo cần nạp mỗi ngày" />
+                  <TableColumn prefWidth="81.5999755859375" text="Hành động" />
+              </columns>
+            </TableView>
+            <HBox alignment="CENTER" prefHeight="75.0" prefWidth="646.0" styleClass="spacing_hbox">
+               <children>
+                  <Button mnemonicParsing="false" text="Lưu" />
+                  <Button mnemonicParsing="false" text="Mục tiêu mới" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_LEFT" prefHeight="72.0" prefWidth="899.0" styleClass="nav-bar">
+         <children>
+            <Label prefHeight="30.0" prefWidth="479.0" styleClass="app-name" text="HEALTHCARE APP" />
+            <HBox alignment="CENTER_RIGHT" prefHeight="72.0" prefWidth="803.0">
+               <children>
+                  <Button mnemonicParsing="false" styleClass="nav-btn" text="Quản lý dinh dưỡng" />
+                  <Button mnemonicParsing="false" styleClass="nav-btn" text="Tổng quan" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+   </children>
+</AnchorPane>
