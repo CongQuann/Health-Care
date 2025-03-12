@@ -22,12 +22,11 @@
          <effect>
             <DropShadow offsetY="8.0">
                <color>
-                  <Color red="0.7803921699523926" green="0.7803921699523926" blue="0.7803921699523926" />
-               </color>
-            </DropShadow>
+                  <Color red="0.621052622795105" green="0.6003508567810059" blue="0.6003508567810059" />
+               </color></DropShadow>
          </effect>
       </Text>
-      <Hyperlink ellipsisString="_" layoutX="217.0" layoutY="176.0" onMouseClicked="#switchToSignUp" prefHeight="27.0" prefWidth="69.0" text="Đăng Ký" textFill="#696565">
+      <Hyperlink ellipsisString="_" layoutX="217.0" layoutY="176.0" onMouseClicked="#switchToSignUp" prefHeight="27.0" prefWidth="69.0" text="Đăng Ký" textFill="#015e70">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -37,12 +36,11 @@
          <effect>
             <DropShadow offsetY="8.0">
                <color>
-                  <Color red="0.7789473533630371" green="0.7789473533630371" blue="0.7789473533630371" />
-               </color>
-            </DropShadow>
+                  <Color red="0.6000000238418579" green="0.6000000238418579" blue="0.6000000238418579" />
+               </color></DropShadow>
          </effect>
       </Hyperlink>
-      <Hyperlink ellipsisString="" layoutX="117.0" layoutY="132.0" onMouseClicked="#switchToSecondary" stylesheets="@styles.css" text="Đăng nhập" textFill="#202020">
+      <Hyperlink ellipsisString="" layoutX="117.0" layoutY="132.0" onMouseClicked="#switchToSecondary" stylesheets="@styles.css" text="Đăng nhập" textFill="#015e70">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -52,9 +50,8 @@
          <effect>
             <DropShadow offsetY="8.0">
                <color>
-                  <Color red="0.7789473533630371" green="0.7789473533630371" blue="0.7789473533630371" />
-               </color>
-            </DropShadow>
+                  <Color red="0.7894737124443054" green="0.780701756477356" blue="0.780701756477356" />
+               </color></DropShadow>
          </effect>
       </Hyperlink>
    </children>
