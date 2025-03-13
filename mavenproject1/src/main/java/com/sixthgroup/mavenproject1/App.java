@@ -1,4 +1,4 @@
-package com.sixthgroup.healthmanagementtraining;
+package com.sixthgroup.mavenproject1;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -14,23 +14,16 @@ import java.io.IOException;
 public class App extends Application {
 
     private static Scene scene;
-    private static Stage stage;
 
-
-    public void start(Stage primaryStage) throws IOException {
-        stage = primaryStage;
-        scene = new Scene(loadFXML("primary"), 349, 482);
+    @Override
+    public void start(Stage stage) throws IOException {
+        scene = new Scene(loadFXML("primary"), 640, 480);
         stage.setScene(scene);
         stage.show();
     }
 
     static void setRoot(String fxml) throws IOException {
-        if (stage == null) {
-            return;
-        }
-        Parent root = loadFXML(fxml);
-        stage.getScene().setRoot(root);
-        stage.show();
+        scene.setRoot(loadFXML(fxml));
     }
 
     private static Parent loadFXML(String fxml) throws IOException {
