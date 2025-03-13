@@ -1,3 +1,11 @@
 Pane{
     -fx-background-color: #e6ddc0;
 }
+Hyperlink{
+    -fx-border-width:0;
+    -fx-underline:false;
+}
+Hyperlink:hover{
+    -fx-underline: false;
+    -fx-text-fill: #015e70;
+}
