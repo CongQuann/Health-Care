@@ -17,7 +17,7 @@
             <Font name="System Bold" size="29.0" />
          </font>
       </Text>
-      <Text fill="#696464" layoutX="88.0" layoutY="194.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chưa có tài khoản?">
+      <Text fill="#696464" layoutX="87.0" layoutY="203.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chưa có tài khoản?">
          <font>
             <Font size="15.0" />
          </font>
@@ -28,7 +28,7 @@
                </color></DropShadow>
          </effect>
       </Text>
-      <Hyperlink ellipsisString="_" layoutX="214.0" layoutY="175.0" onMouseClicked="#switchToSignUp" prefHeight="27.0" prefWidth="69.0" text="Đăng Ký" textFill="#015e70">
+      <Hyperlink ellipsisString="_" layoutX="214.0" layoutY="184.0" onMouseClicked="#switchToSignUp" prefHeight="27.0" prefWidth="69.0" text="Đăng Ký" textFill="#015e70">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
@@ -42,7 +42,7 @@
                </color></DropShadow>
          </effect>
       </Hyperlink>
-      <Hyperlink ellipsisString="" layoutX="117.0" layoutY="138.0" onMouseClicked="#switchToSecondary" prefHeight="36.0" prefWidth="115.0" stylesheets="@styles.css" text="Đăng nhập" textFill="#015e70">
+      <Hyperlink ellipsisString="" layoutX="117.0" layoutY="138.0" onMouseClicked="#switchToSecondary" prefHeight="27.0" prefWidth="115.0" stylesheets="@styles.css" text="Đăng nhập" textFill="#015e70">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>

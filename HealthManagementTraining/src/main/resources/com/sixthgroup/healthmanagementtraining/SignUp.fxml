@@ -4,12 +4,10 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
-<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.TextField?>
-<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="349.0" stylesheets="@SignUp.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.SignUpController">
    <children>
@@ -45,20 +43,10 @@
       </TextField>
       <DatePicker layoutX="34.0" layoutY="311.0" prefHeight="37.0" prefWidth="282.0" promptText="Ngày sinh:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;" />
       <ComboBox id="TypeExercise" fx:id="TypeExercise" editable="true" layoutX="33.0" layoutY="361.0" prefHeight="37.0" prefWidth="282.0" promptText="Cường độ luyện tập:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;" />
-      <Hyperlink ellipsisString="" layoutX="126.0" layoutY="14.0" onMouseClicked="#switchToSecondary" prefHeight="37.0" prefWidth="97.0" stylesheets="@styles.css" text="Đăng Ký" textFill="#015e70">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
+      <Text fill="#015e70" layoutX="118.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Đăng Ký">
          <font>
-            <Font name="System Bold" size="21.0" />
+            <Font name="System Bold" size="28.0" />
          </font>
-         <effect>
-            <DropShadow offsetY="8.0">
-               <color>
-                  <Color red="0.7894737124443054" green="0.780701756477356" blue="0.780701756477356" />
-               </color>
-            </DropShadow>
-         </effect>
-      </Hyperlink>
+      </Text>
    </children>
 </Pane>
