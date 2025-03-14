@@ -1,0 +1,189 @@
+/* Style for the main AnchorPane */
+#AnchorPane {
+    -fx-background-color: #f4f4f4; /* Light gray background */
+
+}
+
+/* Style for the main GridPane */
+.main-content {
+    -fx-hgap: 20px; /* Horizontal gap between columns */
+    -fx-vgap: 20px; /* Vertical gap between rows */
+    -fx-padding: 10px;
+}
+
+/* Style for each widget (VBox) */
+.widget {
+    -fx-background-color: #ffffff; /* White background */
+    -fx-border-radius: 10px; /* Rounded corners */
+    -fx-background-radius: 10px; /* Rounded corners */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 0); /* Shadow effect */
+    -fx-padding: 15px;
+    -fx-spacing: 10px; /* Spacing between children */
+    -fx-alignment: center; /* Center align content */
+}
+
+/* Style for widget labels */
+.widget-label {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #333333; /* Dark gray text */
+}
+
+/* Style for widget values (Text) */
+.widget-value {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-fill: #336699; /* Blue text */
+}
+
+#lipid-text{
+    -fx-fill: #9b861e;
+}
+
+#fiber-text{
+    -fx-fill: #449e2c;
+}
+
+#protein-text{
+    -fx-fill:#9e3f2c;
+}
+/* Hover effect for widgets */
+.widget:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 0); /* Enhanced shadow on hover */
+}
+.default-color2.chart-pie {
+    -fx-pie-color: #4CAF50; /* Màu xanh lá cây cho phần đầu tiên */
+}
+
+.default-color1.chart-pie {
+    -fx-pie-color: #FF9800; /* Màu cam cho phần thứ hai */
+}
+
+.default-color0.chart-pie {
+    -fx-pie-color: #9e3f2c; /* Màu xanh dương */
+}
+.chart-legend {
+    -fx-background-color: transparent; /* Nền trong suốt */
+    -fx-padding: 2px; /* Khoảng cách giữa các phần tử */
+}
+
+.chart-legend-item {
+    -fx-text-fill: #333333; /* Màu chữ của chú thích */
+    -fx-font-size: 5px; /* Cỡ chữ */
+    -fx-font-weight: bold; /* Đậm */
+}
+
+.date-label{
+    -fx-font-size:20px;
+    -fx-font-weight:bold;
+    -fx-fill:#2c3e50;
+}
+.dashboard-label{
+     -fx-font-size:25px;
+    -fx-font-weight:bold;
+    -fx-fill:#2c3e50;
+}
+
+
+/* Tùy chỉnh nút xem danh sách */
+.view-button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-color: #4CAF50; /* Màu nền xanh lá cây */
+    -fx-text-fill: white; /* Màu chữ trắng */
+    -fx-padding: 10px 20px; /* Khoảng cách giữa chữ và viền */
+    -fx-border-radius: 5px; /* Bo góc */
+    -fx-background-radius: 5px; /* Bo góc */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 0); /* Đổ bóng */
+}
+
+.view-button:hover {
+    -fx-background-color: #45a049; /* Màu nền khi hover */
+}
+/* Thiết lập style cho các nút Button trong nav_bar */
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Thiết lập style cho các nút Button trong nav_bar khi hover */
+.nav-btn:hover {
+    -fx-background-color: #34495e;
+}
+
+.spacing_hbox{
+    -fx-spacing: 20px; /* Khoảng cách giữa các phần tử con */
+    
+}
+
+/*PHẦN CSS CHO NAV-BAR*/
+.nav-toggle-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10px;
+}
+.nav-toggle-btn:hover{
+    -fx-background-color: #34495e; /* Màu nền navbar */
+    -fx-fill:#f4f4f4;
+
+}
+.nav-toggle-btn:hover .svg-icon {
+    -fx-fill: white; /* Đổi màu SVG thành trắng */
+}
+/*chỉnh màu cho icon*/
+.nav-toggle-btn SVGPath{
+        -fx-fill: #333; /* Màu icon */
+
+}
+
+/* Navbar */
+.nav-bar {
+    -fx-background-color: #2c3e50; /* Màu nền navbar */
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+/*    -fx-translate-x: -200px;  Ban đầu ẩn bên trái */
+}
+/* Nút trong navbar */
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+}
+
+.nav-btn:hover {
+    -fx-background-color: #34495e;
+}
+
+.close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 5px 10px;
+    -fx-alignment: center;
+}
+
+.close-btn:hover {
+    -fx-background-color:#34495e;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.nav-label{
+    -fx-font-size: 25px;
+    -fx-font-weight:bold;
+    -fx-text-fill: white;
+}
+.nav-icon{
+    -fx-fill:white;
+    
+}
+.header-hbox{
+    -fx-background-color:#34495e;
+}

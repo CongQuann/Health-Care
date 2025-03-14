@@ -1,8 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
-<?import javafx.scene.control.TextField?>
-
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -12,44 +9,44 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="349.0" stylesheets="@Login_Style.css" fx:controller="com.sixthgroup.healthmanagementtraining.SignUpController" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="482.0" prefWidth="349.0" stylesheets="@SignUp.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.SignUpController">
    <children>
-      <Text layoutX="22.0" layoutY="33.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Training&amp;Food App" wrappingWidth="152.53671264648438">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Text>
-      <Button layoutX="111.0" layoutY="403.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="128.0" style="-fx-background-color: #5D6C58; -fx-text-fill: #FFFFFF; -fx-font-size: 16px; -fx-background-radius: 25px; -fx-border-radius: 25px;" text="Đăng Ký">
+      <Button layoutX="110.0" layoutY="413.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="128.0" style="-fx-background-color: #5D6C58; -fx-text-fill: #FFFFFF; -fx-font-size: 16px; -fx-background-radius: 25px; -fx-border-radius: 25px;" text="Đăng Ký">
          <font>
             <Font name="System Bold" size="12.0" />
          </font>
       </Button>
-      <TextField layoutX="23.0" layoutY="69.0" prefHeight="37.0" prefWidth="282.0" promptText="Họ tên:" style="-fx-background-color: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;">
+      <TextField layoutX="34.0" layoutY="62.0" prefHeight="37.0" prefWidth="282.0" promptText="Họ tên:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </TextField>
-      <TextField layoutX="23.0" layoutY="113.0" prefHeight="37.0" prefWidth="282.0" promptText="Email:" style="-fx-background-color: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;">
+      <TextField layoutX="34.0" layoutY="110.0" prefHeight="37.0" prefWidth="282.0" promptText="Email:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </TextField>
-      <TextField layoutX="23.0" layoutY="157.0" prefHeight="37.0" prefWidth="282.0" promptText="Chiều cao:" style="-fx-background-color: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;">
+      <TextField layoutX="33.0" layoutY="160.0" prefHeight="37.0" prefWidth="282.0" promptText="Chiều cao:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </TextField>
-      <TextField layoutX="23.0" layoutY="204.0" prefHeight="37.0" prefWidth="282.0" promptText="Cân nặng:" style="-fx-background-color: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;">
+      <TextField layoutX="34.0" layoutY="211.0" prefHeight="37.0" prefWidth="282.0" promptText="Cân nặng:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </TextField>
-      <TextField layoutX="23.0" layoutY="251.0" prefHeight="37.0" prefWidth="282.0" promptText="Giới tính:" style="-fx-background-color: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;">
+      <TextField layoutX="33.0" layoutY="262.0" prefHeight="37.0" prefWidth="282.0" promptText="Giới tính:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
       </TextField>
-      <DatePicker layoutX="23.0" layoutY="295.0" prefHeight="37.0" prefWidth="282.0" promptText="Ngày sinh:" style="-fx-background-image: #EDEDED; -fx-background-radius: 20px; -fx-border-radius: 20px; -fx-padding: 5px;" />
-      <ComboBox id="TypeExercise" fx:id="TypeExercise" editable="true" layoutX="23.0" layoutY="341.0" prefHeight="37.0" prefWidth="282.0" promptText="Cường độ luyện tập:" />
+      <DatePicker layoutX="34.0" layoutY="311.0" prefHeight="37.0" prefWidth="282.0" promptText="Ngày sinh:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;" />
+      <ComboBox id="TypeExercise" fx:id="TypeExercise" editable="true" layoutX="33.0" layoutY="361.0" prefHeight="37.0" prefWidth="282.0" promptText="Cường độ luyện tập:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;" />
+      <Text fill="#015e70" layoutX="118.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Đăng Ký">
+         <font>
+            <Font name="System Bold" size="28.0" />
+         </font>
+      </Text>
    </children>
 </Pane>
