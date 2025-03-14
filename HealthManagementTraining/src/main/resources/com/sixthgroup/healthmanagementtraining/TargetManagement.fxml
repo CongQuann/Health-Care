@@ -26,7 +26,7 @@
         <!--=================================================================-->
 
         <!-- Nội dung chính -->
-        <VBox alignment="CENTER" layoutX="8.0" layoutY="72.0" prefHeight="520.0" prefWidth="882.0">
+        <VBox alignment="CENTER" layoutX="70.0" layoutY="58.0" prefHeight="520.0" prefWidth="882.0">
             <children>
                 <Label styleClass="Subject" text="Danh sách mục tiêu" />
                 <TableView prefHeight="390.0" prefWidth="858.0">

@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -11,7 +13,7 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="1000.0" styleClass="mainFxmlClass" stylesheets="@dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.DashboardController">
+<AnchorPane id="AnchorPane" prefHeight="654.0" prefWidth="1117.0" styleClass="mainFxmlClass" stylesheets="@dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.DashboardController">
     <children>
         <!-- Nút kích hoạt navbar ========================================================-->
         <HBox styleClass="header-hbox">
@@ -25,52 +27,70 @@
                     <SVGPath content="M22,18A4,4 0 0,1 18,22H14A4,4 0 0,1 10,18V16H22V18M4,3H14A2,2 0 0,1 16,5V14H8V19H4A2,2 0 0,1 2,17V5A2,2 0 0,1 4,3M4,6V8H6V6H4M14,8V6H8V8H14M4,10V12H6V10H4M8,10V12H14V10H8M4,14V16H6V14H4Z" styleClass="nav-icon" />                    
                 </graphic>365Health</Label>
         </HBox>
+        <HBox alignment="CENTER_LEFT" layoutX="58.0" layoutY="100.0">
+            <Label styleClass="date-label" text="Chọn ngày:" />
+            <DatePicker fx:id="datePicker" layoutX="55.0" layoutY="100.0" styleClass="date-picker" />
+        </HBox>
         <!--=================================================================-->
-        <HBox layoutX="226.0" layoutY="121.0">
-            <GridPane prefHeight="222.0" prefWidth="625.0" styleClass="main-content">
+        <HBox layoutX="47.0" layoutY="126.0" prefHeight="368.0" prefWidth="1022.0">
+            <GridPane prefHeight="368.0" prefWidth="1065.0" styleClass="main-content">
                 <!-- Widget 1: Daily Calorie Intake -->
-                <VBox styleClass="widget" GridPane.columnIndex="3" GridPane.rowIndex="1">
-                    <Label styleClass="widget-label" text="Daily Calorie Intake" />
+                <VBox styleClass="widget" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                    <Label styleClass="widget-label" text="Calo đã hấp thụ" />
                     <Text styleClass="widget-value" text="2000 kcal" />
                 </VBox>
                 <!-- Widget 2: Chất béo tiêu thụ -->
                 <VBox styleClass="widget" GridPane.columnIndex="1" GridPane.rowIndex="0">
                     <Label styleClass="widget-label" text="Chất béo tiêu thụ" />
-                    <Text styleClass="widget-value" text="50g" />
+                    <Text id="lipid-text" styleClass="widget-value" text="50g" />
                 </VBox>
                 <!-- Widget 3: Chất xơ tiêu thụ -->
                 <VBox styleClass="widget" GridPane.columnIndex="2" GridPane.rowIndex="0">
                     <Label styleClass="widget-label" text="Chất xơ tiêu thụ" />
-                    <Text styleClass="widget-value" text="25g" />
+                    <Text id="fiber-text" styleClass="widget-value" text="25g" />
                 </VBox>
                 <!-- Widget 4: Chất đạm tiêu thụ -->
-                <VBox styleClass="widget" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                <VBox styleClass="widget">
                     <Label styleClass="widget-label" text="Chất đạm tiêu thụ" />
-                    <Text styleClass="widget-value" text="100g" />
+                    <Text id="protein-text" styleClass="widget-value" text="100g" />
                 </VBox>
                 <!-- Widget 5: Tổng calo đã đốt -->
-                <VBox styleClass="widget" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                <VBox styleClass="widget" GridPane.rowIndex="1">
                     <Label styleClass="widget-label" text="Tổng calo đã đốt" />
                     <Text styleClass="widget-value" text="500 kcal" />
                 </VBox>
                 <!-- Widget 6: Calo cần có mỗi ngày -->
                 <VBox styleClass="widget" GridPane.columnIndex="2" GridPane.rowIndex="1">
                     <Label styleClass="widget-label" text="Calo cần có mỗi ngày" />
-                    <Text styleClass="widget-value" text="2000 kcal" />
+                    <Text styleClass="widget-value" text="2500 kcal" />
+                </VBox>
+                <VBox styleClass="widget" GridPane.columnIndex="3" GridPane.rowIndex="1">
+                    <Label styleClass="widget-label" text="Tỷ lệ Calo" />
+                    <PieChart fx:id="caloPieChart" prefHeight="400" prefWidth="400" startAngle="90.0" />
+                </VBox>
+                <VBox styleClass="widget" GridPane.columnIndex="3" GridPane.rowIndex="0">
+                    <Label styleClass="widget-label" text="Chất đạm tiêu thụ" />
+                    <PieChart fx:id="proteinPieChart" prefHeight="200" prefWidth="200" />
                 </VBox>
                 <columnConstraints>
                     <ColumnConstraints />
-                    <ColumnConstraints />
-                    <ColumnConstraints />
-                    <ColumnConstraints />
+                    <ColumnConstraints maxWidth="187.59999999999997" minWidth="164.39998779296872" prefWidth="182.80001220703122" />
+                    <ColumnConstraints maxWidth="216.80002441406248" minWidth="181.19999999999993" prefWidth="210.39999999999998" />
+                    <ColumnConstraints maxWidth="423.6000122070312" minWidth="375.9999755859375" prefWidth="382.4" />
                 </columnConstraints>
                 <rowConstraints>
+                    <RowConstraints />
                     <RowConstraints />
                     <RowConstraints />
                 </rowConstraints>
             </GridPane>
         </HBox>
-        <!-- Navbar (ban đầu ẩn bên trái) -->
+        <HBox alignment="CENTER" layoutX="241.0" layoutY="599.0" prefHeight="42.0" prefWidth="510.0" spacing="20">
+            <Button fx:id="viewFoodButton" layoutX="50.0" layoutY="500.0" mnemonicParsing="false" styleClass="view-button" text="Xem danh sách món ăn" />
+            <!-- Thêm nút xem danh sách bài tập -->
+            <Button fx:id="viewExerciseButton" layoutX="250.0" layoutY="500.0" mnemonicParsing="false" styleClass="view-button" text="Xem danh sách bài tập" />
+            <!-- Navbar (ban đầu ẩn bên trái) -->
+        </HBox>
         <!--==========================================================-->
         <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
             <children>
@@ -100,6 +120,7 @@
                
             </children>
         </VBox>
+        <Label layoutX="497.0" layoutY="69.0" styleClass="dashboard-label" text="TỔNG QUAN" />
         <!--========================================================================-->
     </children>
 </AnchorPane>

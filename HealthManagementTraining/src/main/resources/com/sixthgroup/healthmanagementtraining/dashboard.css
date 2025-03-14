@@ -36,17 +36,70 @@
     -fx-fill: #336699; /* Blue text */
 }
 
+#lipid-text{
+    -fx-fill: #9b861e;
+}
 
+#fiber-text{
+    -fx-fill: #449e2c;
+}
 
+#protein-text{
+    -fx-fill:#9e3f2c;
+}
 /* Hover effect for widgets */
 .widget:hover {
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 0); /* Enhanced shadow on hover */
 }
+.default-color2.chart-pie {
+    -fx-pie-color: #4CAF50; /* Màu xanh lá cây cho phần đầu tiên */
+}
+
+.default-color1.chart-pie {
+    -fx-pie-color: #FF9800; /* Màu cam cho phần thứ hai */
+}
+
+.default-color0.chart-pie {
+    -fx-pie-color: #9e3f2c; /* Màu xanh dương */
+}
+.chart-legend {
+    -fx-background-color: transparent; /* Nền trong suốt */
+    -fx-padding: 2px; /* Khoảng cách giữa các phần tử */
+}
+
+.chart-legend-item {
+    -fx-text-fill: #333333; /* Màu chữ của chú thích */
+    -fx-font-size: 5px; /* Cỡ chữ */
+    -fx-font-weight: bold; /* Đậm */
+}
+
+.date-label{
+    -fx-font-size:20px;
+    -fx-font-weight:bold;
+    -fx-fill:#2c3e50;
+}
+.dashboard-label{
+     -fx-font-size:25px;
+    -fx-font-weight:bold;
+    -fx-fill:#2c3e50;
+}
 
 
+/* Tùy chỉnh nút xem danh sách */
+.view-button {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-background-color: #4CAF50; /* Màu nền xanh lá cây */
+    -fx-text-fill: white; /* Màu chữ trắng */
+    -fx-padding: 10px 20px; /* Khoảng cách giữa chữ và viền */
+    -fx-border-radius: 5px; /* Bo góc */
+    -fx-background-radius: 5px; /* Bo góc */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 5, 0, 0, 0); /* Đổ bóng */
+}
 
-
-/*============================================================================*/
+.view-button:hover {
+    -fx-background-color: #45a049; /* Màu nền khi hover */
+}
 /* Thiết lập style cho các nút Button trong nav_bar */
 .nav-btn {
     -fx-background-color: transparent;
@@ -134,5 +187,3 @@
 .header-hbox{
     -fx-background-color:#34495e;
 }
-
-/*========================================================================*/
