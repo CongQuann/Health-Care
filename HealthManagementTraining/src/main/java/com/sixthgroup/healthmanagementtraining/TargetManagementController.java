@@ -1,12 +1,16 @@
 package com.sixthgroup.healthmanagementtraining;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -23,7 +27,7 @@ public class TargetManagementController implements Initializable {
     private Button toggleNavButton; //Nut kich hoat
     @FXML
     private Button closeNavButton; // Nút đóng navbar
-
+   
     private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
 
     //kich hoat navbar
@@ -70,5 +74,6 @@ public class TargetManagementController implements Initializable {
 
     }
     
+   
     //=========================================================================
 }

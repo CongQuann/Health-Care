@@ -10,8 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="574.0" prefWidth="903.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="574.0" prefWidth="903.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.ExercisesManagementController">
    <children>
       <TableView layoutX="58.0" layoutY="117.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="375.0" prefWidth="312.0">
         <columns>
@@ -23,7 +22,7 @@
       <ListView layoutX="631.0" layoutY="117.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="375.0" prefWidth="200.0" />
       <Button layoutX="418.0" layoutY="262.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Thêm bài tập đã chọn" textAlignment="CENTER" />
       <Button layoutX="418.0" layoutY="324.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="131.0" text="Xóa bài tập đã chọn" textAlignment="CENTER" />
-      <Button layoutX="451.0" layoutY="382.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="65.0" text="Lưu lịch " textAlignment="CENTER" />
+      <Button fx:id="btn" layoutX="451.0" layoutY="382.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" onAction="#backButton" prefHeight="25.0" prefWidth="65.0" text="Lưu lịch " textAlignment="CENTER" />
       <TitledPane animated="false" layoutX="117.0" layoutY="-199.0" text="untitled" />
       <Text layoutX="392.0" layoutY="29.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LỊCH TẬP">
          <font>
@@ -37,5 +36,6 @@
       </Text>
       <TextField layoutX="631.0" layoutY="78.0" promptText="Nhập bài tập" />
       <Button layoutX="780.0" layoutY="78.0" mnemonicParsing="false" text="Tìm kiếm" />
+      
    </children>
 </Pane>
