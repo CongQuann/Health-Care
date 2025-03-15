@@ -5,7 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 /**
@@ -19,7 +18,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         stage = primaryStage;
-        scene = new Scene(loadFXML("primary"), 349, 482);
+        scene = new Scene(loadFXML("ExercisesManagement"), 349, 482);
         stage.setScene(scene);
         stage.show();
     }
