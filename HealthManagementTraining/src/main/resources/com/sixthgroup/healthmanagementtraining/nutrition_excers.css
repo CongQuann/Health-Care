@@ -1,0 +1,142 @@
+
+/*============================================================================*/
+/* Thiết lập style cho các nút Button trong nav_bar */
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Thiết lập style cho các nút Button trong nav_bar khi hover */
+.nav-btn:hover {
+    -fx-background-color: #34495e;
+}
+
+.spacing_hbox{
+    -fx-spacing: 20px; /* Khoảng cách giữa các phần tử con */
+    
+}
+
+/*PHẦN CSS CHO NAV-BAR*/
+.nav-toggle-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10px;
+}
+.nav-toggle-btn:hover{
+    -fx-background-color: #34495e; /* Màu nền navbar */
+    -fx-fill:#f4f4f4;
+
+}
+.nav-toggle-btn:hover .svg-icon {
+    -fx-fill: white; /* Đổi màu SVG thành trắng */
+}
+/*chỉnh màu cho icon*/
+.nav-toggle-btn SVGPath{
+        -fx-fill: #333; /* Màu icon */
+
+}
+
+/* Navbar */
+.nav-bar {
+    -fx-background-color: #2c3e50; /* Màu nền navbar */
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+/*    -fx-translate-x: -200px;  Ban đầu ẩn bên trái */
+}
+/* Nút trong navbar */
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+}
+
+.nav-btn:hover {
+    -fx-background-color: #34495e;
+}
+
+.close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 5px 10px;
+    -fx-alignment: center;
+}
+
+.close-btn:hover {
+    -fx-background-color:#34495e;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.nav-label{
+    -fx-font-size: 25px;
+    -fx-font-weight:bold;
+    -fx-text-fill: white;
+}
+.nav-icon{
+    -fx-fill:white;
+    
+}
+.header-hbox{
+    -fx-background-color:#34495e;
+}
+.textStyle{
+    -fx-font-size: 16px; /* Kích thước chữ */
+    -fx-font-weight: bold; /* Đậm chữ */
+    -fx-text-fill: black; /* Màu chữ */
+}
+.button:hover {
+    -fx-background-color: #0056b3; /* Màu nền khi di chuột qua */
+    -fx-border-color: #004085; /* Màu viền khi di chuột qua */
+}
+
+.button:pressed {
+    -fx-background-color: #004085; /* Màu nền khi nhấn */
+    -fx-border-color: #003057; /* Màu viền khi nhấn */
+}
+.searchBtn{
+    -fx-background-color: #007bff; /* Màu nền */
+    -fx-text-fill: white; /* Màu chữ */
+    -fx-font-size: 14px; /* Kích thước chữ */
+    -fx-font-weight: bold; /* Đậm chữ */
+    -fx-padding: 8px 12px; /* Khoảng cách bên trong */
+   
+    -fx-border-radius: 20; /* Bán kính bo tròn cho biên */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 1); /* Hiệu ứng bóng */
+    -fx-spacing: 5; /* Khoảng cách giữa biểu tượng và chữ */
+}
+.addBtn {
+    -fx-background-color: #007bff; /* Màu nền */
+    -fx-text-fill: white; /* Màu chữ */
+    -fx-font-size: 16px; /* Kích thước chữ */
+    -fx-font-weight: bold; /* Đậm chữ */
+    -fx-padding: 10px 20px; /* Khoảng cách bên trong */
+    -fx-background-radius: 15; /* Bán kính bo tròn */
+    -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
+}
+.deleteBtn{
+    -fx-background-color: #cf223d; /* Màu nền */
+    -fx-text-fill: white; /* Màu chữ */
+    -fx-font-size: 16px; /* Kích thước chữ */
+    -fx-font-weight: bold; /* Đậm chữ */
+    -fx-padding: 10px 20px; /* Khoảng cách bên trong */
+    -fx-background-radius: 15; /* Bán kính bo tròn */
+    -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
+}
+.saveBtn{
+    -fx-background-color: #2fda38; /* Màu nền */
+    -fx-text-fill: white; /* Màu chữ */
+    -fx-font-size: 16px; /* Kích thước chữ */
+    -fx-font-weight: bold; /* Đậm chữ */
+    -fx-padding: 10px 20px; /* Khoảng cách bên trong */
+    -fx-background-radius: 15; /* Bán kính bo tròn */
+    -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
+}
+/*========================================================================*/

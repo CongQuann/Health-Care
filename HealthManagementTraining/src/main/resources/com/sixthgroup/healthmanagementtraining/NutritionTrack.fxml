@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -14,10 +15,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="498.0" prefWidth="853.0" stylesheets="@nutrition.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
-   <children>
-       <!-- Nút kích hoạt navbar ========================================================-->
-        <HBox styleClass="header-hbox" prefWidth="853.0">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="627.0" prefWidth="853.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
+    <children>
+        <!-- Nút kích hoạt navbar ========================================================-->
+        <HBox prefWidth="853.0" styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
                 <graphic>
                     <SVGPath content="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" styleClass="svg-icon" />
@@ -29,34 +30,40 @@
                 </graphic>365Health</Label>
         </HBox>
         <!--=================================================================-->
-      <Text layoutX="274.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="QUẢN LÝ DINH DƯỠNG">
-         <font>
-            <Font name="System Bold" size="27.0" />
-         </font>
-      </Text>
-      <TableView layoutX="20.0" layoutY="171.0" prefHeight="266.0" prefWidth="469.0">
-        <columns>
-          <TableColumn prefWidth="75.0" text="Tên món ăn" />
-          <TableColumn prefWidth="75.0" text="Chất béo" />
-            <TableColumn prefWidth="75.0" text="Chất xơ" />
-            <TableColumn prefWidth="75.0" text="Chất đạm" />
-            <TableColumn prefWidth="75.0" text="Calo" />
-            <TableColumn prefWidth="75.0" text="Số lượng" />
-        </columns>
-      </TableView>
-      <ListView fx:id="foodListView" layoutX="632.0" layoutY="171.0" prefHeight="266.0" prefWidth="200.0" />
-      <Button layoutX="500.0" layoutY="256.0" mnemonicParsing="false" text="Thêm món đã chọn" />
-      <Button layoutX="500.0" layoutY="299.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="119.0" text="Xóa món đã chọn" />
-      <Button layoutX="500.0" layoutY="343.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="119.0" text="Lưu" />
-      <TextField layoutX="632.0" layoutY="135.0" prefHeight="25.0" prefWidth="140.0" promptText="(Nhập tên món)" />
-      <Button layoutX="772.0" layoutY="135.0" mnemonicParsing="false" text="Tìm kiếm" />
-      <Text layoutX="20.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chọn ngày:">
-         <font>
-            <Font size="16.0" />
-         </font>
-      </Text>
-      <DatePicker layoutX="96.0" layoutY="135.0" />
-      <!-- Navbar (ban đầu ẩn bên trái) -->
+        <Text layoutX="274.0" layoutY="85.0" strokeType="OUTSIDE" strokeWidth="0.0" text="QUẢN LÝ DINH DƯỠNG">
+            <font>
+                <Font name="System Bold" size="27.0" />
+            </font>
+        </Text>
+        <TableView layoutX="20.0" layoutY="171.0" prefHeight="266.0" prefWidth="469.0">
+            <columns>
+                <TableColumn prefWidth="75.0" text="Tên món ăn" />
+                <TableColumn prefWidth="75.0" text="Chất béo" />
+                <TableColumn prefWidth="75.0" text="Chất xơ" />
+                <TableColumn prefWidth="75.0" text="Chất đạm" />
+                <TableColumn prefWidth="75.0" text="Calo" />
+                <TableColumn prefWidth="75.0" text="Số lượng" />
+            </columns>
+        </TableView>
+        <ListView fx:id="foodListView" layoutX="573.0" layoutY="172.0" prefHeight="266.0" prefWidth="200.0" />
+        <Button id="addBtn" layoutX="43.0" layoutY="444.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="189.0" styleClass="addBtn" text="Thêm món đã chọn" />
+        <Button id="deleteBtn" layoutX="315.0" layoutY="444.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="189.0" styleClass="deleteBtn" text="Xóa món đã chọn" />
+        <Button id="saveBtn" layoutX="573.0" layoutY="444.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="119.0" styleClass="saveBtn" text="Lưu" />
+        <TextField layoutX="573.0" layoutY="129.0" prefHeight="25.0" prefWidth="140.0" promptText="(Nhập tên món)" styleClass="textStyle" />
+        <Button id="searchBtn" layoutX="713.0" layoutY="129.0" prefHeight="25.0" prefWidth="100.0" styleClass="searchBtn">
+            Tìm kiếm
+        </Button>
+        <Text fill="#2c2424" layoutX="20.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chọn ngày:">
+            <font>
+                <Font size="16.0" />
+            </font>
+         <styleClass>
+            <String fx:value="textStyle" />
+            <String fx:value="textStyle" />
+         </styleClass>
+        </Text>
+        <DatePicker layoutX="105.0" layoutY="136.0" />
+        <!-- Navbar (ban đầu ẩn bên trái) -->
         <!--==========================================================-->
         <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
             <children>
@@ -87,5 +94,5 @@
             </children>
         </VBox>
         <!--========================================================================-->
-   </children>
+    </children>
 </Pane>

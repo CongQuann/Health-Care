@@ -15,11 +15,10 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="574.0" prefWidth="903.0" stylesheets="@exercise.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.ExercisesManageController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="574.0" prefWidth="903.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.ExercisesManageController">
     <children>
         <!-- Nút kích hoạt navbar ========================================================-->
-        <HBox styleClass="header-hbox" prefWidth="903.0">
+        <HBox prefWidth="903.0" styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
                 <graphic>
                     <SVGPath content="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" styleClass="svg-icon" />
@@ -39,19 +38,19 @@
             </columns>
         </TableView>
         <ListView layoutX="627.0" layoutY="156.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="375.0" prefWidth="200.0" />
-        <Button layoutX="418.0" layoutY="262.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" text="Thêm bài tập đã chọn" textAlignment="CENTER" />
-        <Button layoutX="418.0" layoutY="324.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="131.0" text="Xóa bài tập đã chọn" textAlignment="CENTER" />
-        <Button fx:id="btn" layoutX="451.0" layoutY="382.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="25.0" prefWidth="65.0" text="Lưu lịch " textAlignment="CENTER" />
+        <Button layoutX="392.0" layoutY="261.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" styleClass="addBtn" stylesheets="@nutrition_excers.css" text="Thêm bài tập đã chọn" textAlignment="CENTER" />
+        <Button layoutX="392.0" layoutY="323.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="45.0" prefWidth="200.0" styleClass="deleteBtn" text="Xóa bài tập đã chọn" textAlignment="CENTER" />
+        <Button fx:id="btn" layoutX="391.0" layoutY="381.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="45.0" prefWidth="200.0" styleClass="saveBtn" text="Lưu lịch " textAlignment="CENTER" />
         <TitledPane animated="false" layoutX="117.0" layoutY="-199.0" text="untitled" />
         <Text layoutX="424.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LỊCH TẬP">
             <font>
                 <Font name="System Bold" size="27.0" />
             </font>
         </Text>
-        <TextField layoutX="627.0" layoutY="117.0" promptText="Nhập bài tập" />
-        <Button layoutX="782.0" layoutY="117.0" mnemonicParsing="false" text="Tìm kiếm" />
-        <Label layoutX="54.0" layoutY="117.0" text="Chọn ngày" />
-        <DatePicker layoutX="119.0" layoutY="113.0" />
+        <TextField layoutX="627.0" layoutY="117.0" prefHeight="35.0" prefWidth="174.0" promptText="Nhập bài tập" styleClass="textStyle" />
+        <Button layoutX="801.0" layoutY="117.0" mnemonicParsing="false" styleClass="searchBtn" text="Tìm kiếm" />
+        <Label layoutX="54.0" layoutY="117.0" styleClass="textStyle" text="Chọn ngày:" />
+        <DatePicker layoutX="139.0" layoutY="117.0" />
         <!-- Navbar (ban đầu ẩn bên trái) -->
         <!--==========================================================-->
         <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
