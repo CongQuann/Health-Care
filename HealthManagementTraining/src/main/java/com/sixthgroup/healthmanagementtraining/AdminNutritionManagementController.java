@@ -1,16 +1,16 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
+ */
 package com.sixthgroup.healthmanagementtraining;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.fxml.Initializable;
 import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -18,9 +18,9 @@ import javafx.util.Duration;
  *
  * @author DELL
  */
-public class TargetManagementController implements Initializable {
+public class AdminNutritionManagementController implements Initializable {
 
-    //===================================================================
+ //===================================================================
     @FXML
     private VBox navBar; //Navbar
     @FXML

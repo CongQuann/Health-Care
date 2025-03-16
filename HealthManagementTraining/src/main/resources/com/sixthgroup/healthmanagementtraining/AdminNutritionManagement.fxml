@@ -9,8 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="1000.0" stylesheets="@Targets.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.TargetManagementController">
-    <children>
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" stylesheets="@adminnutritionmanagement.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.AdminNutritionManagementController">
+ <children>
+        <!-- Nút kích hoạt navbar ========================================================-->
         <HBox styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
                 <graphic>
@@ -22,32 +23,36 @@
                     <SVGPath content="M22,18A4,4 0 0,1 18,22H14A4,4 0 0,1 10,18V16H22V18M4,3H14A2,2 0 0,1 16,5V14H8V19H4A2,2 0 0,1 2,17V5A2,2 0 0,1 4,3M4,6V8H6V6H4M14,8V6H8V8H14M4,10V12H6V10H4M8,10V12H14V10H8M4,14V16H6V14H4Z" styleClass="nav-icon" />                    
                 </graphic>365Health</Label>
         </HBox>
+        <!--=================================================================-->
 
         <!-- Nội dung chính -->
         <VBox alignment="CENTER" layoutX="64.0" layoutY="63.0" prefHeight="517.0" prefWidth="894.0">
             <children>
-                <Label styleClass="Subject" text="Danh sách mục tiêu" />
+                <Label styleClass="Subject" text="Danh sách thức ăn" />
                 <TableView prefHeight="390.0" prefWidth="895.0">
                     <columns>
-                        <TableColumn prefWidth="103.99996757507324" text="Ngày kết thúc" />
-                        <TableColumn prefWidth="107.20001983642578" text="Ngày bắt đầu" />
-                        <TableColumn prefWidth="154.4000244140625" text="Cân nặng hiện tại(kg)" />
-                        <TableColumn prefWidth="164.79995727539062" text="Cân nặng mục tiêu(kg)" />
-                        <TableColumn prefWidth="96.0" text="Tiến trình(%)" />
-                        <TableColumn prefWidth="154.4000244140625" text="Calo cần nạp mỗi ngày" />
-                        <TableColumn prefWidth="91.199951171875" text="Hành động" />
+                        <TableColumn prefWidth="267.1999969482422" text="Tên" />
+                        <TableColumn prefWidth="58.399993896484375" text="Calo" />
+                        <TableColumn prefWidth="81.5999755859375" text="Chất béo" />
+                        <TableColumn prefWidth="84.800048828125" text="Chất đạm" />
+                        <TableColumn prefWidth="80.800048828125" text="Chất xơ" />
+                        <TableColumn prefWidth="99.199951171875" text="Loại thức ăn" />
+                        <TableColumn prefWidth="92.0" text="Đơn vị tính" />
+                        <TableColumn prefWidth="108.0" text="Hành động" />
+
                     </columns>
                 </TableView>
                 <HBox alignment="CENTER" prefHeight="75.0" prefWidth="646.0" styleClass="spacing_hbox">
                     <children>
                         <Button mnemonicParsing="false" text="Lưu" />
-                        <Button mnemonicParsing="false" text="Mục tiêu mới" />
+                        <Button mnemonicParsing="false" text="Thức ăn mới" />
                     </children>
                 </HBox>
             </children>
         </VBox>
 
         <!-- Navbar (ban đầu ẩn bên trái) -->
+        <!--==========================================================-->
         <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
             <children>
                 <HBox alignment="CENTER_RIGHT" spacing="26">
@@ -76,5 +81,6 @@
                
             </children>
         </VBox>
+        <!--========================================================================-->
     </children>
 </AnchorPane>
