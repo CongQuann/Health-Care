@@ -29,11 +29,6 @@
             <Font name="System Bold" size="27.0" />
          </font>
       </Text>
-      <Text layoutX="405.0" layoutY="68.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(Ngày)">
-         <font>
-            <Font size="27.0" />
-         </font>
-      </Text>
       <TextField layoutX="631.0" layoutY="78.0" promptText="Nhập bài tập" />
       <Button layoutX="780.0" layoutY="78.0" mnemonicParsing="false" text="Tìm kiếm" />
       
