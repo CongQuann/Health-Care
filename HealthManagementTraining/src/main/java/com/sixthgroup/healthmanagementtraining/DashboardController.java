@@ -21,7 +21,6 @@ import javafx.util.Duration;
  */
 public class DashboardController implements Initializable {
 
-    //===================================================================
     @FXML
     private VBox navBar; //Navbar
     @FXML
@@ -100,5 +99,4 @@ public class DashboardController implements Initializable {
 
     }
 
-    //=========================================================================
 }
