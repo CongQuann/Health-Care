@@ -9,8 +9,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<AnchorPane id="AnchorPane" prefHeight="620.0" prefWidth="1000.0" stylesheets="@Targets.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.TargetManagementController">
-    <children>
+<AnchorPane id="AnchorPane" prefHeight="400.0" prefWidth="600.0" styleClass="mainFxmlClass" stylesheets="@adminexercisemanagement.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.AdminExerciseManagementController">
+
+      <children>
         <!-- Nút kích hoạt navbar ========================================================-->
         <HBox styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
@@ -26,24 +27,21 @@
         <!--=================================================================-->
 
         <!-- Nội dung chính -->
-        <VBox alignment="CENTER" layoutX="64.0" layoutY="63.0" prefHeight="517.0" prefWidth="894.0">
+        <VBox alignment="CENTER" layoutX="195.0" layoutY="50.0" prefHeight="520.0" prefWidth="723.0">
             <children>
-                <Label styleClass="Subject" text="Danh sách mục tiêu" />
-                <TableView prefHeight="390.0" prefWidth="895.0">
+                <Label styleClass="Subject" text="Danh sách bài tập" />
+                <TableView prefHeight="386.0" prefWidth="693.0">
                     <columns>
-                        <TableColumn prefWidth="103.99996757507324" text="Ngày kết thúc" />
-                        <TableColumn prefWidth="107.20001983642578" text="Ngày bắt đầu" />
-                        <TableColumn prefWidth="154.4000244140625" text="Cân nặng hiện tại(kg)" />
-                        <TableColumn prefWidth="164.79995727539062" text="Cân nặng mục tiêu(kg)" />
-                        <TableColumn prefWidth="96.0" text="Tiến trình(%)" />
-                        <TableColumn prefWidth="154.4000244140625" text="Calo cần nạp mỗi ngày" />
-                        <TableColumn prefWidth="91.199951171875" text="Hành động" />
+                        <TableColumn prefWidth="491.199951171875" text="Tên bài tập" />
+                        <TableColumn minWidth="7.199951171875" prefWidth="119.20001220703125" text="Calo mỗi phút" />
+                        <TableColumn prefWidth="89.5999755859375" text="Hành động" />
+
                     </columns>
                 </TableView>
                 <HBox alignment="CENTER" prefHeight="75.0" prefWidth="646.0" styleClass="spacing_hbox">
                     <children>
                         <Button mnemonicParsing="false" text="Lưu" />
-                        <Button mnemonicParsing="false" text="Mục tiêu mới" />
+                        <Button mnemonicParsing="false" text="Bài tập mới" />
                     </children>
                 </HBox>
             </children>
