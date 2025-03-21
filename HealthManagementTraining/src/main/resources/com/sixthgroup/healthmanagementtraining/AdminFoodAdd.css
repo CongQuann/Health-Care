@@ -1,6 +1,0 @@
-Button:hover{
-    -fx-background-color: #4c5e3a;
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-    -fx-transition: all 0.3s;
-}

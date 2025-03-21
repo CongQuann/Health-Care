@@ -100,6 +100,9 @@
 .view-button:hover {
     -fx-background-color: #45a049; /* Màu nền khi hover */
 }
+
+
+/*===================================================*/
 /* Thiết lập style cho các nút Button trong nav_bar */
 .nav-btn {
     -fx-background-color: transparent;
@@ -110,6 +113,9 @@
     -fx-border-radius: 5px;
     -fx-background-radius: 5px;
 }
+
+
+
 
 /* Thiết lập style cho các nút Button trong nav_bar khi hover */
 .nav-btn:hover {
