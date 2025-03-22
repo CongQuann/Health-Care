@@ -10,7 +10,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<AnchorPane id="AnchorPane" prefHeight="628.0" prefWidth="728.0" styleClass="mainFxmlClass" stylesheets="@adminexercise.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.AdminExerciseController">
+<AnchorPane id="AnchorPane" prefHeight="588.0" prefWidth="825.0" styleClass="mainFxmlClass" stylesheets="@adminexercise.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.AdminExerciseController">
     <children>
         <VBox layoutX="192.0" layoutY="98.0" prefHeight="164.0" prefWidth="440.0" spacing="10.0" styleClass="input-container">
             <Label styleClass="header-label" text="Tạo bài tập mới" />
@@ -37,8 +37,8 @@
             <TableColumn prefWidth="193.5999755859375" text="Lượng calo tiêu thụ/phút" />
          </columns>
         </TableView>
-      <Button layoutX="152.0" layoutY="584.0" mnemonicParsing="false" styleClass="edit-button" text="Chỉnh sửa bài tập" />
-        <Button fx:id="deleteTargetButton" layoutX="22.0" layoutY="584.0" styleClass="delete-button" text="Xóa mục tiêu" />
+      <Button layoutX="655.0" layoutY="375.0" mnemonicParsing="false" styleClass="edit-button" text="Chỉnh sửa bài tập" />
+        <Button fx:id="deleteTargetButton" layoutX="526.0" layoutY="375.0" styleClass="delete-button" text="Xóa mục tiêu" />
         
         <!--==========================NAV BAR===============================-->
         <HBox styleClass="header-hbox">
