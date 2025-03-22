@@ -19,18 +19,18 @@
 
             <!-- Hai ô nhập cân nặng trên cùng một hàng -->
             <HBox alignment="CENTER_LEFT" spacing="20.0">
-                <Label text="Cân nặng mục tiêu (kg):" />
-                <TextField fx:id="targetWeightField" promptText="Nhập cân nặng mục tiêu" />
-                <Label text="Cân nặng hiện tại (kg):" />
-                <TextField fx:id="currentWeightField" promptText="Nhập cân nặng hiện tại" />
+                <Label minWidth="130" text="Cân nặng mục tiêu (kg):" />
+                <TextField fx:id="targetWeightField" promptText="Nhập cân nặng mục tiêu" focusTraversable="false"/>
+                <Label minWidth="130" text="Cân nặng hiện tại (kg):" />
+                <TextField fx:id="currentWeightField" promptText="Nhập cân nặng hiện tại" focusTraversable="false"/>
             </HBox>
 
             <!-- Hai ô chọn ngày trên cùng một hàng -->
             <HBox alignment="CENTER_LEFT" spacing="20.0">
-                <Label text="Ngày bắt đầu:" />
-                <DatePicker fx:id="startDatePicker" />
-                <Label text="Ngày kết thúc:" />
-                <DatePicker fx:id="endDatePicker" />
+                <Label minWidth="130" text="Ngày bắt đầu:" />
+                <DatePicker fx:id="startDatePicker" prefHeight="26.0" prefWidth="150.0" focusTraversable="false"/>
+                <Label minWidth="130" text="Ngày kết thúc:" />
+                <DatePicker fx:id="endDatePicker" prefHeight="26.0" prefWidth="149.0" focusTraversable="false"/>
             </HBox>
 
             <Button fx:id="addGoalButton" styleClass="add-button" text="Thêm mục tiêu" />

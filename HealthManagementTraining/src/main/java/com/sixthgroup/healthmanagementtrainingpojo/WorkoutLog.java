@@ -16,7 +16,7 @@ public class WorkoutLog {
     private int duration; // int
     private Date workoutDate; // datetime
     private String userInfoId; // char(8)
-    private String exerciseId; // char(8)
+    private int exerciseId; // char(8)
 
     // Getters and Setters
     /**
@@ -78,14 +78,14 @@ public class WorkoutLog {
     /**
      * @return the exerciseId
      */
-    public String getExerciseId() {
+    public int getExerciseId() {
         return exerciseId;
     }
 
     /**
      * @param exerciseId the exerciseId to set
      */
-    public void setExerciseId(String exerciseId) {
+    public void setExerciseId(int exerciseId) {
         this.exerciseId = exerciseId;
     }
 }

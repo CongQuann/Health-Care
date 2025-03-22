@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class UserInfo {
 
-    private String id; // char(8)
+    private String id; // 
     private String userName; // nvarchar(30)
     private String password; // varchar(30)
     private String role; // enum('user', 'administrator')

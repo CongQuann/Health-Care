@@ -22,7 +22,7 @@ import javafx.util.Duration;
 public class TargetManagementController implements Initializable {
 
 //    ==============================================NAV BAR========================================
-   @FXML
+    @FXML
     private VBox navBar;
     @FXML
     private Button toggleNavButton;

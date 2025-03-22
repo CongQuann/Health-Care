@@ -10,7 +10,7 @@ package com.sixthgroup.healthmanagementtrainingpojo;
  */
 public class Exercise {
 
-    private String id; // char(8)
+    private int id; // char(8)
     private String exerciseName; // nvarchar(40)
     private int caloriesPerMinute; // int
 
@@ -19,14 +19,14 @@ public class Exercise {
     /**
      * @return the id
      */
-    public String getId() {
+    public int getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 
