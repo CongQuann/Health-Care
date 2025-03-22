@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.net.URL?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
@@ -10,36 +11,60 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<AnchorPane id="AnchorPane" prefHeight="588.0" prefWidth="825.0" styleClass="mainFxmlClass" stylesheets="@adminexercise.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.AdminExerciseController">
+<AnchorPane id="AnchorPane" prefHeight="658.0" prefWidth="825.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.AdminFoodController">
+    <stylesheets>
+        <URL value="@adminfood.css" />
+    </stylesheets>
     <children>
-        <VBox layoutX="192.0" layoutY="98.0" prefHeight="164.0" prefWidth="440.0" spacing="10.0" styleClass="input-container">
-            <Label styleClass="header-label" text="Tạo bài tập mới" />
-            <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0">
+        
+        <Label layoutX="300.0" layoutY="42.0" styleClass="lb-Title" text="Quản lý thức ăn" />
+        <VBox layoutX="66.0" layoutY="88.0" prefHeight="189.0" prefWidth="690.0" spacing="10" styleClass="input-container">
+            <Label styleClass="header-label" text="Thêm thức ăn mới" />
+            <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0" spacing="20.0">
                 <children>
-                    <Label minWidth="120" text="Tên bài tập:" />
-                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="290.0" />
+                    <Label minWidth="95" text="Tên thức ăn:" />
+                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                    <Label minWidth="95" text="Loại thức ăn:" />
+                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                </children>
+            </HBox>   
+            <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0" spacing="20.0">
+                <children>
+                    <Label minWidth="95" text="Calo/Đơn vị:" />
+                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                    <Label minWidth="95" text="Chất béo/Đơn vị:" />
+                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                </children>
+            </HBox>    
+            <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0" spacing="20.0">
+                <children>
+                    <Label minWidth="95" text="Chất đạm/Đơn vị:" />
+                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                    <Label minWidth="95" text="Chất xơ/Đơn vị:" />
+                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
                 </children>
             </HBox>
-            <HBox alignment="CENTER_LEFT" layoutX="26.0" layoutY="56.0" prefHeight="27.0" prefWidth="740.0">
-                <children>
-                    <Label minWidth="120" text="Lượng calo/phút:" />
-                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="286.0" />
-                </children>
-            </HBox>
-            <Button fx:id="addExerciseButton" mnemonicParsing="false" styleClass="add-button" text="Thêm bài tập" />
+
+            <Button mnemonicParsing="false" styleClass="add-button" text="Thêm thức ăn" />           
         </VBox>
-        <!-- Phần bảng hiển thị danh sách mục tiêu -->
-        
-        <TableView fx:id="goalTableView" layoutX="22.0" layoutY="273.0" prefHeight="300.0" prefWidth="490.0">
-         <columns>
-            <TableColumn prefWidth="79.20000839233398" text="Mã bài tập" />
-            <TableColumn prefWidth="213.6000213623047" text="Tên bài tập" />
-            <TableColumn prefWidth="193.5999755859375" text="Lượng calo tiêu thụ/phút" />
-         </columns>
+        <TableView fx:id="goalTableView" layoutX="66.0" layoutY="381.0" prefHeight="262.0" prefWidth="690.0">
+            <columns>
+                <TableColumn prefWidth="104.79998779296875" text="Tên thức ăn" />
+                <TableColumn prefWidth="112.79998779296875" text="Loại thức ăn" />
+                <TableColumn prefWidth="107.20001220703125" text="Calo/Đơn vị" />
+                <TableColumn prefWidth="126.4000244140625" text="Chất béo/Đơn vị" />
+                <TableColumn prefWidth="128.79998779296875" text="Chất đạm/Đơn vị" />
+                <TableColumn prefWidth="107.99997558593748" text="Chất xơ/Đơn vị" />
+            </columns>
         </TableView>
-      <Button layoutX="655.0" layoutY="375.0" mnemonicParsing="false" styleClass="edit-button" text="Chỉnh sửa bài tập" />
-        <Button fx:id="deleteTargetButton" layoutX="526.0" layoutY="375.0" styleClass="delete-button" text="Xóa mục tiêu" />
-        
+        <VBox layoutX="66.0" layoutY="296.0" prefHeight="66.0" prefWidth="286.0" styleClass="input-container">
+            <children>
+                <Label styleClass="header-label" text="Tìm kiếm bài tập:" />
+                <TextField focusTraversable="false" prefHeight="26.0" prefWidth="164.0" />
+            </children>
+        </VBox>
+        <Button layoutX="493.0" layoutY="322.0" mnemonicParsing="false" styleClass="edit-button" text="Chỉnh sửa bài tập" />
+        <Button fx:id="deleteTargetButton" layoutX="379.0" layoutY="322.0" styleClass="delete-button" text="Xóa mục tiêu" />
         <!--==========================NAV BAR===============================-->
         <HBox styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
@@ -80,13 +105,7 @@
                
             </children>
         </VBox>
-        <Label layoutX="305.0" layoutY="42.0" styleClass="lb-Title" text="Quản lý bài tập" />
-      <VBox layoutX="526.0" layoutY="273.0" prefHeight="82.0" prefWidth="286.0" styleClass="input-container">
-         <children>
-            <Label styleClass="header-label" text="Tìm kiếm bài tập:" />
-            <TextField focusTraversable="false" prefHeight="26.0" prefWidth="164.0" />
-         </children>
-      </VBox>
-        <!--=====================================================-->
+        <!--=====================================================--> 
     </children>
+    
 </AnchorPane>

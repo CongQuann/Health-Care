@@ -1,0 +1,162 @@
+/*=============================NAV BAR======================*/
+/* Thiết lập style cho các nút Button trong nav_bar */
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: #ffffff;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+/* Thiết lập style cho các nút Button trong nav_bar khi hover */
+.nav-btn:hover {
+    -fx-background-color: #34495e;
+}
+
+.spacing_hbox{
+    -fx-spacing: 20px; /* Khoảng cách giữa các phần tử con */
+    
+}
+
+/*PHẦN CSS CHO NAV-BAR*/
+.nav-toggle-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10px;
+}
+.nav-toggle-btn:hover{
+    -fx-background-color: #34495e; /* Màu nền navbar */
+    -fx-fill:#f4f4f4;
+
+}
+.nav-toggle-btn:hover .svg-icon {
+    -fx-fill: white; /* Đổi màu SVG thành trắng */
+}
+/*chỉnh màu cho icon*/
+.nav-toggle-btn SVGPath{
+        -fx-fill: #333; /* Màu icon */
+
+}
+
+/* Navbar */
+.nav-bar {
+    -fx-background-color: #2c3e50; /* Màu nền navbar */
+    -fx-padding: 10px;
+    -fx-spacing: 10px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
+/*    -fx-translate-x: -200px;  Ban đầu ẩn bên trái */
+}
+/* Nút trong navbar */
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 10px 20px;
+    -fx-border-radius: 5px;
+}
+
+.nav-btn:hover {
+    -fx-background-color: #34495e;
+}
+
+.close-btn {
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-size: 16px;
+    -fx-padding: 5px 10px;
+    -fx-alignment: center;
+}
+
+.close-btn:hover {
+    -fx-background-color:#34495e;
+    -fx-text-fill: white;
+    -fx-cursor: hand;
+}
+
+.nav-label{
+    -fx-font-size: 25px;
+    -fx-font-weight:bold;
+    -fx-text-fill: white;
+}
+.nav-icon{
+    -fx-fill:white;
+    
+}
+.header-hbox{
+    -fx-background-color:#34495e;
+}
+/*===================================================*/
+
+.lb-Title{
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill:#2c3e50;
+}
+/* Định dạng phần khung nhập dữ liệu */
+.input-container {
+    -fx-background-color: #f0f0f0; /* Màu nền xám nhạt */
+    -fx-padding: 15;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+}
+/* Định dạng tiêu đề */
+.header-label {
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+.add-button {
+    -fx-background-color:#34495e;
+    -fx-text-fill: white;
+    -fx-padding: 5px 10px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5;
+}
+.add-button:hover {
+    -fx-background-color:#2c3e50;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #34495e; /* Đổi màu nền tiêu đề */
+    -fx-background-insets: 0, 0 0 1 0;
+    -fx-background-radius: 5;
+}
+
+.table-view .column-header {
+    -fx-background-color: transparent; /* Đảm bảo nền không bị ghi đè */
+    -fx-font-size: 14px;  /* Kích thước chữ */
+    -fx-font-weight: bold; /* Chữ đậm */
+    -fx-text-fill: white;  /* Chữ trắng */
+    -fx-alignment: CENTER; /* Căn giữa chữ */
+
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;  
+}
+
+.delete-button {
+    -fx-background-color: #ff4d4d;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.delete-button:hover {
+    -fx-background-color: #cc0000;
+}
+.edit-button{
+    -fx-background-color: #FFC300;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
+}
+
+.edit-button:hover{
+        -fx-background-color: #c0b92f   ;
+}

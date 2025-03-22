@@ -14,6 +14,7 @@ public class UserInfo {
 
     private String id; // 
     private String userName; // nvarchar(30)
+    private String name;
     private String password; // varchar(30)
     private String role; // enum('user', 'administrator')
     private String email; // varchar(40)
@@ -23,7 +24,7 @@ public class UserInfo {
     private Date DOB; // datetime
     private String gender; // varchar(10)
     private String activityLevel; // enum('sedentary', 'lightlyActive', 'moderatelyActive', 'veryActive', 'ExtremekyActive')
-
+    
     // Getters and Setters
 
     /**
@@ -178,5 +179,19 @@ public class UserInfo {
      */
     public void setActivityLevel(String activityLevel) {
         this.activityLevel = activityLevel;
+    }
+
+    /**
+     * @return the name
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 }
