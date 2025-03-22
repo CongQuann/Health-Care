@@ -10,9 +10,18 @@ package com.sixthgroup.pojo;
  */
 public class Exercise {
 
+   
     private String id; // char(8)
     private String exerciseName; // nvarchar(40)
     private int caloriesPerMinute; // int
+    
+    
+    public Exercise(String id, String name, int calories) {
+        this.id = id;
+        this.exerciseName = name;
+        this.caloriesPerMinute = calories;
+        
+    }
 
     // Getters and Setters
 

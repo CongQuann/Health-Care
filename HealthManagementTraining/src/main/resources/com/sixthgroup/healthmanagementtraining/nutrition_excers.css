@@ -84,13 +84,16 @@
     -fx-fill:white;
     
 }
+
 .header-hbox{
     -fx-background-color:#34495e;
 }
 .textStyle{
-    -fx-font-size: 16px; /* Kích thước chữ */
+    -fx-font-size: 30px; /* Kích thước chữ */
     -fx-font-weight: bold; /* Đậm chữ */
-    -fx-text-fill: black; /* Màu chữ */
+    -fx-fill: #3498db; /* Màu chữ */
+    -fx-stroke:#336699;
+    -fx-stroke-width:1px
 }
 .button:hover {
     -fx-background-color: #0056b3; /* Màu nền khi di chuột qua */
