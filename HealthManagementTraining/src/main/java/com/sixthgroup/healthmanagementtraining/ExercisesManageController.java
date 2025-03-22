@@ -8,6 +8,7 @@ import com.sixthgroup.healthmanagementtrainingpojo.Exercise;
 import com.sixthgroup.healthmanagementtraining.services.ExercisesService;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +17,10 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -44,6 +48,8 @@ public class ExercisesManageController implements Initializable {
     private TextField txtSearch;
     @FXML
     private TableView<Exercise> tbSelectedExers;
+    @FXML
+    private DatePicker selectedDate;
     private ObservableList<Exercise> selectedExercises = FXCollections.observableArrayList();
 
     private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
@@ -89,7 +95,7 @@ public class ExercisesManageController implements Initializable {
         } else {
             System.out.println("toggleNavButton chưa được khởi tạo!");
         }
-        tbSelectedExers.setItems(selectedExercises);
+        this.tbSelectedExers.setItems(selectedExercises);
         loadColumnsForSelectedTable();
         loadColumns();
         loadTableData("");
@@ -107,6 +113,7 @@ public class ExercisesManageController implements Initializable {
             Logger.getLogger(ExercisesManageController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
     public void loadColumnsForSelectedTable() {
         TableColumn colExerciseNameST = new TableColumn("Ten bai tap");
         colExerciseNameST.setCellValueFactory(new PropertyValueFactory("exerciseName"));
@@ -124,9 +131,9 @@ public class ExercisesManageController implements Initializable {
                 btn.setOnAction(event -> {
                     Exercise exercise = getTableView().getItems().get(getIndex());
                     System.out.println("Đã xóa: " + exercise.getExerciseName());
-                    if (exercise !=null) {
+                    if (exercise != null) {
                         // Thêm dòng vào bảng mới
-                        selectedExercises.add(exercise);
+                        tbExers.getItems().add(exercise);
 
                         // Xóa dòng khỏi bảng hiện tại
                         getTableView().getItems().remove(exercise);
@@ -147,6 +154,7 @@ public class ExercisesManageController implements Initializable {
 
         this.tbSelectedExers.getColumns().addAll(colExerciseNameST, colCaloriesST, colActionST);
     }
+
     public void loadColumns() {
         TableColumn colExerciseName = new TableColumn("Ten bai tap");
         colExerciseName.setCellValueFactory(new PropertyValueFactory("exerciseName"));
@@ -164,9 +172,9 @@ public class ExercisesManageController implements Initializable {
                 btn.setOnAction(event -> {
                     Exercise exercise = getTableView().getItems().get(getIndex());
                     System.out.println("Đã thêm: " + exercise.getExerciseName());
-                    if (exercise !=null) {
+                    if (exercise != null) {
                         // Thêm dòng vào bảng mới
-                        selectedExercises.add(exercise);
+                        tbSelectedExers.getItems().add(exercise);
 
                         // Xóa dòng khỏi bảng hiện tại
                         getTableView().getItems().remove(exercise);
@@ -188,5 +196,33 @@ public class ExercisesManageController implements Initializable {
         this.tbExers.getColumns().addAll(colExerciseName, colCalories, colAction);
     }
 
+    public void saveBtnHandler() {
+        // Lấy giá trị từ DatePicker
+        LocalDate selectedDate = this.selectedDate.getValue();
+        // Kiểm tra nếu người dùng chưa chọn ngày
+        if (selectedDate == null) {
+            Alert a = new Alert(Alert.AlertType.WARNING, "Vui long chon ngay truoc khi luu", ButtonType.CANCEL);
+            a.show();
+            return;
+        }
+        if (this.selectedExercises.isEmpty()) {
+            Alert a = new Alert(Alert.AlertType.WARNING, "Danh sach bai tap khong duoc de trong", ButtonType.CANCEL);
+            a.show();
+            return;
+        }
+        // Hiển thị thông tin để kiểm tra (hoặc lưu vào database)
+        System.out.println("Ngày đã chọn: " + selectedDate);
+        System.out.println("Danh sách bài tập đã chọn:");
+
+        for (Exercise ex : selectedExercises) {
+            System.out.println("- " + ex.getExerciseName());
+        }
+
+        // Nếu cần lưu vào database, gọi phương thức xử lý ở đây
+        // saveToDatabase(selectedDate, selectedExercises);
+        Alert a = new Alert(Alert.AlertType.INFORMATION, "Du lieu da duoc luu", ButtonType.OK);
+        a.show();
+
+    }
     //=========================================================================
 }

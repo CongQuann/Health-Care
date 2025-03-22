@@ -65,7 +65,7 @@
                   <Font size="25.0" />
                </font>
             </Text>
-            <DatePicker prefHeight="35.0" prefWidth="243.0" />
+            <DatePicker fx:id="selectedDate" prefHeight="35.0" prefWidth="243.0" />
          </children>
       </HBox>
       <VBox layoutX="632.0" layoutY="117.0" prefHeight="456.0" prefWidth="381.0">
@@ -92,7 +92,7 @@
             <TableView fx:id="tbSelectedExers" prefHeight="400.0" prefWidth="440.0" />
          </children>
       </VBox>
-      <Button layoutX="493.0" layoutY="298.0" mnemonicParsing="false" prefHeight="65.0" prefWidth="110.0" styleClass="saveBtn" text="Lưu lịch" />
+      <Button layoutX="493.0" layoutY="298.0" mnemonicParsing="false" onAction="#saveBtnHandler" prefHeight="65.0" prefWidth="110.0" styleClass="saveBtn" text="Lưu lịch" />
         <!--========================================================================-->
     </children>
 

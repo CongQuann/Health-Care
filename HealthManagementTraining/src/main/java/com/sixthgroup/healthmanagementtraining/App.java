@@ -18,8 +18,11 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         stage = primaryStage;
-        scene = new Scene(loadFXML("Dashboard"), 349, 482);
+        Parent root = loadFXML("TargetManagement");
+        // Không đặt kích thước cố định, JavaFX sẽ tự động lấy từ FXML
+        scene = new Scene(root);
         stage.setScene(scene);
+        stage.sizeToScene(); // Cập nhật kích thước theo FXML
         stage.show();
     }
 
@@ -29,6 +32,7 @@ public class App extends Application {
         }
         Parent root = loadFXML(fxml);
         stage.getScene().setRoot(root);
+        stage.sizeToScene(); // Điều chỉnh kích thước nếu root thay đổi
         stage.show();
     }
 

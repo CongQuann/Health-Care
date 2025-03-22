@@ -4,7 +4,9 @@
  */
 package com.sixthgroup.healthmanagementtrainingpojo;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -16,8 +18,18 @@ public class WorkoutLog {
     private int duration; // int
     private Date workoutDate; // datetime
     private String userInfoId; // char(8)
-    private int exerciseId; // char(8)
+    private List<Exercise> exercises = new ArrayList<>(); // char(8)
 
+    public WorkoutLog(int id, int duration, Date workoutDate, String userInfoId, List<Exercise> exs) {
+        this.id = id;
+        this.duration = duration;
+        this.workoutDate = workoutDate;
+        this.userInfoId = userInfoId;
+        this.exercises = exs;
+    }
+    
+    
+    
     // Getters and Setters
     /**
      * @return the id
@@ -76,16 +88,18 @@ public class WorkoutLog {
     }
 
     /**
-     * @return the exerciseId
+     * @return the exercises
      */
-    public int getExerciseId() {
-        return exerciseId;
+    public List<Exercise> getExercises() {
+        return exercises;
     }
 
     /**
-     * @param exerciseId the exerciseId to set
+     * @param exercises the exercises to set
      */
-    public void setExerciseId(int exerciseId) {
-        this.exerciseId = exerciseId;
+    public void setExercises(List<Exercise> exercises) {
+        this.exercises = exercises;
     }
+
+    
 }
