@@ -5,6 +5,6 @@ module com.sixthgroup.healthmanagementtraining {
     requires java.base;
     opens com.sixthgroup.healthmanagementtraining to javafx.fxml;
     exports com.sixthgroup.healthmanagementtraining;
-    exports com.sixthgroup.pojo;
-    exports com.sixthgroup.services1;
+    exports com.sixthgroup.healthmanagementtrainingpojo;
+    exports com.sixthgroup.healthmanagementtraining.services;
 }

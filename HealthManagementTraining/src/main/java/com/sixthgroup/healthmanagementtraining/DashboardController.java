@@ -3,6 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
 package com.sixthgroup.healthmanagementtraining;
+import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -21,7 +22,6 @@ import javafx.util.Duration;
  */
 public class DashboardController implements Initializable {
 
-    //===================================================================
     @FXML
     private VBox navBar; //Navbar
     @FXML
@@ -29,35 +29,14 @@ public class DashboardController implements Initializable {
     @FXML
     private Button closeNavButton; // Nút đóng navbar
     @FXML
+    
+    private NavbarServices navbarServices = new NavbarServices(); // Khởi tạo NavbarServices
+
+    @FXML
     private PieChart caloPieChart;//Bieu do tron
     @FXML
     private PieChart proteinPieChart; // Biểu đồ tròn chất đạm, chất béo, chất xơ
-    private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
-
-    //kich hoat navbar
-    private void toggleNavBar() {
-        System.out.println("Đã nhấn nút!");
-        TranslateTransition transition = new TranslateTransition(Duration.millis(300), navBar);
-        if (isNavBarVisible) {
-            transition.setToX(-250);
-        } else {
-            transition.setToX(250);
-        }
-        transition.play();
-        isNavBarVisible = !isNavBarVisible;
-    }
-
-    //Dong navbar
-    private void closeNavBar() {
-        System.out.println("Đã nhấn nút!");
-        if (isNavBarVisible) {
-            System.err.println("Da dong navbar");
-            TranslateTransition transition = new TranslateTransition(Duration.millis(300), navBar);
-            transition.setToX(-250);
-            transition.play();
-            isNavBarVisible = false;
-        }
-    }
+   
 
     private void updatePieChart(double absorbed, double required) {
         PieChart.Data absorbedData = new PieChart.Data("Đã hấp thụ", absorbed);
@@ -91,8 +70,8 @@ public class DashboardController implements Initializable {
         navBar.setTranslateX(-250);
 
         if (toggleNavButton != null) {
-            toggleNavButton.setOnMouseClicked(event -> toggleNavBar());
-            closeNavButton.setOnMouseClicked(event -> closeNavBar());
+            toggleNavButton.setOnMouseClicked(event -> navbarServices.toggleNavBar(navBar));
+            closeNavButton.setOnMouseClicked(event -> navbarServices.closeNavBar(navBar));
 
         } else {
             System.out.println("toggleNavButton chưa được khởi tạo!");
@@ -100,5 +79,4 @@ public class DashboardController implements Initializable {
 
     }
 
-    //=========================================================================
 }

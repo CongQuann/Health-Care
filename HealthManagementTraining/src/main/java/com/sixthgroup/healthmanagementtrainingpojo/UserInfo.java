@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.sixthgroup.pojo;
+package com.sixthgroup.healthmanagementtrainingpojo;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import java.util.Date;
  */
 public class UserInfo {
 
-    private String id; // char(8)
+    private String id; // 
     private String userName; // nvarchar(30)
     private String password; // varchar(30)
     private String role; // enum('user', 'administrator')

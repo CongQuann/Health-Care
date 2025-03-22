@@ -2,10 +2,10 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.sixthgroup.services1;
+package com.sixthgroup.healthmanagementtraining.services;
 
-import com.sixthgroup.pojo.Exercise;
-import com.sixthgroup.pojo.JdbcUtils;
+import com.sixthgroup.healthmanagementtrainingpojo.Exercise;
+import com.sixthgroup.healthmanagementtrainingpojo.JdbcUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -32,7 +32,7 @@ public class ExercisesService {
             }
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                Exercise e = new Exercise(rs.getString("id"), rs.getString("exerciseName"),rs.getInt("caloriesPerMinute"));
+                Exercise e = new Exercise(rs.getInt("id"), rs.getString("exerciseName"),rs.getInt("caloriesPerMinute"));
                 exs.add(e);
             }
 

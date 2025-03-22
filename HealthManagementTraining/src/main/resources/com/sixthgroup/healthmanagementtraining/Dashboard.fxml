@@ -15,7 +15,6 @@
 
 <AnchorPane id="AnchorPane" prefHeight="654.0" prefWidth="1117.0" styleClass="mainFxmlClass" stylesheets="@dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.DashboardController">
     <children>
-        <!-- Nút kích hoạt navbar ========================================================-->
         <HBox styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
                 <graphic>
@@ -31,7 +30,6 @@
             <Label styleClass="date-label" text="Chọn ngày:" />
             <DatePicker fx:id="datePicker" layoutX="55.0" layoutY="100.0" styleClass="date-picker" />
         </HBox>
-        <!--=================================================================-->
         <HBox layoutX="47.0" layoutY="126.0" prefHeight="368.0" prefWidth="1022.0">
             <GridPane prefHeight="368.0" prefWidth="1065.0" styleClass="main-content">
                 <!-- Widget 1: Daily Calorie Intake -->
@@ -91,7 +89,6 @@
             <Button fx:id="viewExerciseButton" layoutX="250.0" layoutY="500.0" mnemonicParsing="false" styleClass="view-button" text="Xem danh sách bài tập" />
             <!-- Navbar (ban đầu ẩn bên trái) -->
         </HBox>
-        <!--==========================================================-->
         <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
             <children>
                 <HBox alignment="CENTER_RIGHT" spacing="26">
@@ -121,6 +118,5 @@
             </children>
         </VBox>
         <Label layoutX="497.0" layoutY="69.0" styleClass="dashboard-label" text="TỔNG QUAN" />
-        <!--========================================================================-->
     </children>
 </AnchorPane>
