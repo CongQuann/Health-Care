@@ -17,28 +17,27 @@
             <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0">
                 <children>
                     <Label minWidth="120" text="Tên bài tập:" />
-                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="290.0" />
+                    <TextField fx:id="txtExerciseName" focusTraversable="false" prefHeight="26.0" prefWidth="290.0" />
                 </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" layoutX="26.0" layoutY="56.0" prefHeight="27.0" prefWidth="740.0">
                 <children>
                     <Label minWidth="120" text="Lượng calo/phút:" />
-                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="286.0" />
+                    <TextField fx:id="txtCaloriesPerMinute" focusTraversable="false" prefHeight="26.0" prefWidth="286.0" />
                 </children>
             </HBox>
-            <Button fx:id="addExerciseButton" mnemonicParsing="false" styleClass="add-button" text="Thêm bài tập" />
+            <Button fx:id="addExerciseButton" mnemonicParsing="false" onAction="#handleAddExercise" styleClass="add-button" text="Thêm bài tập" />
         </VBox>
         <!-- Phần bảng hiển thị danh sách mục tiêu -->
         
         <TableView fx:id="goalTableView" layoutX="22.0" layoutY="273.0" prefHeight="300.0" prefWidth="490.0">
          <columns>
-            <TableColumn prefWidth="79.20000839233398" text="Mã bài tập" />
-            <TableColumn prefWidth="213.6000213623047" text="Tên bài tập" />
-            <TableColumn prefWidth="193.5999755859375" text="Lượng calo tiêu thụ/phút" />
+            <TableColumn fx:id="colId" prefWidth="79.20000839233398" text="Mã bài tập" />
+            <TableColumn fx:id="colName" prefWidth="213.6000213623047" text="Tên bài tập" />
+            <TableColumn fx:id="colCalories" prefWidth="193.5999755859375" text="Lượng calo tiêu thụ/phút" />
          </columns>
         </TableView>
-      <Button layoutX="655.0" layoutY="375.0" mnemonicParsing="false" styleClass="edit-button" text="Chỉnh sửa bài tập" />
-        <Button fx:id="deleteTargetButton" layoutX="526.0" layoutY="375.0" styleClass="delete-button" text="Xóa mục tiêu" />
+        <Button fx:id="deleteTargetButton" layoutX="613.0" layoutY="373.0" onAction="#handleDeleteExercise" styleClass="delete-button" text="Xóa mục tiêu" />
         
         <!--==========================NAV BAR===============================-->
         <HBox styleClass="header-hbox">
@@ -84,7 +83,7 @@
       <VBox layoutX="526.0" layoutY="273.0" prefHeight="82.0" prefWidth="286.0" styleClass="input-container">
          <children>
             <Label styleClass="header-label" text="Tìm kiếm bài tập:" />
-            <TextField focusTraversable="false" prefHeight="26.0" prefWidth="164.0" />
+            <TextField fx:id="txtSearchExercise" focusTraversable="false" prefHeight="26.0" prefWidth="164.0" />
          </children>
       </VBox>
         <!--=====================================================-->

@@ -57,4 +57,10 @@ public class Exercise {
     public void setCaloriesPerMinute(int caloriesPerMinute) {
         this.caloriesPerMinute = caloriesPerMinute;
     }
+    
+    public Exercise(int id, String exerciseName, int caloriesPerMinute) {
+        this.id = id;
+        this.exerciseName = exerciseName;
+        this.caloriesPerMinute = caloriesPerMinute;
+    }
 }

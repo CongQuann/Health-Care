@@ -25,8 +25,7 @@ public class SignUpServices {
         ResultSet rs = stmt.executeQuery();
 
         if (rs.next()) {
-            String type = rs.getString("Type"); // Lấy kiểu: enum('a','b',...)
-            // Lọc ra các giá trị trong dấu nháy đơn
+            String type = rs.getString("Type");
             Matcher matcher = Pattern.compile("'(.*?)'").matcher(type);
             while (matcher.find()) {
                 values.add(matcher.group(1));
