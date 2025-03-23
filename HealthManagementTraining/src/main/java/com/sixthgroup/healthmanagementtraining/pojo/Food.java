@@ -17,23 +17,22 @@ public class Food {
     private float proteinPerUnit; // float
     private float fiberPerUnit; // float
     private int foodCategoryId; // foreign key
-    private String unitType; // enum('gram', 'ml', 'piece')
-
+    private String categoryName;
+    private UnitType unitType; // Sử dụng enum
     // Getters and Setters
 
-     public Food(int id,String foodName,int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit, float fiberPerUnit, int foodCategoryId, String unitType) {
+    public Food(int id, String foodName, int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit, float fiberPerUnit, String categoryName, UnitType unitType) {
         this.id = id;
         this.foodName = foodName;
         this.caloriesPerUnit = caloriesPerUnit;
         this.lipidPerUnit = lipidPerUnit;
         this.proteinPerUnit = proteinPerUnit;
         this.fiberPerUnit = fiberPerUnit;
-        this.foodCategoryId = foodCategoryId;
+        this.categoryName = categoryName;
         this.unitType = unitType;
+
     }
-     
-     
-    
+
     /**
      * @return the id
      */
@@ -135,14 +134,32 @@ public class Food {
     /**
      * @return the unitType
      */
-    public String getUnitType() {
+
+    /**
+     * @return the categoryName
+     */
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    /**
+     * @param categoryName the categoryName to set
+     */
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
+
+    /**
+     * @return the unitType
+     */
+    public UnitType getUnitType() {
         return unitType;
     }
 
     /**
      * @param unitType the unitType to set
      */
-    public void setUnitType(String unitType) {
+    public void setUnitType(UnitType unitType) {
         this.unitType = unitType;
     }
 }

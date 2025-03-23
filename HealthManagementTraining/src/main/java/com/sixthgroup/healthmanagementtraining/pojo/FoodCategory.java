@@ -13,6 +13,17 @@ public class FoodCategory {
     private int id; // auto_increment
     private String categoryName; // nvarchar(50)
 
+    public FoodCategory(int id, String categoryName) {
+        this.id = id;
+        this.categoryName = categoryName;
+    }
+
+    @Override
+    public String toString() {
+        return this.categoryName;
+    }
+
+    
     // Getters and Setters
     /**
      * @return the id

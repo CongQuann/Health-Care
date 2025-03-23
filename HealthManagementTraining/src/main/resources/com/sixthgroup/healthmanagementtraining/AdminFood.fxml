@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import java.net.URL?>
-<?import javafx.scene.control.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<AnchorPane id="AnchorPane" prefHeight="658.0" prefWidth="826.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.AdminFoodController">
+<AnchorPane id="AnchorPane" prefHeight="702.0" prefWidth="868.0" styleClass="mainFxmlClass" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.AdminFoodController">
     <stylesheets>
         <URL value="@adminfood.css" />
     </stylesheets>
@@ -21,7 +25,7 @@
                     <Label minWidth="95" text="Tên thức ăn:" />
                     <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
                     <Label minWidth="95" text="Loại thức ăn:" />
-                    <ComboBox fx:id="foodTypeComboBox" prefHeight="26.0" prefWidth="186.0"/>
+                    <ComboBox fx:id="foodTypeComboBox" prefHeight="26.0" prefWidth="186.0" />
                 </children>
             </HBox>   
             <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0" spacing="20.0">
@@ -40,22 +44,22 @@
                     <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
                 </children>
             </HBox>
+            <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0" spacing="20.0">
+                <children>
+                    <Label minWidth="95" text="Đơn vị:" />
+                    <ComboBox fx:id="unitTypeComboBox" prefHeight="26.0" prefWidth="186.0" />
+                </children>
+            </HBox>
 
             <Button mnemonicParsing="false" styleClass="add-button" text="Thêm thức ăn" />           
         </VBox>
-        <TableView fx:id="goalTableView" layoutX="22.0" layoutY="381.0" prefHeight="262.0" prefWidth="827.0">
+        <TableView fx:id="goalTableView" layoutX="22.0" layoutY="423.0" prefHeight="262.0" prefWidth="827.0">
             <columns>
                 
             </columns>
         </TableView>
-        <VBox layoutX="21.0" layoutY="295.0" prefHeight="78.0" prefWidth="418.0" styleClass="input-container">
-            <children>
-                <Label styleClass="header-label" text="Tìm kiếm thức ăn:" />
-                <TextField focusTraversable="false" prefHeight="26.0" prefWidth="164.0" />
-            </children>
-        </VBox>
-        <Button layoutX="603.0" layoutY="319.0" mnemonicParsing="false" styleClass="edit-button" text="Chỉnh sửa thức ăn" />
-        <Button fx:id="deleteTargetButton" layoutX="467.0" layoutY="319.0" styleClass="delete-button" text="Xóa thức ăn" />
+        <Button layoutX="596.0" layoutY="366.0" mnemonicParsing="false" styleClass="edit-button" text="Chỉnh sửa thức ăn" />
+        <Button fx:id="deleteTargetButton" layoutX="462.0" layoutY="366.0" styleClass="delete-button" text="Xóa thức ăn" />
         <!--==========================NAV BAR===============================-->
         <HBox styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
@@ -94,6 +98,12 @@
                     </graphic>
                 </Button>
                
+            </children>
+        </VBox>
+        <VBox layoutX="22.0" layoutY="334.0" prefHeight="78.0" prefWidth="418.0" styleClass="input-container">
+            <children>
+                <Label styleClass="header-label" text="Tìm kiếm thức ăn:" />
+                <TextField focusTraversable="false" prefHeight="26.0" prefWidth="164.0" />
             </children>
         </VBox>
         <!--=====================================================--> 
