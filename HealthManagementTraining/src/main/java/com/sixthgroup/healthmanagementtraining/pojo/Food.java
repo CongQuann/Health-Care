@@ -20,7 +20,7 @@ public class Food {
     private String categoryName;
     private UnitType unitType; // Sử dụng enum
 
- 
+    
 
     @Override
     public String toString() {

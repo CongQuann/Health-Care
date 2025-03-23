@@ -40,7 +40,7 @@ public class NutritionTrackService {
     public List<Food> getFoods(String kw) throws SQLException {
         List<Food> foods = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
-           
+
             PreparedStatement stm;
             if (kw != null) {
                 stm = conn.prepareCall("SELECT * FROM food WHERE foodName like concat('%', ?, '%') ORDER BY id desc");
@@ -49,14 +49,15 @@ public class NutritionTrackService {
                 stm = conn.prepareCall("SELECT * FROM food ");
             }
             ResultSet rs = stm.executeQuery();
-            // Lấy giá trị unitType từ CSDL dưới dạng chuỗi
-            String unitTypeStr = rs.getString("unitType");
 
-            // Chuyển đổi từ String thành Enum UnitType
-            UnitType unitType = UnitType.valueOf(unitTypeStr);
             while (rs.next()) {
+                // Lấy giá trị unitType từ CSDL dưới dạng chuỗi
+                String unitTypeStr = rs.getString("unitType");
+
+                // Chuyển đổi từ String thành Enum UnitType
+                UnitType unitType = UnitType.valueOf(unitTypeStr);
                 Food f = new Food(rs.getInt("id"), rs.getString("foodName"), rs.getInt("caloriesPerUnit"), rs.getFloat("lipidPerUnit"),
-                        rs.getFloat("proteinPerUnit"), rs.getFloat("fiberPerUnit"), rs.getString("categoryName"), unitType);
+                        rs.getFloat("proteinPerUnit"), rs.getFloat("fiberPerUnit"), rs.getString("foodCategory_id"), unitType);
                 foods.add(f);
             }
             return foods;
@@ -74,12 +75,13 @@ public class NutritionTrackService {
                 stm = conn.prepareCall("SELECT * FROM food ");
             }
             ResultSet rs = stm.executeQuery();
-            // Lấy giá trị unitType từ CSDL dưới dạng chuỗi
-            String unitTypeStr = rs.getString("unitType");
 
-            // Chuyển đổi từ String thành Enum UnitType
-            UnitType unitType = UnitType.valueOf(unitTypeStr);
             while (rs.next()) {
+                // Lấy giá trị unitType từ CSDL dưới dạng chuỗi
+                String unitTypeStr = rs.getString("unitType");
+
+                // Chuyển đổi từ String thành Enum UnitType
+                UnitType unitType = UnitType.valueOf(unitTypeStr);
                 Food f = new Food(
                         rs.getInt("id"),
                         rs.getString("foodName"),
@@ -87,7 +89,7 @@ public class NutritionTrackService {
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),
-                        rs.getString("categoryName"), 
+                        rs.getString("foodCategory_id"),
                         unitType
                 );
                 foods.add(f);
