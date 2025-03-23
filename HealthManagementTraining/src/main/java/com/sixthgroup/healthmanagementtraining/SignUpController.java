@@ -2,6 +2,7 @@ package com.sixthgroup.healthmanagementtraining;
 
 import com.sixthgroup.healthmanagementtraining.services.SignUpServices;
 import com.sixthgroup.healthmanagementtraining.services.Utils;
+import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -52,7 +53,7 @@ public class SignUpController implements Initializable {
     }
 
     @FXML
-    private void handleSignUp(ActionEvent event) {
+    private void handleSignUp(ActionEvent event) throws IOException {
         String username = usernameField.getText();
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
@@ -74,6 +75,7 @@ public class SignUpController implements Initializable {
 
         if (success) {
             Utils.getAlert("Success!!!").show();
+            App.setRoot("secondary");
         } else {
             Utils.getAlert("Failed!!! Double Check Your Info").show();
         }
