@@ -17,12 +17,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
@@ -45,9 +47,98 @@ public class AdminFoodController implements Initializable {
     private ComboBox<FoodCategory> foodTypeComboBox;
     @FXML
     private ComboBox<UnitType> unitTypeComboBox;
+    @FXML
+    private TextField foodNameField;
+    @FXML
+    private TextField caloriesField;
+    @FXML
+    private TextField lipidField;
+    @FXML
+    private TextField proteinField;
+    @FXML
+    private TextField fiberField;
 
     private NavbarServices navbarServices = new NavbarServices(); // Khởi tạo NavbarServices
     private AdminFoodServices foodService = new AdminFoodServices(); // Gọi service để lấy dữ liệu
+
+    private Food getFoodFromInput() {
+    // Lấy dữ liệu từ ô nhập liệu
+    String foodName = foodNameField.getText().trim();
+    String caloriesText = caloriesField.getText().trim();
+    String lipidText = lipidField.getText().trim();
+    String proteinText = proteinField.getText().trim();
+    String fiberText = fiberField.getText().trim();
+
+    FoodCategory selectedCategory = foodTypeComboBox.getValue();
+    UnitType selectedUnit = unitTypeComboBox.getValue();
+
+    // Kiểm tra nếu có trường nào bị trống
+    if (foodName.isEmpty() || caloriesText.isEmpty() || lipidText.isEmpty() || 
+        proteinText.isEmpty() || fiberText.isEmpty() || selectedCategory == null || selectedUnit == null) {
+        
+        System.out.println("Vui lòng nhập đầy đủ thông tin!");
+        return null;
+    }
+
+    try {
+        // Chuyển đổi sang số sau khi đã kiểm tra dữ liệu đầu vào
+        int calories = Integer.parseInt(caloriesText);
+        float lipid = Float.parseFloat(lipidText);
+        float protein = Float.parseFloat(proteinText);
+        float fiber = Float.parseFloat(fiberText);
+
+        return new Food(
+                0, // ID tự động tăng trong DB
+                foodName,
+                calories,
+                lipid,
+                protein,
+                fiber,
+                selectedCategory.getId(), 
+                selectedCategory.getCategoryName(), 
+                selectedUnit
+        );
+    } catch (NumberFormatException e) {
+        System.out.println("Lỗi: Vui lòng nhập số hợp lệ!");
+        return null;
+    }
+}
+
+
+    public void handleAddFood(ActionEvent event) throws SQLException {
+        Food food = getFoodFromInput(); // lay food tu giao dien
+        //kiem tra neu food == null thi thong bao chua nhap du thong tin
+        if (food == null) {
+            System.out.println("Vui long nhap du thong tin");
+            return;
+        }
+        //goi service de them du lieu tu food vao database
+        AdminFoodServices afs = new AdminFoodServices();
+        try {
+            boolean success = afs.addFood(food);
+            if (success) {
+                System.out.println("Them mon an thanh cong! ");
+                loadData();
+                clearInputFields(); //xoa du lieu trong input-container sau khi them
+            } else {
+                System.out.println("Them mon an that bai! ");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Lỗi khi thêm dữ liệu vào database!");
+        }
+
+    }
+
+    private void clearInputFields() {
+        foodNameField.clear();
+        caloriesField.clear();
+        lipidField.clear();
+        proteinField.clear();
+        fiberField.clear();
+        foodTypeComboBox.setValue(null);
+        unitTypeComboBox.setValue(null);
+    }
 
     public void loadColumn() {
         TableColumn colFoodName = new TableColumn("Tên thức ăn");

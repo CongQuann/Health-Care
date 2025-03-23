@@ -23,7 +23,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0" spacing="20.0">
                 <children>
                     <Label minWidth="95" text="Tên thức ăn:" />
-                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                    <TextField fx:id="foodNameField" focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
                     <Label minWidth="95" text="Loại thức ăn:" />
                     <ComboBox fx:id="foodTypeComboBox" prefHeight="26.0" prefWidth="186.0" />
                 </children>
@@ -31,17 +31,17 @@
             <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0" spacing="20.0">
                 <children>
                     <Label minWidth="95" text="Calo/Đơn vị:" />
-                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                    <TextField fx:id="caloriesField" focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
                     <Label minWidth="95" text="Chất béo/Đơn vị:" />
-                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                    <TextField fx:id="lipidField" focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
                 </children>
             </HBox>    
             <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0" spacing="20.0">
                 <children>
                     <Label minWidth="95" text="Chất đạm/Đơn vị:" />
-                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                    <TextField fx:id="proteinField" focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
                     <Label minWidth="95" text="Chất xơ/Đơn vị:" />
-                    <TextField focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
+                    <TextField fx:id="fiberField" focusTraversable="false" prefHeight="26.0" prefWidth="186.0" />
                 </children>
             </HBox>
             <HBox alignment="CENTER_LEFT" prefHeight="27.0" prefWidth="740.0" spacing="20.0">
@@ -51,7 +51,7 @@
                 </children>
             </HBox>
 
-            <Button mnemonicParsing="false" styleClass="add-button" text="Thêm thức ăn" />           
+            <Button onAction="#handleAddFood" fx:id="addFoodButton" mnemonicParsing="false" styleClass="add-button" text="Thêm thức ăn" />           
         </VBox>
         <TableView fx:id="goalTableView" layoutX="22.0" layoutY="423.0" prefHeight="262.0" prefWidth="827.0">
             <columns>

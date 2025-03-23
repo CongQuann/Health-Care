@@ -21,16 +21,17 @@ public class Food {
     private UnitType unitType; // Sử dụng enum
     // Getters and Setters
 
-    public Food(int id, String foodName, int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit, float fiberPerUnit, String categoryName, UnitType unitType) {
+    public Food(int id, String foodName, int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit,
+            float fiberPerUnit, int foodCategoryId, String foodCategoryName, UnitType unitType) {
         this.id = id;
         this.foodName = foodName;
         this.caloriesPerUnit = caloriesPerUnit;
         this.lipidPerUnit = lipidPerUnit;
         this.proteinPerUnit = proteinPerUnit;
         this.fiberPerUnit = fiberPerUnit;
-        this.categoryName = categoryName;
+        this.foodCategoryId = foodCategoryId;
+        this.categoryName = foodCategoryName; // Lưu tên danh mục
         this.unitType = unitType;
-
     }
 
     /**
@@ -134,7 +135,6 @@ public class Food {
     /**
      * @return the unitType
      */
-
     /**
      * @return the categoryName
      */
