@@ -4,9 +4,9 @@
  */
 package com.sixthgroup.healthmanagementtraining;
 
+import com.sixthgroup.healthmanagementtraining.pojo.Food;
+import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.services.NutritionTrackService;
-import com.sixthgroup.healthmanagementtrainingpojo.Food;
-import com.sixthgroup.healthmanagementtrainingpojo.FoodCategory;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ResourceBundle;

@@ -4,9 +4,10 @@
  */
 package com.sixthgroup.healthmanagementtraining.services;
 
-import com.sixthgroup.healthmanagementtrainingpojo.Food;
-import com.sixthgroup.healthmanagementtrainingpojo.FoodCategory;
-import com.sixthgroup.healthmanagementtrainingpojo.JdbcUtils;
+import com.sixthgroup.healthmanagementtraining.pojo.Food;
+import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
+import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
+import com.sixthgroup.healthmanagementtraining.pojo.UnitType;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -20,6 +21,7 @@ import javafx.scene.control.Alert;
  * @author PC
  */
 public class NutritionTrackService {
+
     public List<FoodCategory> getCates() throws SQLException {
         List<FoodCategory> cates = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
@@ -34,49 +36,61 @@ public class NutritionTrackService {
             return cates;
         }
     }
-    public List<Food> getFoods(String kw) throws SQLException{
+
+    public List<Food> getFoods(String kw) throws SQLException {
         List<Food> foods = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
-           PreparedStatement stm;
-            if (kw!= null){
+           
+            PreparedStatement stm;
+            if (kw != null) {
                 stm = conn.prepareCall("SELECT * FROM food WHERE foodName like concat('%', ?, '%') ORDER BY id desc");
                 stm.setString(1, kw);
-            }
-            else{
+            } else {
                 stm = conn.prepareCall("SELECT * FROM food ");
             }
             ResultSet rs = stm.executeQuery();
+            // Lấy giá trị unitType từ CSDL dưới dạng chuỗi
+            String unitTypeStr = rs.getString("unitType");
+
+            // Chuyển đổi từ String thành Enum UnitType
+            UnitType unitType = UnitType.valueOf(unitTypeStr);
             while (rs.next()) {
-                Food f = new Food(rs.getInt("id"), rs.getString("foodName"),rs.getInt("caloriesPerUnit"),rs.getFloat("lipidPerUnit"),
-                    rs.getFloat("proteinPerUnit"),rs.getFloat("fiberPerUnit"),rs.getInt("foodCategory_id"),rs.getString("unitType"));
+                Food f = new Food(rs.getInt("id"), rs.getString("foodName"), rs.getInt("caloriesPerUnit"), rs.getFloat("lipidPerUnit"),
+                        rs.getFloat("proteinPerUnit"), rs.getFloat("fiberPerUnit"), rs.getString("categoryName"), unitType);
                 foods.add(f);
             }
             return foods;
         }
     }
-    public List<Food> getFoodsByCate(int cate_id) throws SQLException{
+
+    public List<Food> getFoodsByCate(int cate_id) throws SQLException {
         List<Food> foods = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
-           PreparedStatement stm;
-            if (cate_id != 0){
+            PreparedStatement stm;
+            if (cate_id != 0) {
                 stm = conn.prepareCall("SELECT * FROM food WHERE foodCategory_id = ?");
                 stm.setInt(1, cate_id);
-            }
-            else
+            } else {
                 stm = conn.prepareCall("SELECT * FROM food ");
+            }
             ResultSet rs = stm.executeQuery();
+            // Lấy giá trị unitType từ CSDL dưới dạng chuỗi
+            String unitTypeStr = rs.getString("unitType");
+
+            // Chuyển đổi từ String thành Enum UnitType
+            UnitType unitType = UnitType.valueOf(unitTypeStr);
             while (rs.next()) {
                 Food f = new Food(
-                rs.getInt("id"),
-                rs.getString("foodName"),
-                rs.getInt("caloriesPerUnit"),
-                rs.getFloat("lipidPerUnit"),
-                rs.getFloat("proteinPerUnit"),
-                rs.getFloat("fiberPerUnit"),
-                rs.getInt("foodCategory_id"),
-                rs.getString("unitType")
-            );
-            foods.add(f);
+                        rs.getInt("id"),
+                        rs.getString("foodName"),
+                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("lipidPerUnit"),
+                        rs.getFloat("proteinPerUnit"),
+                        rs.getFloat("fiberPerUnit"),
+                        rs.getString("categoryName"), 
+                        unitType
+                );
+                foods.add(f);
             }
             return foods;
         }

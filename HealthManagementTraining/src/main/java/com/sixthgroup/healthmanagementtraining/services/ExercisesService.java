@@ -4,8 +4,8 @@
  */
 package com.sixthgroup.healthmanagementtraining.services;
 
-import com.sixthgroup.healthmanagementtrainingpojo.Exercise;
-import com.sixthgroup.healthmanagementtrainingpojo.JdbcUtils;
+import com.sixthgroup.healthmanagementtraining.pojo.Exercise;
+import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

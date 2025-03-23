@@ -7,13 +7,12 @@ import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+
 
 /**
  * FXML Controller class

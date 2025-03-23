@@ -4,7 +4,7 @@
  */
 package com.sixthgroup.healthmanagementtraining;
 
-import com.sixthgroup.healthmanagementtrainingpojo.Exercise;
+import com.sixthgroup.healthmanagementtraining.pojo.Exercise;
 import com.sixthgroup.healthmanagementtraining.services.ExercisesService;
 import java.net.URL;
 import java.sql.SQLException;
