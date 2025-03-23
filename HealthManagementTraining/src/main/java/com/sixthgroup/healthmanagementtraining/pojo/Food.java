@@ -19,8 +19,15 @@ public class Food {
     private int foodCategoryId; // foreign key
     private String categoryName;
     private UnitType unitType; // Sử dụng enum
-    // Getters and Setters
 
+ 
+
+    @Override
+    public String toString() {
+        return this.foodName; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+
+    // Getters and Setters
     public Food(int id, String foodName, int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit, float fiberPerUnit, String categoryName, UnitType unitType) {
         this.id = id;
         this.foodName = foodName;
@@ -134,7 +141,6 @@ public class Food {
     /**
      * @return the unitType
      */
-
     /**
      * @return the categoryName
      */

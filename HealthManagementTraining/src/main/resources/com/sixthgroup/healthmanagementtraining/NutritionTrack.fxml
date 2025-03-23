@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.String?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
@@ -15,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="627.0" prefWidth="853.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="627.0" prefWidth="855.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
     <children>
         <!-- Nút kích hoạt navbar ========================================================-->
         <HBox prefWidth="853.0" styleClass="header-hbox">
@@ -35,34 +34,17 @@
                 <Font name="System Bold" size="27.0" />
             </font>
         </Text>
-        <TableView layoutX="20.0" layoutY="171.0" prefHeight="266.0" prefWidth="469.0">
-            <columns>
-                <TableColumn prefWidth="75.0" text="Tên món ăn" />
-                <TableColumn prefWidth="75.0" text="Chất béo" />
-                <TableColumn prefWidth="75.0" text="Chất xơ" />
-                <TableColumn prefWidth="75.0" text="Chất đạm" />
-                <TableColumn prefWidth="75.0" text="Calo" />
-                <TableColumn prefWidth="75.0" text="Số lượng" />
-            </columns>
-        </TableView>
-        <ListView fx:id="foodListView" layoutX="573.0" layoutY="172.0" prefHeight="266.0" prefWidth="200.0" />
-        <Button id="addBtn" layoutX="43.0" layoutY="444.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="189.0" styleClass="addBtn" text="Thêm món đã chọn" />
-        <Button id="deleteBtn" layoutX="315.0" layoutY="444.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="189.0" styleClass="deleteBtn" text="Xóa món đã chọn" />
-        <Button id="saveBtn" layoutX="573.0" layoutY="444.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="119.0" styleClass="saveBtn" text="Lưu" />
-        <TextField layoutX="573.0" layoutY="129.0" prefHeight="25.0" prefWidth="140.0" promptText="(Nhập tên món)" styleClass="textStyle" />
-        <Button id="searchBtn" layoutX="713.0" layoutY="129.0" prefHeight="25.0" prefWidth="100.0" styleClass="searchBtn">
+        <Button id="saveBtn" layoutX="584.0" layoutY="488.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="119.0" styleClass="saveBtn" text="Lưu" />
+        <TextField fx:id="txtSearch" layoutX="466.0" layoutY="148.0" prefHeight="25.0" prefWidth="140.0" promptText="(Nhập tên món)" />
+        <Button id="searchBtn" layoutX="606.0" layoutY="146.0" prefHeight="25.0" prefWidth="100.0" styleClass="searchBtn" text="Tìm kiếm">
             Tìm kiếm
         </Button>
-        <Text fill="#2c2424" layoutX="20.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Chọn ngày:">
+        <Text fill="#2c2424" layoutX="26.0" layoutY="153.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textStyle" text="Chọn ngày:">
             <font>
                 <Font size="16.0" />
             </font>
-         <styleClass>
-            <String fx:value="textStyle" />
-            <String fx:value="textStyle" />
-         </styleClass>
         </Text>
-        <DatePicker layoutX="105.0" layoutY="136.0" />
+        <DatePicker layoutX="144.0" layoutY="135.0" />
         <!-- Navbar (ban đầu ẩn bên trái) -->
         <!--==========================================================-->
         <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
@@ -93,6 +75,55 @@
                
             </children>
         </VBox>
+      <VBox layoutX="23.0" layoutY="444.0" prefHeight="178.0" prefWidth="469.0" spacing="10.0">
+         <children>
+            <HBox prefHeight="31.0" prefWidth="469.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="caloriesText" text="Tổng calo cần nạp:" wrappingWidth="168.615234375">
+                     <font>
+                        <Font size="19.0" />
+                     </font>
+                  </Text>
+                  <TextArea prefHeight="10.0" prefWidth="200.0">
+                     <font>
+                        <Font size="5.0" />
+                     </font>
+                  </TextArea>
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" prefHeight="31.0" prefWidth="469.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="caloriesText" text="Tổng calo từ danh sách:" wrappingWidth="206.615234375">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Text>
+                  <TextArea prefHeight="10.0" prefWidth="200.0">
+                     <font>
+                        <Font size="5.0" />
+                     </font>
+                  </TextArea>
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" prefHeight="31.0" prefWidth="469.0">
+               <children>
+                  <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="caloriesText" text="Tổng calo cần nạp:" wrappingWidth="169.615234375" />
+                  <TextArea prefHeight="10.0" prefWidth="200.0">
+                     <font>
+                        <Font size="5.0" />
+                     </font>
+                  </TextArea>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+      <TableView fx:id="tbFoods" layoutX="466.0" layoutY="171.0" prefHeight="266.0" prefWidth="338.0" />
+      <TableView fx:id="tbSelectedFood" layoutX="26.0" layoutY="171.0" prefHeight="266.0" prefWidth="421.0" />
+      <HBox layoutX="465.0" layoutY="113.0" prefHeight="31.0" prefWidth="250.0">
+         <children>
+            <ComboBox fx:id="cbFoodCates" onAction="#choseHandler" prefHeight="25.0" prefWidth="186.0" />
+         </children>
+      </HBox>
         <!--========================================================================-->
     </children>
 </Pane>
