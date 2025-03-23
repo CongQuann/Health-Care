@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.sixthgroup.healthmanagementtrainingpojo;
+package com.sixthgroup.healthmanagementtraining.pojo;
 
 /**
  *
@@ -21,6 +21,19 @@ public class Food {
 
     // Getters and Setters
 
+     public Food(int id,String foodName,int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit, float fiberPerUnit, int foodCategoryId, String unitType) {
+        this.id = id;
+        this.foodName = foodName;
+        this.caloriesPerUnit = caloriesPerUnit;
+        this.lipidPerUnit = lipidPerUnit;
+        this.proteinPerUnit = proteinPerUnit;
+        this.fiberPerUnit = fiberPerUnit;
+        this.foodCategoryId = foodCategoryId;
+        this.unitType = unitType;
+    }
+     
+     
+    
     /**
      * @return the id
      */
