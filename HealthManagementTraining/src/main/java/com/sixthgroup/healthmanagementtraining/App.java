@@ -18,7 +18,7 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         stage = primaryStage;
-        Parent root = loadFXML("primary");
+        Parent root = loadFXML("AdminFood");
         // Không đặt kích thước cố định, JavaFX sẽ tự động lấy từ FXML
         scene = new Scene(root);
         stage.setScene(scene);

@@ -8,7 +8,7 @@ package com.sixthgroup.healthmanagementtraining.services;
  *
  * @author quanp
  */
-import com.sixthgroup.healthmanagementtrainingpojo.JdbcUtils;
+import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

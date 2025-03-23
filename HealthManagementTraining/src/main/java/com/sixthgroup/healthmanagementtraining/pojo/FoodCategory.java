@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.sixthgroup.healthmanagementtrainingpojo;
+package com.sixthgroup.healthmanagementtraining.pojo;
 
 /**
  *
@@ -13,6 +13,17 @@ public class FoodCategory {
     private int id; // auto_increment
     private String categoryName; // nvarchar(50)
 
+    public FoodCategory(int id, String categoryName) {
+        this.id = id;
+        this.categoryName = categoryName;
+    }
+
+    @Override
+    public String toString() {
+        return this.categoryName;
+    }
+
+    
     // Getters and Setters
     /**
      * @return the id
