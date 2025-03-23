@@ -19,6 +19,23 @@ public class Food {
     private int foodCategoryId; // foreign key
     private String unitType; // enum('gram', 'ml', 'piece')
 
+    public Food(int id, String foodName, int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit, float fiberPerUnit, int foodCategoryId, String unitType) {
+        this.id = id;
+        this.foodName = foodName;
+        this.caloriesPerUnit = caloriesPerUnit;
+        this.lipidPerUnit = lipidPerUnit;
+        this.proteinPerUnit = proteinPerUnit;
+        this.fiberPerUnit = fiberPerUnit;
+        this.foodCategoryId = foodCategoryId;
+        this.unitType = unitType;
+    }
+
+    @Override
+    public String toString() {
+        return this.foodName; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
+    
     // Getters and Setters
 
     /**

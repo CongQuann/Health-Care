@@ -12,7 +12,19 @@ public class FoodCategory {
 
     private int id; // auto_increment
     private String categoryName; // nvarchar(50)
+    
+    
+    public FoodCategory(int id, String cateName){
+        this.id = id;
+        this.categoryName = cateName;
+    }
 
+    @Override
+    public String toString() {
+        return this.categoryName; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
+    }
+    
+    
     // Getters and Setters
     /**
      * @return the id

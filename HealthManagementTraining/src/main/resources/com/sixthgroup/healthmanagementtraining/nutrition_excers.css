@@ -61,6 +61,7 @@
     -fx-background-color: #34495e;
 }
 
+
 .close-btn {
     -fx-background-color: transparent;
     -fx-text-fill: white;
@@ -88,8 +89,11 @@
 .header-hbox{
     -fx-background-color:#34495e;
 }
+.caloriesText{
+    -fx-font-size:19px;
+}
 .textStyle{
-    -fx-font-size: 30px; /* Kích thước chữ */
+    -fx-font-size: 20px; /* Kích thước chữ */
     -fx-font-weight: bold; /* Đậm chữ */
     -fx-fill: #3498db; /* Màu chữ */
     -fx-stroke:#336699;
@@ -109,8 +113,7 @@
     -fx-text-fill: white; /* Màu chữ */
     -fx-font-size: 14px; /* Kích thước chữ */
     -fx-font-weight: bold; /* Đậm chữ */
-    -fx-padding: 8px 12px; /* Khoảng cách bên trong */
-   
+    -fx-padding: 4px 8px; /* Khoảng cách bên trong */
     -fx-border-radius: 20; /* Bán kính bo tròn cho biên */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 1); /* Hiệu ứng bóng */
     -fx-spacing: 5; /* Khoảng cách giữa biểu tượng và chữ */

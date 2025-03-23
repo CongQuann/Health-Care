@@ -40,19 +40,5 @@ public class ExercisesService {
         }
     }
 
-//    public List<Category> getCategories() throws SQLException {
-//
-//        List<Category> cates = new ArrayList<>();
-//        try (Connection conn = JdbcUtils.getConn()) {
-//            PreparedStatement stm = conn.prepareCall("SELECT * FROM category ");
-//
-//            ResultSet rs = stm.executeQuery();
-//            while (rs.next()) {
-//                Category c = new Category(rs.getInt("id"), rs.getString("name"));
-//                cates.add(c);
-//            }
-//
-//            return cates;
-//        }
-//    }
+
 }
