@@ -34,6 +34,8 @@ public class AdminFoodServices {
             );
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
+
+                //chuyen unitType tư String sang UnitType
                 String unitTypeStr = rs.getString("unitType");
                 UnitType unitType = UnitType.valueOf(unitTypeStr);
 
@@ -84,11 +86,36 @@ public class AdminFoodServices {
 
     }
 
+    //dùng để xóa một thức ăn
+    public void deleteFood(int foodId) throws SQLException {
+        try (Connection conn = JdbcUtils.getConn()) {
+            PreparedStatement stm = conn.prepareStatement("DELETE FROM food WHERE id = ?");
+
+            stm.setInt(1, foodId);
+            stm.executeUpdate();
+        }
+    }
+
+    public void updateFood(Food food) throws SQLException {
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "UPDATE food SET foodName = ?, caloriesPerUnit = ?, lipidPerUnit = ?, proteinPerUnit = ?, fiberPerUnit = ? WHERE id = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, food.getFoodName());
+            stm.setInt(2, food.getCaloriesPerUnit());
+            stm.setFloat(3, food.getLipidPerUnit());
+            stm.setFloat(4, food.getProteinPerUnit());
+            stm.setFloat(5, food.getFiberPerUnit());
+            stm.setInt(6, food.getId());
+
+            stm.executeUpdate();
+        }
+    }
+
     public List<FoodCategory> getFoodCategories() throws SQLException {
         List<FoodCategory> categories = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm = conn.prepareCall(
-                    "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, fc.categoryName, f.unitType FROM food f JOIN foodcategory fc ON f.foodCategory_id = fc.id");
+                    "SELECT id, categoryName FROM foodcategory");
             ResultSet rs = stm.executeQuery();
 
             while (rs.next()) {
@@ -98,6 +125,36 @@ public class AdminFoodServices {
 
         }
         return categories;
+    }
+
+    public List<Food> searchFood(String keyword) throws SQLException {
+        List<Food> filteredList = new ArrayList<>();
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
+                    + "f.foodCategory_id, fc.categoryName, f.unitType "
+                    + "FROM food f JOIN foodcategory fc ON f.foodCategory_id = fc.id "
+                    + "WHERE f.foodName LIKE ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, "%" + keyword + "%"); // Tìm kiếm gần đúng
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                UnitType unitType = UnitType.valueOf(rs.getString("unitType"));
+                Food food = new Food(
+                        rs.getInt("id"),
+                        rs.getString("foodName"),
+                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("lipidPerUnit"),
+                        rs.getFloat("proteinPerUnit"),
+                        rs.getFloat("fiberPerUnit"),
+                        rs.getInt("foodCategory_id"),
+                        rs.getString("categoryName"),
+                        unitType
+                );
+                filteredList.add(food);
+            }
+        }
+        return filteredList;
     }
 
 }

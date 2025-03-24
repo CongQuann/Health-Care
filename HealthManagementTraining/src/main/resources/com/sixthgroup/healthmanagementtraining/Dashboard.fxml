@@ -89,7 +89,7 @@
             <Button fx:id="viewExerciseButton" layoutX="250.0" layoutY="500.0" mnemonicParsing="false" styleClass="view-button" text="Xem danh sách bài tập" />
             <!-- Navbar (ban đầu ẩn bên trái) -->
         </HBox>
-        <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
+        <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="654.0" prefWidth="250.0" styleClass="nav-bar">
             <children>
                 <HBox alignment="CENTER_RIGHT" spacing="26">
                     <Button fx:id="closeNavButton" mnemonicParsing="false" styleClass="close-btn" text="✖" />
