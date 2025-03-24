@@ -157,4 +157,36 @@ public class AdminFoodServices {
         return filteredList;
     }
 
+
+    public List<Food> searchFoodByCategoryAndKeyword(int categoryId, String keyword) throws SQLException {
+        List<Food> filteredList = new ArrayList<>();
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
+                    + "f.foodCategory_id, fc.categoryName, f.unitType "
+                    + "FROM food f JOIN foodcategory fc ON f.foodCategory_id = fc.id "
+                    + "WHERE f.foodCategory_id = ? AND f.foodName LIKE ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1, categoryId);
+            stm.setString(2, "%" + keyword + "%");
+
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                UnitType unitType = UnitType.valueOf(rs.getString("unitType"));
+                Food food = new Food(
+                        rs.getInt("id"),
+                        rs.getString("foodName"),
+                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("lipidPerUnit"),
+                        rs.getFloat("proteinPerUnit"),
+                        rs.getFloat("fiberPerUnit"),
+                        rs.getInt("foodCategory_id"),
+                        rs.getString("categoryName"),
+                        unitType
+                );
+                filteredList.add(food);
+            }
+        }
+        return filteredList;
+    }
 }
+
