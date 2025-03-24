@@ -3,16 +3,26 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
 package com.sixthgroup.healthmanagementtraining;
+
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
+import com.sixthgroup.healthmanagementtraining.services.Utils;
+import java.io.IOException;
 
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.ResourceBundle;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.layout.VBox;
-
+import javafx.stage.Stage;
 
 /**
  * FXML Controller class
@@ -28,14 +38,15 @@ public class DashboardController implements Initializable {
     @FXML
     private Button closeNavButton; // Nút đóng navbar
     @FXML
-    
+
     private NavbarServices navbarServices = new NavbarServices(); // Khởi tạo NavbarServices
 
     @FXML
     private PieChart caloPieChart;//Bieu do tron
     @FXML
     private PieChart proteinPieChart; // Biểu đồ tròn chất đạm, chất béo, chất xơ
-   
+    @FXML
+    private DatePicker datePicker;
 
     private void updatePieChart(double absorbed, double required) {
         PieChart.Data absorbedData = new PieChart.Data("Đã hấp thụ", absorbed);
@@ -60,7 +71,11 @@ public class DashboardController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//thiet lap su kien cho nut kich hoat 
+        // Khi FXML được load, lấy ngày từ Utils và đặt vào DatePicker
+        datePicker.setValue(Utils.getSelectedDate());
+        datePickHandler();
+        
+        //thiet lap su kien cho nut kich hoat 
         updatePieChart(2000, 2500); // Ví dụ: Đã hấp thụ 2000 kcal, cần 2500 kcal
         updateNutritionPieChart(100, 50, 25); // Ví dụ: Chất đạm 100g, chất béo 50g, chất xơ 25g
         System.out.println("Controller đã được khởi tạo thành công!");
@@ -78,4 +93,24 @@ public class DashboardController implements Initializable {
 
     }
 
+    public void switchToExercises(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        Utils.setSelectedDate(datePicker.getValue());
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "ExercisesManagement.fxml");
+    }
+
+    public void switchToNutrition(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        Utils.setSelectedDate(datePicker.getValue());
+
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "NutritionTrack.fxml");
+    }
+    public void datePickHandler(){
+        // Lay ngay dang chon
+        LocalDate selectedDate = datePicker.getValue();
+        // Cập nhật ngày vào biến tĩnh khi người dùng chọn
+        Utils.setSelectedDate(selectedDate);
+    }
 }

@@ -6,6 +6,8 @@ package com.sixthgroup.healthmanagementtraining;
 
 import com.sixthgroup.healthmanagementtraining.pojo.Exercise;
 import com.sixthgroup.healthmanagementtraining.services.ExercisesService;
+import com.sixthgroup.healthmanagementtraining.services.Utils;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -15,18 +17,24 @@ import java.util.logging.Logger;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
 import javafx.util.Duration;
 
 /**
@@ -49,8 +57,7 @@ public class ExercisesManageController implements Initializable {
     @FXML
     private TableView<Exercise> tbSelectedExers;
     @FXML
-    private DatePicker selectedDate;
-    private ObservableList<Exercise> selectedExercises = FXCollections.observableArrayList();
+    private Label dateLabel;
 
     private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
 
@@ -82,7 +89,14 @@ public class ExercisesManageController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//thiet lap su kien cho nut kich hoat 
+        // Lấy ngày từ biến tĩnh và hiển thị
+        LocalDate date = Utils.getSelectedDate();
+        if (date != null) {
+            dateLabel.setText("Ngày đã chọn: " + date.toString());
+        } else {
+            dateLabel.setText("Không có ngày nào được chọn.");
+        }
+        // thiet lap su kien cho nut kich hoat 
         System.out.println("Controller đã được khởi tạo thành công!");
 
         // Đảm bảo navBar ban đầu ẩn đi
@@ -95,6 +109,7 @@ public class ExercisesManageController implements Initializable {
         } else {
             System.out.println("toggleNavButton chưa được khởi tạo!");
         }
+        ObservableList<Exercise> selectedExercises = FXCollections.observableArrayList();
         this.tbSelectedExers.setItems(selectedExercises);
         loadColumnsForSelectedTable();
         loadColumns();
@@ -198,24 +213,11 @@ public class ExercisesManageController implements Initializable {
 
     public void saveBtnHandler() {
         // Lấy giá trị từ DatePicker
-        LocalDate selectedDate = this.selectedDate.getValue();
-        // Kiểm tra nếu người dùng chưa chọn ngày
-        if (selectedDate == null) {
-            Alert a = new Alert(Alert.AlertType.WARNING, "Vui long chon ngay truoc khi luu", ButtonType.CANCEL);
-            a.show();
-            return;
-        }
-        if (this.selectedExercises.isEmpty()) {
-            Alert a = new Alert(Alert.AlertType.WARNING, "Danh sach bai tap khong duoc de trong", ButtonType.CANCEL);
-            a.show();
-            return;
-        }
-        // Hiển thị thông tin để kiểm tra (hoặc lưu vào database)
-        System.out.println("Ngày đã chọn: " + selectedDate);
-        System.out.println("Danh sách bài tập đã chọn:");
-
-        for (Exercise ex : selectedExercises) {
-            System.out.println("- " + ex.getExerciseName());
+        LocalDate date = Utils.getSelectedDate();
+        if (date != null) {
+            dateLabel.setText("Ngày đã chọn: " + date.toString());
+        } else {
+            dateLabel.setText("Không có ngày nào được chọn.");
         }
 
         // Nếu cần lưu vào database, gọi phương thức xử lý ở đây
@@ -223,6 +225,14 @@ public class ExercisesManageController implements Initializable {
         Alert a = new Alert(Alert.AlertType.INFORMATION, "Du lieu da duoc luu", ButtonType.OK);
         a.show();
 
+    }
+    public void backHandler(ActionEvent event) throws IOException {
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "Dashboard.fxml");
+    }
+    public void switchToNutrition(ActionEvent event) throws IOException {
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "NutritionTrack.fxml");
     }
     //=========================================================================
 }
