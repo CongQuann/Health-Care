@@ -56,9 +56,9 @@ public class NutritionTrackService {
 
                 // Chuyển đổi từ String thành Enum UnitType
                 UnitType unitType = UnitType.valueOf(unitTypeStr);
-                Food f = new Food(rs.getInt("id"), rs.getString("foodName"), rs.getInt("caloriesPerUnit"), rs.getFloat("lipidPerUnit"),
-                        rs.getFloat("proteinPerUnit"), rs.getFloat("fiberPerUnit"), rs.getString("foodCategory_id"), unitType);
-                foods.add(f);
+//                Food f = new Food(rs.getInt("id"), rs.getString("foodName"), rs.getInt("caloriesPerUnit"), rs.getFloat("lipidPerUnit"),
+//                        rs.getFloat("proteinPerUnit"), rs.getFloat("fiberPerUnit"), rs.getString("foodCategory_id"), unitType);
+//                foods.add(f);
             }
             return foods;
         }
@@ -82,17 +82,17 @@ public class NutritionTrackService {
 
                 // Chuyển đổi từ String thành Enum UnitType
                 UnitType unitType = UnitType.valueOf(unitTypeStr);
-                Food f = new Food(
-                        rs.getInt("id"),
-                        rs.getString("foodName"),
-                        rs.getInt("caloriesPerUnit"),
-                        rs.getFloat("lipidPerUnit"),
-                        rs.getFloat("proteinPerUnit"),
-                        rs.getFloat("fiberPerUnit"),
-                        rs.getString("foodCategory_id"),
-                        unitType
-                );
-                foods.add(f);
+//                Food f = new Food(
+//                        rs.getInt("id"),
+//                        rs.getString("foodName"),
+//                        rs.getInt("caloriesPerUnit"),
+//                        rs.getFloat("lipidPerUnit"),
+//                        rs.getFloat("proteinPerUnit"),
+//                        rs.getFloat("fiberPerUnit"),
+//                        rs.getString("foodCategory_id"),
+//                        unitType
+//                );
+//                foods.add(f);
             }
             return foods;
         }
