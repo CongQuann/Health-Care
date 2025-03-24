@@ -21,7 +21,6 @@ public class Food {
     private UnitType unitType; // Sử dụng enum
 
     
-
     @Override
     public String toString() {
         return this.foodName; // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
@@ -39,6 +38,7 @@ public class Food {
         this.unitType = unitType;
 
     }
+
 
     /**
      * @return the id

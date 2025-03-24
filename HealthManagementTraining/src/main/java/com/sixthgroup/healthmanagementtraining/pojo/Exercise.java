@@ -16,10 +16,10 @@ public class Exercise {
     private int id; // char(8)
     private String exerciseName; // nvarchar(40)
     private int caloriesPerMinute; // int
-    public Exercise(int aInt, String string, int aInt1) {
-        this.id = aInt;
-        this.exerciseName = string;
-        this.caloriesPerMinute  = aInt1;
+    public Exercise(int id, String exerciseName, int caloriesPerMinute) {
+        this.id = id;
+        this.exerciseName = exerciseName;
+        this.caloriesPerMinute = caloriesPerMinute;
     }
     // Getters and Setters
 
@@ -64,4 +64,5 @@ public class Exercise {
     public void setCaloriesPerMinute(int caloriesPerMinute) {
         this.caloriesPerMinute = caloriesPerMinute;
     }
+    
 }
