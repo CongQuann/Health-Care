@@ -7,24 +7,33 @@ package com.sixthgroup.healthmanagementtraining;
 import com.sixthgroup.healthmanagementtraining.pojo.Food;
 import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.services.NutritionTrackService;
+import com.sixthgroup.healthmanagementtraining.services.Utils;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+
 import javafx.fxml.Initializable;
+
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
+
 import javafx.util.Duration;
 
 /**
@@ -48,6 +57,9 @@ public class NutritionController implements Initializable {
     private TableView<Food> tbSelectedFood;
     @FXML
     private TextField txtSearch;
+    @FXML
+    private Label dateLabel;
+
     private ObservableList<Food> selectedFood = FXCollections.observableArrayList();
     private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
 
@@ -79,7 +91,14 @@ public class NutritionController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//thiet lap su kien cho nut kich hoat 
+        // Lấy ngày từ biến tĩnh và hiển thị
+        LocalDate date = Utils.getSelectedDate();
+        if (date != null) {
+            dateLabel.setText("Ngày đã chọn: " + date.toString());
+        } else {
+            dateLabel.setText("Không có ngày nào được chọn.");
+        }
+        //thiet lap su kien cho nut kich hoat 
         System.out.println("Controller đã được khởi tạo thành công!");
 
         // Đảm bảo navBar ban đầu ẩn đi
@@ -101,7 +120,7 @@ public class NutritionController implements Initializable {
         }
         loadColumns();
         loadColumnsForSelectedTable();
-        loadTableData("");
+        loadTableData(null);
         txtSearch.textProperty().addListener((e) -> {
             loadTableData(txtSearch.getText());
         });
@@ -109,9 +128,10 @@ public class NutritionController implements Initializable {
 
     public void loadTableData(String kw) {
         NutritionTrackService n = new NutritionTrackService();
-
         try {
-            this.tbFoods.setItems(FXCollections.observableList(n.getFoods(kw)));
+            List<Food> foodList = n.getFoods(kw);
+            ObservableList foodObservableList = FXCollections.observableArrayList(foodList);
+            this.tbFoods.setItems(foodObservableList);
         } catch (SQLException ex) {
             Logger.getLogger(ExercisesManageController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -129,7 +149,7 @@ public class NutritionController implements Initializable {
         TableColumn colUnitType = new TableColumn("Don vi:");
         colUnitType.setCellValueFactory(new PropertyValueFactory("unitType"));
         colUnitType.setPrefWidth(125);
-        
+
         TableColumn colActionST = new TableColumn();
         colActionST.setCellFactory(column -> new TableCell<Food, Void>() {
             private final Button btn = new Button("Xóa");
@@ -163,18 +183,29 @@ public class NutritionController implements Initializable {
     }
 
     public void loadColumns() {
-        TableColumn colFoodName = new TableColumn("Ten mon an");
+        TableColumn colFoodName = new TableColumn("Tên thức ăn");
         colFoodName.setCellValueFactory(new PropertyValueFactory("foodName"));
-        colFoodName.setPrefWidth(125);
+        colFoodName.setPrefWidth(107);
 
-        TableColumn colCalories = new TableColumn("Calories:");
+        TableColumn colCalories = new TableColumn("Calo/Đơn vị");
         colCalories.setCellValueFactory(new PropertyValueFactory("caloriesPerUnit"));
-        colCalories.setPrefWidth(125);
+        colCalories.setPrefWidth(107);
 
-        TableColumn colUnitType = new TableColumn("Don vi:");
-        colUnitType.setCellValueFactory(new PropertyValueFactory("unitType"));
-        colUnitType.setPrefWidth(125);
+        TableColumn colLipid = new TableColumn("Chất béo/Đơn vị");
+        colLipid.setCellValueFactory(new PropertyValueFactory("lipidPerUnit"));
+        colLipid.setPrefWidth(107);
 
+        TableColumn colProtein = new TableColumn("Chất đạm/Đơn vị");
+        colProtein.setCellValueFactory(new PropertyValueFactory("proteinPerUnit"));
+        colProtein.setPrefWidth(107);
+
+        TableColumn colFiber = new TableColumn("Chất xơ/Đơn vị");
+        colFiber.setCellValueFactory(new PropertyValueFactory("fiberPerUnit"));
+        colFiber.setPrefWidth(107);
+
+        TableColumn colFoodType = new TableColumn("Loại thức ăn");
+        colFoodType.setCellValueFactory(new PropertyValueFactory("categoryName"));
+        colFoodType.setPrefWidth(107);
         TableColumn colAction = new TableColumn();
         colAction.setCellFactory(column -> new TableCell<Food, Void>() {
             private final Button btn = new Button("Thêm");
@@ -205,7 +236,7 @@ public class NutritionController implements Initializable {
             }
         });
 
-        this.tbFoods.getColumns().addAll(colFoodName, colCalories, colUnitType, colAction);
+        this.tbFoods.getColumns().addAll(colFoodName, colCalories, colLipid, colProtein, colFiber, colFoodType, colAction);
     }
 
     public void choseHandler() throws SQLException {
@@ -213,6 +244,16 @@ public class NutritionController implements Initializable {
         int cate_id = this.cbFoodCates.getSelectionModel().getSelectedItem().getId();
         System.out.println("Cate " + cate_id);
         this.tbFoods.setItems(FXCollections.observableList(n.getFoodsByCate(cate_id)));
+    }
+
+    public void backHandler(ActionEvent event) throws IOException {
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "Dashboard.fxml");
+    }
+     public void switchToExercises(ActionEvent event) throws IOException {
+        
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "ExercisesManagement.fxml");
     }
     //=========================================================================
 }
