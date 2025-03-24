@@ -20,7 +20,6 @@ public class FoodCategory {
     }
 
 
-
     @Override
     public String toString() {
         return this.categoryName;
