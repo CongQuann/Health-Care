@@ -1,3 +1,4 @@
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -10,10 +11,16 @@ package com.sixthgroup.healthmanagementtraining.pojo;
  */
 public class Exercise {
 
+    
+
     private int id; // char(8)
     private String exerciseName; // nvarchar(40)
     private int caloriesPerMinute; // int
-
+    public Exercise(int id, String exerciseName, int caloriesPerMinute) {
+        this.id = id;
+        this.exerciseName = exerciseName;
+        this.caloriesPerMinute = caloriesPerMinute;
+    }
     // Getters and Setters
 
     /**
@@ -57,4 +64,5 @@ public class Exercise {
     public void setCaloriesPerMinute(int caloriesPerMinute) {
         this.caloriesPerMinute = caloriesPerMinute;
     }
+    
 }

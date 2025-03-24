@@ -3,8 +3,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.TitledPane?>
@@ -15,42 +13,16 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="574.0" prefWidth="903.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.ExercisesManageController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="574.0" prefWidth="1013.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.ExercisesManageController">
     <children>
         <!-- Nút kích hoạt navbar ========================================================-->
-        <HBox prefWidth="903.0" styleClass="header-hbox">
-            <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
-                <graphic>
-                    <SVGPath content="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z" styleClass="svg-icon" />
-                </graphic>
-            </Button>
-            <Label prefHeight="42.0" prefWidth="982.0" styleClass="nav-label">
+        <HBox prefHeight="42.0" prefWidth="1013.0" styleClass="header-hbox">
+            <Label prefHeight="42.0" prefWidth="1011.0" styleClass="nav-label">
                 <graphic>
                     <SVGPath content="M22,18A4,4 0 0,1 18,22H14A4,4 0 0,1 10,18V16H22V18M4,3H14A2,2 0 0,1 16,5V14H8V19H4A2,2 0 0,1 2,17V5A2,2 0 0,1 4,3M4,6V8H6V6H4M14,8V6H8V8H14M4,10V12H6V10H4M8,10V12H14V10H8M4,14V16H6V14H4Z" styleClass="nav-icon" />                    
                 </graphic>365Health</Label>
         </HBox>
-        <!--=================================================================-->
-        <TableView layoutX="54.0" layoutY="152.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="375.0" prefWidth="312.0">
-            <columns>
-                <TableColumn prefWidth="86.0" text="Tên bài tập" />
-                <TableColumn prefWidth="118.0" text="Thời gian tập(phút)" />
-                <TableColumn minWidth="0.0" prefWidth="110.0" text="Calo tiêu thụ" />
-            </columns>
-        </TableView>
-        <ListView layoutX="627.0" layoutY="156.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="375.0" prefWidth="200.0" />
-        <Button layoutX="392.0" layoutY="261.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" styleClass="addBtn" stylesheets="@nutrition_excers.css" text="Thêm bài tập đã chọn" textAlignment="CENTER" />
-        <Button layoutX="392.0" layoutY="323.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="45.0" prefWidth="200.0" styleClass="deleteBtn" text="Xóa bài tập đã chọn" textAlignment="CENTER" />
-        <Button fx:id="btn" layoutX="391.0" layoutY="381.0" mnemonicParsing="false" nodeOrientation="LEFT_TO_RIGHT" prefHeight="45.0" prefWidth="200.0" styleClass="saveBtn" text="Lưu lịch " textAlignment="CENTER" />
         <TitledPane animated="false" layoutX="117.0" layoutY="-199.0" text="untitled" />
-        <Text layoutX="424.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LỊCH TẬP">
-            <font>
-                <Font name="System Bold" size="27.0" />
-            </font>
-        </Text>
-        <TextField layoutX="627.0" layoutY="117.0" prefHeight="35.0" prefWidth="174.0" promptText="Nhập bài tập" styleClass="textStyle" />
-        <Button layoutX="801.0" layoutY="117.0" mnemonicParsing="false" styleClass="searchBtn" text="Tìm kiếm" />
-        <Label layoutX="54.0" layoutY="117.0" styleClass="textStyle" text="Chọn ngày:" />
-        <DatePicker layoutX="139.0" layoutY="117.0" />
         <!-- Navbar (ban đầu ẩn bên trái) -->
         <!--==========================================================-->
         <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
@@ -81,6 +53,46 @@
                
             </children>
         </VBox>
+      <HBox layoutX="1.0" layoutY="42.0" prefHeight="26.0" prefWidth="903.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textStyle" text="Quản lý lịch tập" textAlignment="CENTER" wrappingWidth="900.681640625" />
+         </children>
+      </HBox>
+      <HBox layoutX="1.0" layoutY="82.0" prefHeight="35.0" prefWidth="381.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Chọn ngày tập:" wrappingWidth="179.701171875">
+               <font>
+                  <Font size="25.0" />
+               </font>
+            </Text>
+            <DatePicker fx:id="selectedDate" prefHeight="35.0" prefWidth="243.0" />
+         </children>
+      </HBox>
+      <VBox layoutX="632.0" layoutY="117.0" prefHeight="456.0" prefWidth="381.0">
+         <children>
+            <TableView fx:id="tbExers" prefHeight="456.0" prefWidth="309.0" />
+         </children>
+      </VBox>
+      <HBox layoutX="632.0" layoutY="82.0" prefHeight="35.0" prefWidth="270.0">
+         <children>
+            <TextField fx:id="txtSearch" prefHeight="44.0" prefWidth="270.0" promptText="Nhập tên bài tập" />
+         </children>
+      </HBox>
+      <HBox layoutY="121.0" prefHeight="50.0" prefWidth="441.0">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Danh sách bài tập đã chọn" wrappingWidth="440.13671875">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Text>
+         </children>
+      </HBox>
+      <VBox layoutX="7.0" layoutY="171.0" prefHeight="402.0" prefWidth="440.0">
+         <children>
+            <TableView fx:id="tbSelectedExers" prefHeight="400.0" prefWidth="440.0" />
+         </children>
+      </VBox>
+      <Button layoutX="493.0" layoutY="298.0" mnemonicParsing="false" onAction="#saveBtnHandler" prefHeight="65.0" prefWidth="110.0" styleClass="saveBtn" text="Lưu lịch" />
         <!--========================================================================-->
     </children>
 

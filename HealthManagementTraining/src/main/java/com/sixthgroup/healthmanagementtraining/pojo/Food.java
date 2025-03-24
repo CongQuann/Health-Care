@@ -19,7 +19,7 @@ public class Food {
     private int foodCategoryId; // foreign key
     private String categoryName;
     private UnitType unitType; // Sử dụng enum
-    // Getters and Setters
+
 
     public Food(int id, String foodName, int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit,
             float fiberPerUnit, int foodCategoryId, String foodCategoryName, UnitType unitType) {
@@ -33,6 +33,7 @@ public class Food {
         this.categoryName = foodCategoryName; // Lưu tên danh mục
         this.unitType = unitType;
     }
+
 
     /**
      * @return the id

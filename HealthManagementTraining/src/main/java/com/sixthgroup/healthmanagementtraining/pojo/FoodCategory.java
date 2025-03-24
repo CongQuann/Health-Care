@@ -12,11 +12,13 @@ public class FoodCategory {
 
     private int id; // auto_increment
     private String categoryName; // nvarchar(50)
-
-    public FoodCategory(int id, String categoryName) {
+    
+    
+    public FoodCategory(int id, String cateName){
         this.id = id;
-        this.categoryName = categoryName;
+        this.categoryName = cateName;
     }
+
 
     @Override
     public String toString() {
