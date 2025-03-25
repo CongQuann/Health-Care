@@ -123,16 +123,16 @@
     -fx-text-fill: white; /* Màu chữ */
     -fx-font-size: 16px; /* Kích thước chữ */
     -fx-font-weight: bold; /* Đậm chữ */
-    -fx-padding: 10px 20px; /* Khoảng cách bên trong */
+    -fx-padding: 4px 8px; /* Khoảng cách bên trong */
     -fx-background-radius: 15; /* Bán kính bo tròn */
     -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
 }
 .deleteBtn{
     -fx-background-color: #cf223d; /* Màu nền */
     -fx-text-fill: white; /* Màu chữ */
-    -fx-font-size: 16px; /* Kích thước chữ */
+    -fx-font-size: 14px; /* Kích thước chữ */
     -fx-font-weight: bold; /* Đậm chữ */
-    -fx-padding: 10px 20px; /* Khoảng cách bên trong */
+    -fx-padding: 4px 8px; /* Khoảng cách bên trong */
     -fx-background-radius: 15; /* Bán kính bo tròn */
     -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
 }
@@ -141,7 +141,16 @@
     -fx-text-fill: white; /* Màu chữ */
     -fx-font-size: 16px; /* Kích thước chữ */
     -fx-font-weight: bold; /* Đậm chữ */
-    -fx-padding: 10px 20px; /* Khoảng cách bên trong */
+    -fx-padding: 4px 8px; /* Khoảng cách bên trong */
+    -fx-background-radius: 15; /* Bán kính bo tròn */
+    -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
+}
+.backBtn{
+    -fx-background-color: #007bff; /* Màu nền */
+    -fx-text-fill: white; /* Màu chữ */
+    -fx-font-size: 16px; /* Kích thước chữ */
+    -fx-font-weight: bold; /* Đậm chữ */
+    -fx-padding: 4px 8px; /* Khoảng cách bên trong */
     -fx-background-radius: 15; /* Bán kính bo tròn */
     -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
 }
