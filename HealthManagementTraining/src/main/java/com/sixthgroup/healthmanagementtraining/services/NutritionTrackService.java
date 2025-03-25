@@ -43,10 +43,17 @@ public class NutritionTrackService {
 
             PreparedStatement stm;
             if (kw != null) {
-                stm = conn.prepareCall("SELECT * FROM food WHERE foodName like concat('%', ?, '%') ORDER BY id desc");
-                stm.setString(1, kw);
+                 String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
+                    + "f.foodCategory_id, fc.categoryName, f.unitType "
+                    + "FROM food f JOIN foodcategory fc ON f.foodCategory_id = fc.id "
+                    + "WHERE f.foodName LIKE ?";
+                stm = conn.prepareStatement(sql);
+                stm.setString(1, "%" + kw + "%"); // Tìm kiếm gần đúng
             } else {
-                stm = conn.prepareCall("SELECT * FROM food ");
+                String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
+                    + "f.foodCategory_id, fc.categoryName, f.unitType "
+                    + "FROM food f JOIN foodcategory fc ON f.foodCategory_id = fc.id";
+                stm = conn.prepareStatement(sql);
             }
             ResultSet rs = stm.executeQuery();
 
@@ -56,8 +63,17 @@ public class NutritionTrackService {
 
                 // Chuyển đổi từ String thành Enum UnitType
                 UnitType unitType = UnitType.valueOf(unitTypeStr);
-                Food f = new Food(rs.getInt("id"), rs.getString("foodName"), rs.getInt("caloriesPerUnit"), rs.getFloat("lipidPerUnit"),
-                        rs.getFloat("proteinPerUnit"), rs.getFloat("fiberPerUnit"), rs.getString("foodCategory_id"), unitType);
+                Food f = new Food(
+                        rs.getInt("id"),
+                        rs.getString("foodName"),
+                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("lipidPerUnit"),
+                        rs.getFloat("proteinPerUnit"),
+                        rs.getFloat("fiberPerUnit"),
+                        rs.getInt("foodCategory_id"), // Lấy ID danh mục
+                        rs.getString("categoryName"), // Lấy tên danh mục
+                        unitType
+                );
                 foods.add(f);
             }
             return foods;
@@ -69,7 +85,11 @@ public class NutritionTrackService {
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm;
             if (cate_id != 0) {
-                stm = conn.prepareCall("SELECT * FROM food WHERE foodCategory_id = ?");
+                String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
+                    + "f.foodCategory_id, fc.categoryName, f.unitType "
+                    + "FROM food f JOIN foodcategory fc ON f.foodCategory_id = fc.id "
+                    + "WHERE f.foodCategory_id = ?";
+                stm = conn.prepareCall(sql);
                 stm.setInt(1, cate_id);
             } else {
                 stm = conn.prepareCall("SELECT * FROM food ");
@@ -89,7 +109,8 @@ public class NutritionTrackService {
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),
-                        rs.getString("foodCategory_id"),
+                        rs.getInt("foodCategory_id"), // Lấy ID danh mục
+                        rs.getString("categoryName"), // Lấy tên danh mục
                         unitType
                 );
                 foods.add(f);
