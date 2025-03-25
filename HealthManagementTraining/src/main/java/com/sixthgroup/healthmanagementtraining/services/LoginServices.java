@@ -33,8 +33,12 @@ public class LoginServices {
             if (rs.next()) {
                 String role = rs.getString("role");
                 if ("user".equalsIgnoreCase(role)) {
+                    Utils.clearUser();
+                    Utils.saveUser(username);
                     return Role.USER;
                 } else if ("administrator".equalsIgnoreCase(role)) {
+                    Utils.clearUser();
+                    Utils.saveUser(username);
                     return Role.ADMIN;
                 }
             }
