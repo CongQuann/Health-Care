@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import java.util.prefs.Preferences;
 
 /**
  *
@@ -24,6 +25,20 @@ public class Utils {
         return new Alert(Alert.AlertType.INFORMATION, content, ButtonType.OK);
     }
     
+    //current user
+    private static final Preferences prefs = Preferences.userRoot().node("HealthManagementTraining");
+
+    public static void saveUser(String username) {
+        prefs.put("loggedInUser", username);
+    }
+
+    public static String getUser() {
+        return prefs.get("loggedInUser", null);
+    }
+
+    public static void clearUser() {
+        prefs.remove("loggedInUser");
+    }
     
     private static LocalDate selectedDate = LocalDate.now(); // Mặc định là hôm nay
 
@@ -36,3 +51,5 @@ public class Utils {
     }
     
 }
+
+
