@@ -28,6 +28,11 @@
     -fx-font-weight: bold;
     -fx-text-fill: #333333; /* Dark gray text */
 }
+/* Hover effect for widgets */
+.widget:hover {
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 0); /* Enhanced shadow on hover */
+}
+
 
 /* Style for widget values (Text) */
 .widget-value {
@@ -47,31 +52,31 @@
 #protein-text{
     -fx-fill:#9e3f2c;
 }
-/* Hover effect for widgets */
-.widget:hover {
+
+/*chỉnh CSS cho biểu đồ====================================================*/
+.protein-slice {
+    -fx-pie-color: #781d38;
+}
+
+.fat-slice {
+    -fx-pie-color: #c2bc19;
+}
+
+.fiber-slice {
+    -fx-pie-color: #0a8210;
+}
+
+.pie-chart-pane{
+    -fx-background-color: #ffffff; /* White background */
+    -fx-border-radius: 10px; /* Rounded corners */
+    -fx-background-radius: 10px; /* Rounded corners */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.1), 10, 0, 0, 0); /* Shadow effect */
+}
+
+.pie-chart-pane:hover{
     -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 15, 0, 0, 0); /* Enhanced shadow on hover */
 }
-.default-color2.chart-pie {
-    -fx-pie-color: #4CAF50; /* Màu xanh lá cây cho phần đầu tiên */
-}
-
-.default-color1.chart-pie {
-    -fx-pie-color: #FF9800; /* Màu cam cho phần thứ hai */
-}
-
-.default-color0.chart-pie {
-    -fx-pie-color: #9e3f2c; /* Màu xanh dương */
-}
-.chart-legend {
-    -fx-background-color: transparent; /* Nền trong suốt */
-    -fx-padding: 2px; /* Khoảng cách giữa các phần tử */
-}
-
-.chart-legend-item {
-    -fx-text-fill: #333333; /* Màu chữ của chú thích */
-    -fx-font-size: 5px; /* Cỡ chữ */
-    -fx-font-weight: bold; /* Đậm */
-}
+/*==============================================================*/
 
 .date-label{
     -fx-font-size:20px;
@@ -79,7 +84,7 @@
     -fx-fill:#2c3e50;
 }
 .dashboard-label{
-     -fx-font-size:25px;
+    -fx-font-size:25px;
     -fx-font-weight:bold;
     -fx-fill:#2c3e50;
 }
@@ -124,7 +129,7 @@
 
 .spacing_hbox{
     -fx-spacing: 20px; /* Khoảng cách giữa các phần tử con */
-    
+
 }
 
 /*PHẦN CSS CHO NAV-BAR*/
@@ -143,7 +148,7 @@
 }
 /*chỉnh màu cho icon*/
 .nav-toggle-btn SVGPath{
-        -fx-fill: #333; /* Màu icon */
+    -fx-fill: #333; /* Màu icon */
 
 }
 
@@ -153,7 +158,7 @@
     -fx-padding: 10px;
     -fx-spacing: 10px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
-/*    -fx-translate-x: -200px;  Ban đầu ẩn bên trái */
+    /*    -fx-translate-x: -200px;  Ban đầu ẩn bên trái */
 }
 /* Nút trong navbar */
 .nav-btn {
@@ -188,7 +193,7 @@
 }
 .nav-icon{
     -fx-fill:white;
-    
+
 }
 .header-hbox{
     -fx-background-color:#34495e;

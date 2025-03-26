@@ -35,6 +35,7 @@ public class LoginServices {
                 if ("user".equalsIgnoreCase(role)) {
                     Utils.clearUser();
                     Utils.saveUser(username);
+                    System.out.println(Utils.getUser());
                     return Role.USER;
                 } else if ("administrator".equalsIgnoreCase(role)) {
                     Utils.clearUser();

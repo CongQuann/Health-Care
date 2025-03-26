@@ -4,10 +4,107 @@
  */
 package com.sixthgroup.healthmanagementtraining.services;
 
+import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.time.LocalDate;
+
 /**
  *
  * @author DELL
  */
 public class DashboardServices {
-    
+
+    public int getDailyCalorieIntake(String userName, LocalDate servingDate) throws SQLException {
+        int totalCalories = 0;
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT SUM(f.caloriesPerUnit * n.numberOfUnit) "
+                    + "FROM nutritionlog n "
+                    + "JOIN userinfo u ON n.userInfo_id = u.id "
+                    + "JOIN food f ON n.food_id = f.id "
+                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, userName);
+            stm.setDate(2, java.sql.Date.valueOf(servingDate));
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                totalCalories = rs.getInt(1);
+            }
+        }
+        return totalCalories;
+    }
+
+    public double getDailyLipidIntake(String userName, LocalDate servingDate) throws SQLException {
+        double totalLipid = 0;
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT SUM(f.lipidPerUnit * n.numberOfUnit) "
+                    + "FROM nutritionlog n "
+                    + "JOIN userinfo u ON n.userInfo_id = u.id "
+                    + "JOIN food f ON n.food_id = f.id "
+                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, userName);
+            stm.setDate(2, java.sql.Date.valueOf(servingDate));
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                totalLipid = rs.getDouble(1);
+            }
+        }
+        return totalLipid;
+    }
+
+    public double getDailyFiberIntake(String userName, LocalDate servingDate) throws SQLException {
+        double totalFiber = 0;
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT SUM(f.fiberPerUnit * n.numberOfUnit) "
+                    + "FROM nutritionlog n "
+                    + "JOIN userinfo u ON n.userInfo_id = u.id "
+                    + "JOIN food f ON n.food_id = f.id "
+                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, userName);
+            stm.setDate(2, java.sql.Date.valueOf(servingDate));
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                totalFiber = rs.getDouble(1);
+            }
+        }
+        return totalFiber;
+    }
+
+    public double getDailyProteinIntake(String userName, LocalDate servingDate) throws SQLException {
+        double totalProtein = 0;
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT SUM(f.proteinPerUnit * n.numberOfUnit) "
+                    + "FROM nutritionlog n "
+                    + "JOIN userinfo u ON n.userInfo_id = u.id "
+                    + "JOIN food f ON n.food_id = f.id "
+                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, userName);
+            stm.setDate(2, java.sql.Date.valueOf(servingDate));
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                totalProtein = rs.getDouble(1);
+            }
+        }
+        return totalProtein;
+    }
+
+    public int getDailyCalorieBurn(String userName, LocalDate workoutDate) throws SQLException {
+        int totalCalo = 0;
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT SUM(e.caloriesPerMinute * w.duration) FROM (workoutlog w JOIN userinfo u) JOIN exercise e ON w.userInfo_id = u.id AND w.exercise_id = e.id WHERE u.userName = ? AND DATE(w.workoutDate) = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, userName);
+            stm.setDate(2, java.sql.Date.valueOf(workoutDate));
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()){
+                totalCalo = rs.getInt(1);
+            }
+        }
+        return totalCalo;
+    }
 }
