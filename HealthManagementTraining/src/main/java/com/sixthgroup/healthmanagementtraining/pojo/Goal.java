@@ -4,7 +4,7 @@
  */
 package com.sixthgroup.healthmanagementtraining.pojo;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 /**
  *
@@ -14,8 +14,8 @@ public class Goal {
     private int id; // auto_increment
     private float targetWeight; // float
     private float currentWeight; // float
-    private Date startDate; // datetime
-    private Date endDate; // datetime
+    private LocalDate startDate; // datetime
+    private LocalDate endDate; // datetime
     private int dailyCaloNeeded; // int
     private int currentProgress; // int
     private String userInfoId; // char(8)
@@ -65,28 +65,28 @@ public class Goal {
     /**
      * @return the startDate
      */
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
     /**
      * @param startDate the startDate to set
      */
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
     /**
      * @return the endDate
      */
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
     /**
      * @param endDate the endDate to set
      */
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 
@@ -130,5 +130,15 @@ public class Goal {
      */
     public void setUserInfoId(String userInfoId) {
         this.userInfoId = userInfoId;
+    }
+    public Goal(int id, float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate, int dailyCaloNeeded, int currentProgress){
+       this.id = id;
+        this.targetWeight = targetWeight;
+        this.currentWeight = currentWeight;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.dailyCaloNeeded = dailyCaloNeeded;
+        this.currentProgress = currentProgress;
+        
     }
 }
