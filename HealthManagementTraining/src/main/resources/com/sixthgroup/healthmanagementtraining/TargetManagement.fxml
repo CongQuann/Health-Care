@@ -20,36 +20,36 @@
             <!-- Hai ô nhập cân nặng trên cùng một hàng -->
             <HBox alignment="CENTER_LEFT" spacing="20.0">
                 <Label minWidth="130" text="Cân nặng mục tiêu (kg):" />
-                <TextField fx:id="targetWeightField" promptText="Nhập cân nặng mục tiêu" focusTraversable="false"/>
+                <TextField fx:id="targetWeightField" focusTraversable="false" promptText="Nhập cân nặng mục tiêu" />
                 <Label minWidth="130" text="Cân nặng hiện tại (kg):" />
-                <TextField fx:id="currentWeightField" promptText="Nhập cân nặng hiện tại" focusTraversable="false"/>
+                <TextField fx:id="currentWeightField" focusTraversable="false" promptText="Nhập cân nặng hiện tại" />
             </HBox>
 
             <!-- Hai ô chọn ngày trên cùng một hàng -->
             <HBox alignment="CENTER_LEFT" spacing="20.0">
                 <Label minWidth="130" text="Ngày bắt đầu:" />
-                <DatePicker fx:id="startDatePicker" prefHeight="26.0" prefWidth="150.0" focusTraversable="false"/>
+                <DatePicker fx:id="startDatePicker" focusTraversable="false" prefHeight="26.0" prefWidth="150.0" />
                 <Label minWidth="130" text="Ngày kết thúc:" />
-                <DatePicker fx:id="endDatePicker" prefHeight="26.0" prefWidth="149.0" focusTraversable="false"/>
+                <DatePicker fx:id="endDatePicker" focusTraversable="false" prefHeight="26.0" prefWidth="149.0" />
             </HBox>
 
-            <Button fx:id="addGoalButton" styleClass="add-button" text="Thêm mục tiêu" />
+            <Button fx:id="addGoalButton" onAction="#addGoal" styleClass="add-button" text="Thêm mục tiêu" />
         </VBox>
 
         <!-- Phần bảng hiển thị danh sách mục tiêu -->
         
         <TableView fx:id="goalTableView" layoutX="26.0" layoutY="272.0" prefHeight="300.0" prefWidth="772.0">
             <columns>
-                <TableColumn fx:id="targetWeightColumn" prefWidth="170.0" text="Cân nặng mục tiêu (kg)" />
-                <TableColumn fx:id="currentWeightColumn" prefWidth="170.0" text="Cân nặng hiện tại (kg)" />
-                <TableColumn fx:id="startDateColumn" prefWidth="140.0" text="Ngày bắt đầu" />
-                <TableColumn fx:id="endDateColumn" prefWidth="140.0" text="Ngày kết thúc" />
-                <TableColumn fx:id="progressColumn" prefWidth="160.0" text="Tiến độ hiện tại (%)" />
+                <TableColumn fx:id="targetWeightCol" prefWidth="170.0" text="Cân nặng mục tiêu (kg)" />
+                <TableColumn fx:id="currentWeightCol" prefWidth="170.0" text="Cân nặng hiện tại (kg)" />
+                <TableColumn fx:id="startDateCol" prefWidth="140.0" text="Ngày bắt đầu" />
+                <TableColumn fx:id="endDateCol" prefWidth="140.0" text="Ngày kết thúc" />
+                <TableColumn fx:id="progressCol" prefWidth="160.0" text="Tiến độ hiện tại (%)" />
 
             </columns>
         </TableView>
         <Label layoutX="287.0" layoutY="42.0" prefHeight="46.0" prefWidth="250.0" styleClass="lb-Title" text="Quản lý mục tiêu" />
-        <Button fx:id="deleteTargetButton" layoutX="680.0" layoutY="584.0" styleClass="delete-button" text="Xóa mục tiêu" />
+        <Button fx:id="deleteTargetButton" layoutX="680.0" layoutY="584.0" onAction="#deleteGoal" styleClass="delete-button" text="Xóa mục tiêu" />
         <!--==========================NAV BAR===============================-->
         <HBox styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
@@ -90,7 +90,5 @@
                
             </children>
         </VBox>
-        <!--=====================================================-->
-          <Button layoutX="517.0" layoutY="584.0" mnemonicParsing="false" styleClass="edit-button" text="Chỉnh sửa mục tiêu" />
     </children>
 </AnchorPane>
