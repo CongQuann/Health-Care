@@ -4,8 +4,8 @@
  */
 package com.sixthgroup.healthmanagementtraining.pojo;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,35 +16,24 @@ public class WorkoutLog {
 
     private int id; // auto_increment
     private int duration; // int
-    private Date workoutDate; // datetime
+    private LocalDate workoutDate; // datetime
     private String userInfoId; // char(8)
-    private List<Exercise> exercises = new ArrayList<>(); // char(8)
+    private int exerciseId; // char(8)
 
-    public WorkoutLog(int id, int duration, Date workoutDate, String userInfoId, List<Exercise> exs) {
-        this.id = id;
+    public WorkoutLog(int duration, LocalDate workoutDate, String userInfoId, int exercise) {
+        
         this.duration = duration;
         this.workoutDate = workoutDate;
         this.userInfoId = userInfoId;
-        this.exercises = exs;
+        this.exerciseId = exercise;
     }
-    
+    public WorkoutLog(){
+        
+    }
     
     
     // Getters and Setters
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
-    }
-
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
-        this.id = id;
-    }
-
+    
     /**
      * @return the duration
      */
@@ -62,14 +51,14 @@ public class WorkoutLog {
     /**
      * @return the workoutDate
      */
-    public Date getWorkoutDate() {
+    public LocalDate getWorkoutDate() {
         return workoutDate;
     }
 
     /**
      * @param workoutDate the workoutDate to set
      */
-    public void setWorkoutDate(Date workoutDate) {
+    public void setWorkoutDate(LocalDate workoutDate) {
         this.workoutDate = workoutDate;
     }
 
@@ -88,18 +77,18 @@ public class WorkoutLog {
     }
 
     /**
-     * @return the exercises
+     * @return the exerciseId
      */
-    public List<Exercise> getExercises() {
-        return exercises;
+    public int getExerciseId() {
+        return exerciseId;
     }
 
     /**
-     * @param exercises the exercises to set
+     * @param exerciseId the exerciseId to set
      */
-    public void setExercises(List<Exercise> exercises) {
-        this.exercises = exercises;
+    public void setExerciseId(int exerciseId) {
+        this.exerciseId = exerciseId;
     }
 
-    
+  
 }

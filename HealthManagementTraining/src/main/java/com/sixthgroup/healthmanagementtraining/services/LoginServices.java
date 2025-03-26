@@ -13,6 +13,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoginServices {
 
@@ -22,8 +24,7 @@ public class LoginServices {
 
     public static Role checkLogin(String username, String password) throws SQLException {
         String sql = "SELECT role FROM userinfo WHERE userName = ? AND password = ?";
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             stmt.setString(1, username);
             stmt.setString(2, password);
@@ -47,4 +48,6 @@ public class LoginServices {
 
         return null; // đăng nhập thất bại
     }
+
+ 
 }

@@ -10,9 +10,6 @@ package com.sixthgroup.healthmanagementtraining.pojo;
  * @author PC
  */
 public class Exercise {
-
-    
-
     private int id; // char(8)
     private String exerciseName; // nvarchar(40)
     private int caloriesPerMinute; // int

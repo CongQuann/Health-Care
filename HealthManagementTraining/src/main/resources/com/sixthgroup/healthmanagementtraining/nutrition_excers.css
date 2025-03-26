@@ -118,6 +118,11 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0, 0, 1); /* Hiệu ứng bóng */
     -fx-spacing: 5; /* Khoảng cách giữa biểu tượng và chữ */
 }
+.labelStyle{
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill:#2c3e50;
+}
 .addBtn {
     -fx-background-color: #007bff; /* Màu nền */
     -fx-text-fill: white; /* Màu chữ */
