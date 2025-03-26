@@ -109,7 +109,7 @@ public class ExercisesManageController implements Initializable {
         // Lấy ngày từ biến tĩnh và hiển thị
         LocalDate date = Utils.getSelectedDate();
         if (date != null) {
-            dateLabel.setText("Ngày đã chọn: " + date.toString());
+            dateLabel.setText(date.toString());
         } else {
             dateLabel.setText("Không có ngày nào được chọn.");
         }
@@ -352,7 +352,7 @@ public class ExercisesManageController implements Initializable {
                 }
 
                 stmt.executeUpdate(); // Thực thi tất cả câu lệnh cùng lúc
-                System.out.println("Lưu thành công các bài tập vào ExerciseLog.");
+                System.out.println("Lưu thành công các bài tập vào WorkoutLog.");
 
             } catch (SQLException e) {
                 e.printStackTrace();
@@ -366,7 +366,7 @@ public class ExercisesManageController implements Initializable {
         s.switchScene(event, "Dashboard.fxml");
     }
 
-    public String getUUIdByName(String username) {
+    public static String getUUIdByName(String username) {
         String id = null;  // Giá trị mặc định nếu không tìm thấy
         if (username != null) {
             try (Connection conn = JdbcUtils.getConn()) {

@@ -6,6 +6,8 @@ package com.sixthgroup.healthmanagementtraining.services;
 
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -29,7 +31,11 @@ public class Utils {
     public static Alert getAlert(String content) {
         return new Alert(Alert.AlertType.INFORMATION, content, ButtonType.OK);
     }
-    
+    public static String roundFloat(float value, int decimalPlaces) {
+        BigDecimal bigDecimal = new BigDecimal(Float.toString(value)); // Chuyển float thành BigDecimal
+        bigDecimal = bigDecimal.setScale(decimalPlaces, RoundingMode.HALF_UP); // Làm tròn theo HALF_UP
+        return bigDecimal.toString(); // Trả về chuỗi đã làm tròn
+    }
     //current user
     private static final Preferences prefs = Preferences.userRoot().node("HealthManagementTraining");
 
