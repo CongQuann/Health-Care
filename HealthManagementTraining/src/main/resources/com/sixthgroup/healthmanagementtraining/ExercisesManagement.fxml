@@ -109,9 +109,9 @@
                         <Label styleClass="labelStyle" text="Tổng thời gian tập:" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="54.0" prefWidth="153.0">
+                  <HBox prefHeight="20.0" prefWidth="153.0">
                      <children>
-                        <Text fx:id="txtTotalDuration" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                        <Text fx:id="txtTotalDuration" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="84.13671875" />
                      </children>
                   </HBox>
                </children>
@@ -123,9 +123,9 @@
                         <Label prefHeight="30.0" prefWidth="180.0" styleClass="labelStyle" text="Tổng calo tiêu thụ:" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="100.0" prefWidth="200.0">
+                  <HBox prefHeight="100.0" prefWidth="200.0" styleClass="caloriesText">
                      <children>
-                        <Text fx:id="txtTotalCalories" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                        <Text fx:id="txtTotalCalories" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="64.0498046875" />
                      </children>
                   </HBox>
                </children>

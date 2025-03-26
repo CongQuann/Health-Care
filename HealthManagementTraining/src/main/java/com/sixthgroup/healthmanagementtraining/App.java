@@ -21,6 +21,7 @@ public class App extends Application {
 
         Parent root = loadFXML("secondary");
 
+
         // Không đặt kích thước cố định, JavaFX sẽ tự động lấy từ FXML
         scene = new Scene(root);
         stage.setScene(scene);
