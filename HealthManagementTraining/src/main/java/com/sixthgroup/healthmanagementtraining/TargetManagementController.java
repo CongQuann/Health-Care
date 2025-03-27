@@ -228,9 +228,9 @@ public class TargetManagementController implements Initializable {
 
             String targetType = "";
             if (currentWeight > targetWeight) {
-                targetType = "gain";
-            } else if (currentWeight < targetWeight) {
                 targetType = "loss";
+            } else if (currentWeight < targetWeight) {
+                targetType = "gain";
             } else if (currentWeight == targetWeight) {
                 Utils.getAlert("Cân Nặng Hiện Tại Và Cân Nặng Mục Tiêu Không Được Bằng Nhau").show();
                 return;
@@ -242,7 +242,7 @@ public class TargetManagementController implements Initializable {
             
             int caloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, startDate, endDate);
             System.out.println("Calo " + caloNeeded);
-            TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight,caloNeeded, startDate, endDate, targetType);
+            TargetManagementServices.addGoal(userInfoId,targetWeight, currentWeight,caloNeeded, startDate, endDate, targetType);
             System.out.println("Userid :" + userInfoId);
             System.out.println("Đã thêm mục tiêu");
             loadGoals();

@@ -59,7 +59,7 @@ public class TargetManagementServices {
 
     // Thêm mục tiêu mới
     public static void addGoal(String userInfoId, float targetWeight, float currentWeight,int caloriesNeeded, LocalDate startDate, LocalDate endDate, String targetType) throws SQLException {
-        String sql = "INSERT INTO goal (targetWeight, currentWeight, startDate, endDate, userInfo_id, currentProgress, targetType, dailyCaloNeeded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO goal (targetWeight, currentWeight, startDate, endDate, userInfo_id, currentProgress, targetType, dailyCaloNeeded, initialWeight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         //dailyCaloNeeded
         try (Connection conn = JdbcUtils.getConn();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
@@ -71,6 +71,7 @@ public class TargetManagementServices {
             stmt.setInt(6, 0);
             stmt.setString(7, targetType);
             stmt.setInt(8,caloriesNeeded);
+            stmt.setFloat(9,currentWeight);
             stmt.executeUpdate();
         }
     }
