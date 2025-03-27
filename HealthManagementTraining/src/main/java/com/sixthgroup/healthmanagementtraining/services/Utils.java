@@ -26,20 +26,26 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 import java.util.prefs.Preferences;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  *
  * @author quanp
  */
 public class Utils {
+
+    private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+
     public static Alert getAlert(String content) {
         return new Alert(Alert.AlertType.INFORMATION, content, ButtonType.OK);
     }
+
     public static String roundFloat(float value, int decimalPlaces) {
         BigDecimal bigDecimal = new BigDecimal(Float.toString(value)); // Chuyển float thành BigDecimal
         bigDecimal = bigDecimal.setScale(decimalPlaces, RoundingMode.HALF_UP); // Làm tròn theo HALF_UP
         return bigDecimal.toString(); // Trả về chuỗi đã làm tròn
     }
+
     //current user
     private static final Preferences prefs = Preferences.userRoot().node("HealthManagementTraining");
 
@@ -54,7 +60,7 @@ public class Utils {
     public static void clearUser() {
         prefs.remove("loggedInUser");
     }
-    
+
     private static LocalDate selectedDate = LocalDate.now(); // Mặc định là hôm nay
 
     public static void setSelectedDate(LocalDate date) {
@@ -64,18 +70,20 @@ public class Utils {
     public static LocalDate getSelectedDate() {
         return selectedDate;
     }
-    
+
     public static LocalDate convertToLocalDate(Date date) {
         return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
-    
+
     public static Date convertToDate(LocalDate localDate) {
         return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
     }
+
     public static float convertToFloat(double num) {
         float result = (float) num; // Ép kiểu từ double về float
         return Math.round(result * 10) / 10.0f; // Làm tròn 1 số thập phân
     }
+
     public static String getUUIdByName(String username) {
         String id = null;  // Giá trị mặc định nếu không tìm thấy
         if (username != null) {
@@ -93,7 +101,16 @@ public class Utils {
             }
         }
         return id;
+        // Mã hóa mật khẩu
+    }
+
+    public static String hashPassword(String password) {
+        return encoder.encode(password);
+    }
+
+    // Kiểm tra mật khẩu nhập vào có khớp với mật khẩu đã mã hóa không
+    public static boolean checkPassword(String rawPassword, String hashedPassword) {
+        return encoder.matches(rawPassword, hashedPassword);
+
     }
 }
-
-

@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,6 +26,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBox;
 
@@ -54,6 +57,12 @@ public class UserInfoManagementController implements Initializable {
     private ComboBox<String> genderComboBox;
     @FXML
     private ComboBox<ActivityLevel> activityLevelComboBox;
+    @FXML
+    private PasswordField oldPasswordField;
+    @FXML
+    private PasswordField newPasswordField;
+    @FXML
+    private PasswordField confirmPasswordField;
 
     public void loadActivityLevel() {
         // Đặt danh sách các giá trị từ enum UnitType vào ComboBox
@@ -120,11 +129,83 @@ public class UserInfoManagementController implements Initializable {
         }
     }
 
+    private void setupDatePickerValidation() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+
+        dobPicker.getEditor().focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue) { // Khi mất focus
+                String input = dobPicker.getEditor().getText().trim(); // Lấy giá trị người dùng nhập
+                if (input.isEmpty()) {
+                    return; // Nếu rỗng, không làm gì cả
+                }
+                try {
+                    LocalDate parsedDate = LocalDate.parse(input, formatter);
+                    dobPicker.setValue(parsedDate); // Cập nhật giá trị nếu hợp lệ
+                    System.out.println("Cập nhật ngày sinh: " + parsedDate);
+                } catch (DateTimeParseException e) {
+                    System.out.println("Ngày nhập không hợp lệ: " + input);
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Lỗi nhập ngày");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Ngày nhập không hợp lệ! Vui lòng nhập đúng định dạng MM/dd/yyyy.");
+                    alert.showAndWait();
+                    dobPicker.getEditor().clear(); // Xóa nội dung nhập sai
+                }
+            }
+        });
+    }
+
+    public void handlerChangePass(ActionEvent event) {
+        UserInfoServices userInfoServices = new UserInfoServices();
+        String oldPassword = oldPasswordField.getText();
+        String newPassword = newPasswordField.getText();
+        String confirmPassword = confirmPasswordField.getText();
+
+        // Lấy username hiện tại từ Utils
+        String userName = Utils.getUser();
+        if (userName == null || userName.isEmpty()) {
+            showAlert("Lỗi", "Không tìm thấy người dùng hiện tại.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin.", Alert.AlertType.ERROR);
+            return;
+        }
+
+        if (!newPassword.equals(confirmPassword)) {
+            showAlert("Lỗi", "Mật khẩu mới không khớp. Vui lòng nhập lại!", Alert.AlertType.ERROR);
+            return;
+        }
+
+//         Gọi phương thức đổi mật khẩu từ services
+        boolean isUpdated = userInfoServices.updateUserPassword(userName, oldPassword, newPassword);
+
+        if (isUpdated) {
+            showAlert("Thành công", "Đổi mật khẩu thành công!", Alert.AlertType.INFORMATION);
+            oldPasswordField.clear();
+            newPasswordField.clear();
+            confirmPasswordField.clear();
+        } else {
+            showAlert("Lỗi", "Sai mật khẩu cũ hoặc có lỗi xảy ra!", Alert.AlertType.ERROR);
+        }
+    }
+
+    private void showAlert(String title, String content, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         navBar.setTranslateX(-250);
         loadActivityLevel();
         loadUserInfo();
+        setupDatePickerValidation();
+
         //nạp combobox cho giới tính
         ObservableList<String> genderOptions = FXCollections.observableArrayList("Nam", "Nữ");
         genderComboBox.setItems(genderOptions);
@@ -137,6 +218,7 @@ public class UserInfoManagementController implements Initializable {
         } else {
             System.out.println("toggleNavButton chưa được khởi tạo!");
         }
+
     }
 
     public void switchToExercises(ActionEvent event) throws IOException {

@@ -9,6 +9,7 @@ module com.sixthgroup.healthmanagementtraining {
     exports com.sixthgroup.healthmanagementtraining.services;
     
     opens com.sixthgroup.healthmanagementtraining.pojo to javafx.base;
+    requires spring.security.crypto;
 
 
 }
