@@ -289,7 +289,7 @@ public class ExercisesManageController implements Initializable {
                             String id = null;
                             String username = Utils.getUser();
                             System.out.println("Username: " + username);
-                            id = getUUIdByName(username);
+                            id = Utils.getUUIdByName(username);
                             System.out.println("UUID: " + id);
                             WorkoutLog w = new WorkoutLog();
                             w.setDuration(selectedDuration);
@@ -366,24 +366,7 @@ public class ExercisesManageController implements Initializable {
         s.switchScene(event, "Dashboard.fxml");
     }
 
-    public static String getUUIdByName(String username) {
-        String id = null;  // Giá trị mặc định nếu không tìm thấy
-        if (username != null) {
-            try (Connection conn = JdbcUtils.getConn()) {
-                String sql = "SELECT id FROM userinfo WHERE username = ? ";
-                PreparedStatement stm = conn.prepareCall(sql);
-                stm.setString(1, username);
-                ResultSet rs = stm.executeQuery();
-                while (rs.next()) {
-                    id = rs.getString("id");
-                    return id;
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return id;
-    }
+    
     public int getExerciseCaloriesByExerciseId(int exerciseId){
         int calories = -1;
         try (Connection conn = JdbcUtils.getConn()) {
