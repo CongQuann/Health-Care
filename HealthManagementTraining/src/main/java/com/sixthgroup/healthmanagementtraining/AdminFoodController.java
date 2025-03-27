@@ -118,7 +118,7 @@ public class AdminFoodController implements Initializable {
                     foodName,
                     calories,
                     lipid,
-                    protein,
+                  protein,
                     fiber,
                     selectedCategory.getId(),
                     selectedCategory.getCategoryName(),
@@ -128,9 +128,9 @@ public class AdminFoodController implements Initializable {
             System.out.println("Lỗi: Vui lòng nhập số hợp lệ!");
             return null;
         }
-    }
+   }
 
-    public void handleAddFood(ActionEvent event) throws SQLException {
+   public void handleAddFood(ActionEvent event) throws SQLException {
         Food food = getFoodFromInput(); // lay food tu giao dien qua hàm getFoodFromInput đã tạo ở trên
         //kiem tra neu food == null thi thong bao chua nhap du thong tin
         if (food == null) {
