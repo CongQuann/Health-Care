@@ -14,6 +14,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -68,7 +72,39 @@ public class Utils {
         return selectedDate;
     }
 
-    // Mã hóa mật khẩu
+    public static LocalDate convertToLocalDate(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
+    public static Date convertToDate(LocalDate localDate) {
+        return Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+    }
+
+    public static float convertToFloat(double num) {
+        float result = (float) num; // Ép kiểu từ double về float
+        return Math.round(result * 10) / 10.0f; // Làm tròn 1 số thập phân
+    }
+
+    public static String getUUIdByName(String username) {
+        String id = null;  // Giá trị mặc định nếu không tìm thấy
+        if (username != null) {
+            try (Connection conn = JdbcUtils.getConn()) {
+                String sql = "SELECT id FROM userinfo WHERE username = ? ";
+                PreparedStatement stm = conn.prepareCall(sql);
+                stm.setString(1, username);
+                ResultSet rs = stm.executeQuery();
+                while (rs.next()) {
+                    id = rs.getString("id");
+                    return id;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return id;
+        // Mã hóa mật khẩu
+    }
+
     public static String hashPassword(String password) {
         return encoder.encode(password);
     }
@@ -76,6 +112,7 @@ public class Utils {
     // Kiểm tra mật khẩu nhập vào có khớp với mật khẩu đã mã hóa không
     public static boolean checkPassword(String rawPassword, String hashedPassword) {
         return encoder.matches(rawPassword, hashedPassword);
+
     }
     
 }

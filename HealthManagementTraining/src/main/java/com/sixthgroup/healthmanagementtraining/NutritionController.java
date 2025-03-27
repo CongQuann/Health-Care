@@ -329,7 +329,7 @@ public class NutritionController implements Initializable {
                             String id = null;
                             String username = Utils.getUser();
                             System.out.println("Username: " + username);
-                            id = ExercisesManageController.getUUIdByName(username);
+                            id = Utils.getUUIdByName(username);
                             System.out.println("UUID: " + id);
                             NutritionLog n = new NutritionLog();
                             n.setFoodId(food.getId());

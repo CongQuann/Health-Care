@@ -289,7 +289,7 @@ public class ExercisesManageController implements Initializable {
                             String id = null;
                             String username = Utils.getUser();
                             System.out.println("Username: " + username);
-                            id = getUUIdByName(username);
+                            id = Utils.getUUIdByName(username);
                             System.out.println("UUID: " + id);
                             WorkoutLog w = new WorkoutLog();
                             w.setDuration(selectedDuration);
@@ -366,6 +366,7 @@ public class ExercisesManageController implements Initializable {
         s.switchScene(event, "Dashboard.fxml");
     }
 
+
     public static String getUUIdByName(String username) {
         String id = null;  // Giá trị mặc định nếu không tìm thấy
         if (username != null) {
@@ -385,7 +386,9 @@ public class ExercisesManageController implements Initializable {
         return id;
     }
 
-    public int getExerciseCaloriesByExerciseId(int exerciseId) {
+    
+    public int getExerciseCaloriesByExerciseId(int exerciseId){
+
         int calories = -1;
         try (Connection conn = JdbcUtils.getConn()) {
             String sql = "SELECT caloriesPerMinute FROM exercise WHERE id = ? ";

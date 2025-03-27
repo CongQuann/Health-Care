@@ -178,7 +178,7 @@ public class UserInfoManagementController implements Initializable {
             return;
         }
 
-        // Gọi phương thức đổi mật khẩu từ services
+//         Gọi phương thức đổi mật khẩu từ services
         boolean isUpdated = userInfoServices.updateUserPassword(userName, oldPassword, newPassword);
 
         if (isUpdated) {

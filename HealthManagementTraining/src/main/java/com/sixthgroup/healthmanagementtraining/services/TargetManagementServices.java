@@ -58,8 +58,9 @@ public class TargetManagementServices {
     }
 
     // Thêm mục tiêu mới
-    public static void addGoal(String userInfoId, float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate) throws SQLException {
-        String sql = "INSERT INTO goal (targetWeight, currentWeight, startDate, endDate, userInfo_id) VALUES (?, ?, ?, ?, ?)";
+    public static void addGoal(String userInfoId, float targetWeight, float currentWeight,int caloriesNeeded, LocalDate startDate, LocalDate endDate, String targetType) throws SQLException {
+        String sql = "INSERT INTO goal (targetWeight, currentWeight, startDate, endDate, userInfo_id, currentProgress, targetType, dailyCaloNeeded) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        //dailyCaloNeeded
         try (Connection conn = JdbcUtils.getConn();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setFloat(1, targetWeight);
@@ -67,40 +68,66 @@ public class TargetManagementServices {
             stmt.setDate(3, Date.valueOf(startDate));
             stmt.setDate(4, Date.valueOf(endDate));
             stmt.setString(5, userInfoId);
+            stmt.setInt(6, 0);
+            stmt.setString(7, targetType);
+            stmt.setInt(8,caloriesNeeded);
             stmt.executeUpdate();
         }
     }
 
-    // Cập nhật mục tiêu (chỉ tăng ngày kết thúc)
+    // Cập nhật mục tiêu (bao gồm tính toán currentProgress)
     public static boolean updateGoal(String userInfoId, int goalId, float targetWeight, float currentWeight, LocalDate newEndDate) throws SQLException {
-        String checkSql = "SELECT endDate FROM goal WHERE id = ? AND userInfo_id = ?";
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+        String checkSql = "SELECT endDate, targetWeight, initialWeight, targetType FROM goal WHERE id = ? AND userInfo_id = ?";
+
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
             checkStmt.setInt(1, goalId);
             checkStmt.setString(2, userInfoId);
             ResultSet rs = checkStmt.executeQuery();
+
             if (rs.next()) {
                 LocalDate currentEndDate = rs.getDate("endDate").toLocalDate();
+                float oldTargetWeight = rs.getFloat("targetWeight");
+                float initialWeight = rs.getFloat("initialWeight");
+                String targetType = rs.getString("targetType");
+
                 if (newEndDate.isBefore(currentEndDate)) {
                     return false; // Không cho phép giảm ngày kết thúc
                 }
+
+                int newProgress = 0;
+
+                // Nếu targetWeight không đổi, chỉ currentWeight thay đổi
+                if (oldTargetWeight == targetWeight && currentWeight != initialWeight) {
+                    if ("loss".equals(targetType)) {
+                        newProgress = (int) (((initialWeight - currentWeight) / (initialWeight - targetWeight)) * 100);
+                        if (newProgress < 0) newProgress = 0;
+                    } else if ("gain".equals(targetType)) {
+                        newProgress = (int) (((currentWeight - initialWeight) / (targetWeight - initialWeight)) * 100);
+                        if (newProgress < 0) newProgress = 0;
+                    }
+                } // Nếu targetWeight thay đổi, reset progress
+                else if (oldTargetWeight != targetWeight) {
+                    newProgress = 0;
+                    initialWeight = currentWeight;
+                }
+
+                // Cập nhật cơ sở dữ liệu
+                String updateSql = "UPDATE goal SET targetWeight = ?, currentWeight = ?, endDate = ?, currentProgress = ?, initialWeight = ? WHERE id = ? AND userInfo_id = ?";
+                try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
+                    stmt.setFloat(1, targetWeight);
+                    stmt.setFloat(2, currentWeight);
+                    stmt.setDate(3, Date.valueOf(newEndDate));
+                    stmt.setInt(4, newProgress);
+                    stmt.setFloat(5, initialWeight);
+                    stmt.setInt(6, goalId);
+                    stmt.setString(7, userInfoId);
+                    stmt.executeUpdate();
+                }
+                return true;
             } else {
                 return false;
             }
         }
-
-        // Cập nhật mục tiêu
-        String updateSql = "UPDATE goal SET targetWeight = ?, currentWeight = ?, endDate = ? WHERE id = ? AND userInfo_id = ?";
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement stmt = conn.prepareStatement(updateSql)) {
-            stmt.setFloat(1, targetWeight);
-            stmt.setFloat(2, currentWeight);
-            stmt.setDate(3, Date.valueOf(newEndDate));
-            stmt.setInt(4, goalId);
-            stmt.setString(5, userInfoId);
-            stmt.executeUpdate();
-        }
-        return true;
     }
 
     // Xóa mục tiêu
