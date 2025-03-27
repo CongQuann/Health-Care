@@ -33,7 +33,7 @@ public class UserInfoServices {
                 userInfo = new UserInfo();
 //                userInfo.setUserName(resultSet.getString("userName"));
                 userInfo.setName(resultSet.getString("name"));
-                
+
                 userInfo.setEmail(resultSet.getString("email"));
                 userInfo.setHeight(resultSet.getFloat("height"));
                 userInfo.setWeight(resultSet.getFloat("weight"));
@@ -66,6 +66,41 @@ public class UserInfoServices {
             stm.setString(8, userInfo.getUserName());
 
             return stm.executeUpdate() > 0; // Trả về true nếu cập nhật thành công
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateUserPassword(String userName, String oldPassword, String newPassword) {
+        try (Connection conn = JdbcUtils.getConn()) {
+            // Lấy mật khẩu hiện tại từ cơ sở dữ liệu
+            String sqlSelect = "SELECT password FROM userinfo WHERE userName = ?";
+            PreparedStatement selectStmt = conn.prepareStatement(sqlSelect);
+            selectStmt.setString(1, userName);
+            ResultSet rs = selectStmt.executeQuery();
+
+            if (rs.next()) {
+                String hashedPassword = rs.getString("password");
+
+                // Kiểm tra mật khẩu cũ có đúng không
+                if (!Utils.checkPassword(oldPassword, hashedPassword)) {
+                    return false; // Sai mật khẩu cũ
+                }
+            } else {
+                return false; // Không tìm thấy tài khoản
+            }
+
+            // Mã hóa mật khẩu mới
+            String hashedNewPassword = Utils.hashPassword(newPassword);
+
+            // Cập nhật mật khẩu mới vào CSDL
+            String sqlUpdate = "UPDATE userinfo SET password = ? WHERE userName = ?";
+            PreparedStatement updateStmt = conn.prepareStatement(sqlUpdate);
+            updateStmt.setString(1, hashedNewPassword);
+            updateStmt.setString(2, userName);
+
+            return updateStmt.executeUpdate() > 0;
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
