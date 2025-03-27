@@ -64,7 +64,7 @@ public class NutritionController implements Initializable {
     @FXML
     private TableView<Food> tbFoods;
     @FXML
-    private TableView<NutritionLog> tbNutritionLog;
+    private TableView<Food> tbSelectedFood;
     @FXML
     private TextField txtSearch;
     @FXML
@@ -83,6 +83,7 @@ public class NutritionController implements Initializable {
     private static float totalLipid;
     private static float totalFiber;
     private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
+    private NutritionTrackService n = new NutritionTrackService();
 
     //kich hoat navbar
     private void toggleNavBar() {
@@ -132,8 +133,27 @@ public class NutritionController implements Initializable {
         } else {
             System.out.println("toggleNavButton chưa được khởi tạo!");
         }
-        ObservableList<NutritionLog> selectedFood = FXCollections.observableArrayList();
-        this.tbNutritionLog.setItems(selectedFood);
+
+        // Lấy danh sách thức ăn đã chọn từ CSDL
+        ObservableList<Food> selectedFood = FXCollections.observableArrayList();
+        this.tbSelectedFood.setItems(selectedFood);
+        try {
+            List<Food> selectedFoodsFromLog;
+            selectedFoodsFromLog = n.getFoodLogOfUser(Utils.getUUIdByName(Utils.getUser()), Utils.getSelectedDate());
+            if (selectedFoodsFromLog.isEmpty()) {
+                System.out.println("Chưa có món ăn nào được chọn hôm nay.");
+                tbSelectedFood.getItems().clear(); // Đảm bảo bảng trống
+                
+            } else {
+                // Hiển thị danh sách trên bảng
+                tbSelectedFood.getItems().setAll(selectedFoodsFromLog);
+                updateTotalNutrition(selectedFoodsFromLog);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NutritionController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+       
         loadFoodCate();
         loadColumns();
         loadColumnsForSelectedTable();
@@ -141,8 +161,8 @@ public class NutritionController implements Initializable {
         txtSearch.textProperty().addListener((e) -> {
             loadTableData(txtSearch.getText());
         });
-    }
 
+    }
     public void loadFoodCate() {
         NutritionTrackService n = new NutritionTrackService();
         try {
@@ -168,64 +188,19 @@ public class NutritionController implements Initializable {
     }
 
     public void loadColumnsForSelectedTable() {
-        TableColumn colFoodID = new TableColumn("Mã thức ăn");
-        colFoodID.setCellValueFactory(new PropertyValueFactory("foodId"));
-        colFoodID.setPrefWidth(125);
+        TableColumn colFoodName = new TableColumn("Tên thức ăn");
+        colFoodName.setCellValueFactory(new PropertyValueFactory("foodName"));
+        colFoodName.setPrefWidth(125);
 
-        TableColumn colQuantity = new TableColumn("Khối lượng tịnh");
-        colQuantity.setCellValueFactory(new PropertyValueFactory("numberOfUnit"));
-        colQuantity.setPrefWidth(125);
+        TableColumn<Food, Integer> colSelectedQuantity = new TableColumn<>("Khối lượng đã chọn");
+        colSelectedQuantity.setCellValueFactory(new PropertyValueFactory<>("selectedQuantity"));
+        colSelectedQuantity.setPrefWidth(125);
 
-        TableColumn colDate = new TableColumn("Ngày ăn");
-        colDate.setCellValueFactory(new PropertyValueFactory("servingDate"));
-        colDate.setPrefWidth(125);
+        TableColumn colUnitType = new TableColumn("Loại đơn vị");
+        colUnitType.setCellValueFactory(new PropertyValueFactory("unitType"));
+        colUnitType.setPrefWidth(125);
 
-        TableColumn colActionST = new TableColumn();
-        colActionST.setCellFactory(column -> new TableCell<NutritionLog, Void>() {
-            private final Button btn = new Button("Xóa");
-
-            {
-                btn.setOnAction(event -> {
-                    NutritionLog log = getTableView().getItems().get(getIndex());
-                    if (log != null) {
-                        // Hiển thị thông báo xác nhận trước khi xóa
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setTitle("Xác nhận xóa");
-                        alert.setHeaderText("Bạn có chắc muốn xóa thức ăn này?");
-                        alert.setContentText("Thức ăn ID: " + log.getFoodId());
-
-                        Optional<ButtonType> result = alert.showAndWait();
-                        if (result.isPresent() && result.get() == ButtonType.OK) {
-                            // Xóa bài tập khỏi danh sách
-                            getTableView().getItems().remove(log);
-                            totalCalo -= (log.getNumberOfUnit() * getCaloByFoodId(log.getFoodId())) / DEFAULT_QUANTITY;
-                            txtTotalCalories.setText(String.valueOf(totalCalo));
-                            totalProtein -= (log.getNumberOfUnit() * getProteinByFoodId(log.getFoodId())) / DEFAULT_QUANTITY;
-                            txtTotalProtein.setText(Utils.roundFloat(totalProtein, 1));
-                            totalLipid -= (log.getNumberOfUnit() * getLipidByFoodId(log.getFoodId())) / DEFAULT_QUANTITY;
-                            txtTotalLipid.setText(Utils.roundFloat(totalLipid, 1));
-                            totalFiber -= (log.getNumberOfUnit() * getFiberByFoodId(log.getFoodId())) / DEFAULT_QUANTITY;
-                            txtTotalFiber.setText(Utils.roundFloat(totalFiber, 1));
-                            System.out.println("Đã xóa thức ăn có ID: " + log.getFoodId());
-                        }
-                    }
-                });
-            }
-
-            @Override
-
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getIndex() >= getTableView().getItems().size()) {
-                    setGraphic(null);  // Không hiển thị nút nếu hàng trống
-                } else {
-                    setGraphic(btn);  // Hiển thị nút nếu có dữ liệu
-                }
-            }
-        }
-        );
-
-        this.tbNutritionLog.getColumns().addAll(colFoodID, colQuantity, colDate, colActionST);
+        this.tbSelectedFood.getColumns().addAll(colFoodName, colSelectedQuantity, colUnitType);
     }
 
     public void loadColumns() {
@@ -261,19 +236,16 @@ public class NutritionController implements Initializable {
         ObservableList<Integer> quantity = FXCollections.observableArrayList(10, 30, 50, 100, 200);
         TableColumn<Food, Integer> colQuantity = new TableColumn<>("Khối lượng thức ăn");
         colQuantity.setCellFactory(column -> new TableCell<>() {
-            private final ComboBox<Integer> comboBox = new ComboBox<>(quantity);
+            private final ComboBox<Integer> comboBox = new ComboBox<>(FXCollections.observableArrayList(10, 30, 50, 100, 200));
 
             {
                 comboBox.setPrefWidth(100);
-                comboBox.setValue(10); // Giá trị mặc định
-
-                // Khi người dùng chọn, lưu vào TableRow
                 comboBox.setOnAction(event -> {
-                    if (getTableRow() != null) {
-                        getTableRow().setUserData(comboBox.getValue());
+                    Food food = getTableView().getItems().get(getIndex());
+                    if (food != null) {
+                        food.setSelectedQuantity(comboBox.getValue()); // Lưu giá trị đã chọn
                     }
                 });
-
             }
 
             @Override
@@ -282,12 +254,9 @@ public class NutritionController implements Initializable {
                 if (empty || getIndex() >= getTableView().getItems().size()) {
                     setGraphic(null);
                 } else {
+                    Food food = getTableView().getItems().get(getIndex());
+                    comboBox.setValue(food.getSelectedQuantity()); // Hiển thị giá trị khi cập nhật
                     setGraphic(comboBox);
-
-                    //Luôn lưu giá trị mặc định vào TableRow khi hàng được tạo
-                    if (getTableRow() != null && getTableRow().getUserData() == null) {
-                        getTableRow().setUserData(10); // Gán giá trị mặc định
-                    }
                 }
             }
         });
@@ -302,55 +271,42 @@ public class NutritionController implements Initializable {
                     Food food = getTableView().getItems().get(getIndex());
 
                     if (food != null) {
-                        // Thêm dòng vào bảng mới
+                        int selectedQuantity = food.getSelectedQuantity(); // Lấy giá trị từ object
+
                         System.out.println("Đã thêm: " + food.getFoodName());
-
-                        // Lấy giá trị thời gian từ TableRow
-                        int selectedQuantity = (int) getTableRow().getUserData();
-
-                        // Hiển thị giá trị đã chọn
                         System.out.println("Khối lượng tịnh: " + selectedQuantity);
 
-                        //  Kiểm tra xem bài tập đã tồn tại trong tbSelectedExers chưa
-                        boolean isExist = tbNutritionLog.getItems().stream()
-                                .anyMatch(log -> log.getFoodId() == food.getId());
+                        boolean isExist = tbSelectedFood.getItems().stream()
+                                .anyMatch(log -> log.getId() == food.getId());
 
                         if (isExist) {
-                            // Hiển thị cảnh báo nếu bài tập đã tồn tại
                             Alert alert = new Alert(Alert.AlertType.WARNING);
                             alert.setTitle("Lỗi");
                             alert.setHeaderText(null);
                             alert.setContentText("Món ăn này đã được thêm trước đó!");
                             alert.showAndWait();
                         } else {
-                            // Nếu chưa tồn tại, thêm vào danh sách
-                            LocalDate date = Utils.getSelectedDate();
-                            System.out.println("Ngày ăn: " + date);
-                            String id = null;
-                            String username = Utils.getUser();
-                            System.out.println("Username: " + username);
-                            id = Utils.getUUIdByName(username);
-                            System.out.println("UUID: " + id);
-                            NutritionLog n = new NutritionLog();
-                            n.setFoodId(food.getId());
-                            n.setNumberOfUnit(selectedQuantity);
-                            n.setUserInfoId(id);
-                            n.setServingDate(date);
-//                          Lưu bài tập vào bảng mới (tbWorkoutLog)
-                            tbNutritionLog.getItems().add(n);
+                            // Cập nhật selectedQuantity vào đối tượng trước khi thêm vào danh sách
+                            Food selectedFood = new Food(food.getId(), food.getFoodName(), food.getCaloriesPerUnit(),
+                                    food.getLipidPerUnit(), food.getProteinPerUnit(),
+                                    food.getFiberPerUnit(), food.getFoodCategoryId(), food.getCategoryName(), food.getUnitType());
+                            selectedFood.setSelectedQuantity(selectedQuantity); // Lưu khối lượng đã chọn
+
+                            tbSelectedFood.getItems().add(selectedFood); // Thêm vào bảng danh sách đã chọn
+
                             totalCalo += (selectedQuantity * food.getCaloriesPerUnit()) / DEFAULT_QUANTITY;
-                            txtTotalCalories.setText(String.valueOf(totalCalo));
+                            txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalo, 0)));
                             totalProtein += (selectedQuantity * food.getProteinPerUnit()) / DEFAULT_QUANTITY;
-                            txtTotalProtein.setText(String.valueOf(totalProtein));
+                            txtTotalProtein.setText(String.valueOf(Utils.roundFloat(totalProtein, 1)));
                             totalLipid += (selectedQuantity * food.getLipidPerUnit()) / DEFAULT_QUANTITY;
-                            txtTotalLipid.setText(String.valueOf(totalLipid));
+                            txtTotalLipid.setText(String.valueOf(Utils.roundFloat(totalLipid, 1)));
                             totalFiber += (selectedQuantity * food.getFiberPerUnit()) / DEFAULT_QUANTITY;
-                            txtTotalFiber.setText(String.valueOf(totalFiber));
+                            txtTotalFiber.setText(String.valueOf(Utils.roundFloat(totalFiber, 1)));
+
                             System.out.println("Thêm món ăn thành công!");
                         }
                     }
-                }
-                );
+                });
             }
 
             @Override
@@ -380,31 +336,82 @@ public class NutritionController implements Initializable {
     }
 
     public void saveHandler() {
-        if (tbNutritionLog.getItems().isEmpty()) {
-            Alert a = Utils.getAlert("Không có bài tập nào trong danh sách.");
-            a.show();
+        if (tbSelectedFood.getItems().isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Cảnh báo");
+            alert.setHeaderText(null);
+            alert.setContentText("Danh sách món ăn trống!");
+            alert.showAndWait();
             return;
-        } else {
-            String sql = "INSERT INTO workoutlog (numberOfUnit, servingDate, food_id, userInfo_id) VALUES (?, ?, ?, ?)";
-            try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        }
+        String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
+        LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
 
-                for (NutritionLog log : this.tbNutritionLog.getItems()) {
-                    stmt.setInt(1, log.getNumberOfUnit());
-                    stmt.setDate(2, java.sql.Date.valueOf(log.getServingDate()));
-                    System.out.println("UserId " + log.getUserInfoId());
-                    stmt.setString(3, log.getUserInfoId());
-                    stmt.setInt(4, log.getFoodId());
-                    stmt.addBatch(); // Thêm vào batch để tối ưu hiệu suất
-                }
+        NutritionTrackService n = new NutritionTrackService();
+        n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
 
-                stmt.executeUpdate(); // Thực thi tất cả câu lệnh cùng lúc
-                System.out.println("Lưu thành công các bài tập vào WorkoutLog.");
+    }
 
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+    public void deleteHandler() {
+        Food selectedFood = tbSelectedFood.getSelectionModel().getSelectedItem();
+
+        if (selectedFood == null) {
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Vui lòng chọn món ăn cần xóa!");
+            return;
+        }
+        String userId = Utils.getUUIdByName(Utils.getUser());
+        LocalDate servingDate = Utils.getSelectedDate();
+
+        try {
+            // Gọi NutritionService để xóa món ăn khỏi DB
+            NutritionTrackService n = new NutritionTrackService();
+            n.deleteFoodFromLog(selectedFood.getId(), userId, servingDate);
+
+            // Cập nhật giao diện (Xóa khỏi danh sách đã chọn)
+            removeFoodFromSelectedList(selectedFood);
+
+            Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Món ăn đã được xóa khỏi nhật ký!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi xóa dữ liệu!");
+        }
+    }
+
+    private void removeFoodFromSelectedList(Food food) {
+        tbSelectedFood.getItems().remove(food);
+
+        // Cập nhật lại tổng calo, protein...
+        totalCalo -= (food.getSelectedQuantity() * food.getCaloriesPerUnit()) / DEFAULT_QUANTITY;
+        txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalo, 0)));
+
+        totalProtein -= (food.getSelectedQuantity() * food.getProteinPerUnit()) / DEFAULT_QUANTITY;
+        txtTotalProtein.setText(String.valueOf(Utils.roundFloat(totalProtein, 1)));
+
+        totalLipid -= (food.getSelectedQuantity() * food.getLipidPerUnit()) / DEFAULT_QUANTITY;
+        txtTotalLipid.setText(String.valueOf(Utils.roundFloat(totalLipid, 1)));
+
+        totalFiber -= (food.getSelectedQuantity() * food.getFiberPerUnit()) / DEFAULT_QUANTITY;
+        txtTotalFiber.setText(String.valueOf(Utils.roundFloat(totalFiber, 1)));
+    }
+
+    private void updateTotalNutrition(List<Food> selectedFoods) {
+        totalCalo = 0;
+        totalProtein = 0;
+        totalLipid = 0;
+        totalFiber = 0;
+
+        for (Food food : selectedFoods) {
+            totalCalo += (food.getSelectedQuantity() * food.getCaloriesPerUnit()) / DEFAULT_QUANTITY;
+            totalProtein += (food.getSelectedQuantity() * food.getProteinPerUnit()) / DEFAULT_QUANTITY;
+            totalLipid += (food.getSelectedQuantity() * food.getLipidPerUnit()) / DEFAULT_QUANTITY;
+            totalFiber += (food.getSelectedQuantity() * food.getFiberPerUnit()) / DEFAULT_QUANTITY;
         }
 
+        txtTotalCalories.setText(Utils.roundFloat(totalCalo, 0));
+        txtTotalProtein.setText(Utils.roundFloat(totalProtein, 1));
+        txtTotalLipid.setText(Utils.roundFloat(totalLipid, 1));
+        txtTotalFiber.setText(Utils.roundFloat(totalFiber, 1));
     }
 
     public void backHandler(ActionEvent event) throws IOException {
@@ -504,7 +511,7 @@ public class NutritionController implements Initializable {
         // Lưu ngày vào biến tĩnh
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "TargetManagement.fxml");
-        
+
     }
 
 }

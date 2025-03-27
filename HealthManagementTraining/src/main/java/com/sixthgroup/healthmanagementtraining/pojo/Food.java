@@ -19,7 +19,7 @@ public class Food {
     private int foodCategoryId; // foreign key
     private String categoryName;
     private UnitType unitType; // Sử dụng enum
-
+    private int selectedQuantity=10; //Giá trị mặc định
 
     public Food(int id, String foodName, int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit,
             float fiberPerUnit, int foodCategoryId, String foodCategoryName, UnitType unitType) {
@@ -33,7 +33,9 @@ public class Food {
         this.categoryName = foodCategoryName; // Lưu tên danh mục
         this.unitType = unitType;
     }
-
+    public Food(){
+        
+    }
 
     /**
      * @return the id
@@ -162,5 +164,19 @@ public class Food {
      */
     public void setUnitType(UnitType unitType) {
         this.unitType = unitType;
+    }
+
+    /**
+     * @return the selectedQuantity
+     */
+    public int getSelectedQuantity() {
+        return selectedQuantity;
+    }
+
+    /**
+     * @param selectedQuantity the selectedQuantity to set
+     */
+    public void setSelectedQuantity(int selectedQuantity) {
+        this.selectedQuantity = selectedQuantity;
     }
 }

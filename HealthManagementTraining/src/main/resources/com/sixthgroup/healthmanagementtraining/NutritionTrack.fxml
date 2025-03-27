@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="723.0" prefWidth="1057.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="793.0" prefWidth="1057.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
     <children>
         <!-- Nút kích hoạt navbar ========================================================-->
         <HBox prefHeight="42.0" prefWidth="1057.0" styleClass="header-hbox">
@@ -32,8 +32,8 @@
                 <Font name="System Bold" size="27.0" />
             </font>
         </Text>
-        <TextField fx:id="txtSearch" layoutX="466.0" layoutY="148.0" prefHeight="25.0" prefWidth="140.0" promptText="(Nhập tên món)" />
-        <VBox layoutX="23.0" layoutY="444.0" prefHeight="178.0" prefWidth="469.0" spacing="10.0">
+        <TextField fx:id="txtSearch" layoutX="18.0" layoutY="132.0" prefHeight="25.0" prefWidth="140.0" promptText="(Nhập tên món)" />
+        <VBox layoutX="556.0" layoutY="441.0" prefHeight="178.0" prefWidth="469.0" spacing="10.0">
             <children>
                 <HBox prefHeight="31.0" prefWidth="469.0">
                     <children>
@@ -93,30 +93,31 @@
                 </HBox>
                 <HBox layoutX="10.0" layoutY="133.0" prefHeight="31.0" prefWidth="469.0">
                     <children>
-                        <HBox prefHeight="31.0" prefWidth="142.0">
+                        <HBox prefHeight="33.0" prefWidth="142.0">
                             <children>
                                 <Button mnemonicParsing="false" onAction="#saveHandler" styleClass="saveBtn" text="Lưu lịch ăn" />
                             </children>
                         </HBox>
-                        <HBox prefHeight="31.0" prefWidth="335.0">
+                        <HBox prefHeight="33.0" prefWidth="146.0">
                             <children>
-                                <Button mnemonicParsing="false" onAction="#backHandler" prefHeight="33.0" prefWidth="81.0" styleClass="backBtn" text="Trở về" />
+                                <Button mnemonicParsing="false" onAction="#backHandler" prefHeight="33.0" prefWidth="89.0" styleClass="backBtn" text="Trở về" />
                             </children>
                         </HBox>
+                  <HBox layoutX="148.0" layoutY="10.0" prefHeight="33.0" prefWidth="181.0">
+                     <children>
+                        <Button mnemonicParsing="false" onAction="#deleteHandler" prefHeight="33.0" prefWidth="81.0" styleClass="deleteBtn" text="Xóa món" />
+                     </children>
+                  </HBox>
                     </children>
                 </HBox>
             </children>
         </VBox>
-        <TableView fx:id="tbFoods" layoutX="466.0" layoutY="171.0" prefHeight="266.0" prefWidth="583.0" />
-        <TableView fx:id="tbNutritionLog" layoutX="26.0" layoutY="171.0" prefHeight="266.0" prefWidth="421.0" />
-        <HBox layoutX="465.0" layoutY="113.0" prefHeight="31.0" prefWidth="250.0">
+        <TableView fx:id="tbFoods" layoutX="18.0" layoutY="161.0" prefHeight="266.0" prefWidth="1007.0" />
+        <TableView fx:id="tbSelectedFood" layoutX="18.0" layoutY="441.0" prefHeight="266.0" prefWidth="421.0" />
+        <HBox layoutX="465.0" layoutY="113.0" prefHeight="31.0" prefWidth="250.0" />
+        <HBox layoutX="781.0" layoutY="56.0" prefHeight="25.0" prefWidth="262.0">
             <children>
-                <ComboBox fx:id="cbFoodCates" onAction="#choseHandler" prefHeight="25.0" prefWidth="186.0" promptText="Loại thức ăn" />
-            </children>
-        </HBox>
-        <HBox layoutX="47.0" layoutY="122.0" prefHeight="25.0" prefWidth="262.0">
-            <children>
-                <Text fill="#2c2424" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="textStyle" text="Ngày:" wrappingWidth="85.70703125">
+                <Text fill="#2c2424" strokeType="OUTSIDE" strokeWidth="0.0" text="Ngày:" wrappingWidth="85.70703125">
                     <font>
                         <Font size="16.0" />
                     </font>
@@ -131,7 +132,7 @@
                 <HBox alignment="CENTER_RIGHT" spacing="26">
                     <Button fx:id="closeNavButton" mnemonicParsing="false" styleClass="close-btn" text="✖" />
                 </HBox>
-                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToUserInfo"  styleClass="nav-btn" text="Tài khoản">
+                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToUserInfo" styleClass="nav-btn" text="Tài khoản">
                     <graphic>
                         <SVGPath content="M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z" styleClass="nav-icon" />                    
                     </graphic>
@@ -164,6 +165,7 @@
                
             </children>
         </VBox>
+          <ComboBox fx:id="cbFoodCates" layoutX="18.0" layoutY="101.0" onAction="#choseHandler" prefHeight="25.0" prefWidth="186.0" promptText="Loại thức ăn" />
         <!--========================================================================-->
     </children>
 </Pane>
