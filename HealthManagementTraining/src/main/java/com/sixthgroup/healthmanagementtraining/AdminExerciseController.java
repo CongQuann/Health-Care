@@ -8,6 +8,7 @@ import com.sixthgroup.healthmanagementtraining.pojo.Exercise;
 import com.sixthgroup.healthmanagementtraining.services.AdminExerciseServices;
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
 import com.sixthgroup.healthmanagementtraining.services.Utils;
+import java.io.IOException;
 
 import java.net.URL;
 import java.sql.SQLException;
@@ -16,6 +17,7 @@ import java.util.List;
 import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -190,6 +192,12 @@ public class AdminExerciseController implements Initializable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+     public void switchToAdminFood(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "AdminFood.fxml");
+        
     }
     
     

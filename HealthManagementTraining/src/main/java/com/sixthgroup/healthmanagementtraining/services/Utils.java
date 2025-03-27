@@ -4,6 +4,7 @@
  */
 package com.sixthgroup.healthmanagementtraining.services;
 
+import com.sixthgroup.healthmanagementtraining.ScenceSwitcher;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -76,4 +77,5 @@ public class Utils {
     public static boolean checkPassword(String rawPassword, String hashedPassword) {
         return encoder.matches(rawPassword, hashedPassword);
     }
+    
 }

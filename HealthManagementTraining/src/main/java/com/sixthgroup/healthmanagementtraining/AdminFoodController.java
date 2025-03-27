@@ -9,6 +9,7 @@ import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.pojo.UnitType;
 import com.sixthgroup.healthmanagementtraining.services.AdminFoodServices;
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -440,4 +441,12 @@ public class AdminFoodController implements Initializable {
         // Thiết lập các cột có thể chỉnh sửa và xử lý sự kiện
         setupTableEditable();
     }
+    
+    public void switchToAdminExercise(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "AdminExercise.fxml");
+        
+    }
+
 }

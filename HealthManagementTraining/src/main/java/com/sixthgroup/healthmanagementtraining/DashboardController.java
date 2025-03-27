@@ -159,6 +159,8 @@ public class DashboardController implements Initializable {
         });
 
     }
+    
+   
 
     public void switchToExercises(ActionEvent event) throws IOException {
         // Lưu ngày vào biến tĩnh
@@ -182,6 +184,21 @@ public class DashboardController implements Initializable {
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "UserInfoManagement.fxml");
     }
+
+    public void switchToLogin(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "secondary.fxml");
+        Utils.clearUser();
+    }
+       public void switchToTarget(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "TargetManagement.fxml");
+        
+    }
+
+    
 
     public void datePickHandler() {
         // Lay ngay dang chon
