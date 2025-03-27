@@ -232,11 +232,11 @@ public class NutritionController implements Initializable {
         TableColumn colFoodName = new TableColumn("Tên thức ăn");
         colFoodName.setCellValueFactory(new PropertyValueFactory("foodName"));
         colFoodName.setPrefWidth(107);
-        
+
         TableColumn colFoodID = new TableColumn("Mã thức ăn ");
         colFoodID.setCellValueFactory(new PropertyValueFactory("id"));
         colFoodID.setPrefWidth(107);
-        
+
         TableColumn colCalories = new TableColumn("Calo/1 Đơn vị");
         colCalories.setCellValueFactory(new PropertyValueFactory("caloriesPerUnit"));
         colCalories.setPrefWidth(107);
@@ -252,11 +252,11 @@ public class NutritionController implements Initializable {
         TableColumn colFiber = new TableColumn("Chất xơ/1 Đơn vị");
         colFiber.setCellValueFactory(new PropertyValueFactory("fiberPerUnit"));
         colFiber.setPrefWidth(107);
-        
+
         TableColumn colType = new TableColumn("Loại đơn vị");
         colType.setCellValueFactory(new PropertyValueFactory("unitType"));
         colType.setPrefWidth(107);
-        
+
         // Danh sách thời gian có thể chọn
         ObservableList<Integer> quantity = FXCollections.observableArrayList(10, 30, 50, 100, 200);
         TableColumn<Food, Integer> colQuantity = new TableColumn<>("Khối lượng thức ăn");
@@ -366,7 +366,7 @@ public class NutritionController implements Initializable {
         }
         );
 
-        this.tbFoods.getColumns().addAll(colFoodID,colFoodName, colCalories, colLipid, colProtein, colFiber,colType, colQuantity, colAction);
+        this.tbFoods.getColumns().addAll(colFoodID, colFoodName, colCalories, colLipid, colProtein, colFiber, colType, colQuantity, colAction);
     }
 
     public void choseHandler() throws SQLException {
@@ -486,5 +486,25 @@ public class NutritionController implements Initializable {
         }
         return fiber;
     }
+
     //=========================================================================
+    public void switchToUserInfo(ActionEvent event) throws IOException {
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "UserInfoManagement.fxml");
+    }
+
+    public void switchToLogin(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "secondary.fxml");
+        Utils.clearUser();
+    }
+
+    public void switchToTarget(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "TargetManagement.fxml");
+        
+    }
+
 }

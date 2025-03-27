@@ -366,26 +366,68 @@ public class ExercisesManageController implements Initializable {
         s.switchScene(event, "Dashboard.fxml");
     }
 
-    
-    public int getExerciseCaloriesByExerciseId(int exerciseId){
-        int calories = -1;
-        try (Connection conn = JdbcUtils.getConn()) {
-                String sql = "SELECT caloriesPerMinute FROM exercise WHERE id = ? ";
+
+    public static String getUUIdByName(String username) {
+        String id = null;  // Giá trị mặc định nếu không tìm thấy
+        if (username != null) {
+            try (Connection conn = JdbcUtils.getConn()) {
+                String sql = "SELECT id FROM userinfo WHERE username = ? ";
                 PreparedStatement stm = conn.prepareCall(sql);
-                stm.setInt(1, exerciseId);
+                stm.setString(1, username);
                 ResultSet rs = stm.executeQuery();
                 while (rs.next()) {
-                    calories = rs.getInt("caloriesPerMinute");
-                    return calories;
+                    id = rs.getString("id");
+                    return id;
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }
+        return id;
+    }
+
+    
+    public int getExerciseCaloriesByExerciseId(int exerciseId){
+
+        int calories = -1;
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT caloriesPerMinute FROM exercise WHERE id = ? ";
+            PreparedStatement stm = conn.prepareCall(sql);
+            stm.setInt(1, exerciseId);
+            ResultSet rs = stm.executeQuery();
+            while (rs.next()) {
+                calories = rs.getInt("caloriesPerMinute");
+                return calories;
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return calories;
     }
+
     public void switchToNutrition(ActionEvent event) throws IOException {
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "NutritionTrack.fxml");
     }
+
+    public void switchToTarget(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "TargetManagement.fxml");
+        
+    }
+
+    public void switchToUserInfo(ActionEvent event) throws IOException {
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "UserInfoManagement.fxml");
+    }
+
+    public void switchToLogin(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "secondary.fxml");
+        Utils.clearUser();
+    }
+
     //=========================================================================
 }

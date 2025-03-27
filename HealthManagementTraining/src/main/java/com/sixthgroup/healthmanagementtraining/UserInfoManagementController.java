@@ -246,4 +246,18 @@ public class UserInfoManagementController implements Initializable {
 
     }
 
+    public void switchToLogin(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "secondary.fxml");
+        Utils.clearUser();
+    }
+
+    public void switchToTarget(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "TargetManagement.fxml");
+       
+    }
+
 }

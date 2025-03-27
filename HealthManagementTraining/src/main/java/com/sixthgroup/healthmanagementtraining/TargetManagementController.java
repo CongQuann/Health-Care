@@ -10,6 +10,7 @@ import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
 import com.sixthgroup.healthmanagementtraining.services.TargetManagementServices;
 import com.sixthgroup.healthmanagementtraining.services.UserInfoServices;
 import com.sixthgroup.healthmanagementtraining.services.Utils;
+import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -22,6 +23,7 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -269,6 +271,46 @@ public class TargetManagementController implements Initializable {
             Utils.getAlert("Lỗi khi xóa mục tiêu!").show();
         }
     }
+
+
+    public void switchToExercises(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+//        Utils.setSelectedDate(datePicker.getValue());
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "ExercisesManagement.fxml");
+
+    }
+
+    public void switchToDashboard(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+//        Utils.setSelectedDate(datePicker.getValue());
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "Dashboard.fxml");
+
+    }
+
+    public void switchToNutrition(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+//      Utils.setSelectedDate(datePicker.getValue());
+
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "NutritionTrack.fxml");
+
+    }
+
+    public void switchToLogin(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "secondary.fxml");
+        Utils.clearUser();
+    }
+
+    public void switchToUserInfo(ActionEvent event) throws IOException {
+
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "UserInfoManagement.fxml");
+    }
+
 
     public int calCaloriesNeeded(String username, float targetWeight, LocalDate startDate, LocalDate endDate) {
         UserInfoServices s = new UserInfoServices();

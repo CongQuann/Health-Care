@@ -50,8 +50,6 @@ public class DashboardController implements Initializable {
 
     private NavbarServices navbarServices = new NavbarServices(); // Khởi tạo NavbarServices
 
- 
-
     @FXML
     private PieChart nutritionPieChart;
     @FXML
@@ -176,9 +174,9 @@ public class DashboardController implements Initializable {
         s.switchScene(event, "NutritionTrack.fxml");
 
     }
-     public void switchToTarget(ActionEvent event) throws IOException {
+
+    public void switchToTarget(ActionEvent event) throws IOException {
         // Lưu ngày vào biến tĩnh
-        Utils.setSelectedDate(datePicker.getValue());
 
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "TargetManagement.fxml");
@@ -189,6 +187,13 @@ public class DashboardController implements Initializable {
         Utils.setSelectedDate(datePicker.getValue());
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "UserInfoManagement.fxml");
+    }
+
+    public void switchToLogin(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "secondary.fxml");
+        Utils.clearUser();
     }
 
     public void datePickHandler() {
