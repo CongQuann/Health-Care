@@ -23,31 +23,30 @@ public class LoginServices {
     }
 
     public static Role checkLogin(String username, String password) throws SQLException {
-        String sql = "SELECT role FROM userinfo WHERE userName = ? AND password = ?";
+        String sql = "SELECT password, role FROM userinfo WHERE userName = ?";
+
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
             stmt.setString(1, username);
-            stmt.setString(2, password);
-
             ResultSet rs = stmt.executeQuery();
 
             if (rs.next()) {
+                String hashedPassword = rs.getString("password"); // Lấy mật khẩu đã mã hóa từ DB
                 String role = rs.getString("role");
-                if ("user".equalsIgnoreCase(role)) {
+
+                // Kiểm tra mật khẩu nhập vào với mật khẩu đã mã hóa
+                if (Utils.checkPassword(password, hashedPassword)) {
                     Utils.clearUser();
                     Utils.saveUser(username);
-                    System.out.println(Utils.getUser());
-                    return Role.USER;
-                } else if ("administrator".equalsIgnoreCase(role)) {
-                    Utils.clearUser();
-                    Utils.saveUser(username);
-                    return Role.ADMIN;
+
+                    if ("user".equalsIgnoreCase(role)) {
+                        return Role.USER;
+                    } else if ("administrator".equalsIgnoreCase(role)) {
+                        return Role.ADMIN;
+                    }
                 }
             }
         }
-
-        return null; // đăng nhập thất bại
+        return null; // Đăng nhập thất bại
     }
 
- 
 }
