@@ -5,16 +5,21 @@
 package com.sixthgroup.healthmanagementtraining;
 
 import com.sixthgroup.healthmanagementtraining.pojo.Goal;
+import com.sixthgroup.healthmanagementtraining.pojo.UserInfo;
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
 import com.sixthgroup.healthmanagementtraining.services.TargetManagementServices;
+import com.sixthgroup.healthmanagementtraining.services.UserInfoServices;
 import com.sixthgroup.healthmanagementtraining.services.Utils;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-import javafx.animation.TranslateTransition;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -28,7 +33,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
-import javafx.util.Duration;
+import javafx.scene.text.Text;
 import javafx.util.converter.FloatStringConverter;
 import javafx.util.converter.LocalDateStringConverter;
 
@@ -71,8 +76,28 @@ public class TargetManagementController implements Initializable {
     @FXML
     private DatePicker endDatePicker;
 
+    @FXML
+    private Text txtCalo;
     private NavbarServices navbarServices = new NavbarServices(); // Khởi tạo NavbarServices
     //kich hoat navbar
+
+    private final double sedentaryCoefficient = 1.2;
+    private final double lightlyActiveCoefficient = 1.375;
+    private final double moderatelyActiveCoefficient = 1.55;
+    private final double veryActiveCoefficient = 1.725;
+    private final double extremelyActiveCoefficient = 1.9;
+
+    private final double maleWeightCoefficient = 13.7;
+    private final double femaleWeightCoefficient = 9.6;
+
+    private final double maleHeightCoefficient = 5;
+    private final double femaleHeightCoefficient = 1.8;
+
+    private final double maleAgeCoefficient = 6.8;
+    private final double femaleAgeCoefficient = 4.7;
+
+    private final double baseMaleBMR = 66;
+    private final double baseFemaleBMR = 655;
 
     @FXML
     @Override
@@ -182,12 +207,20 @@ public class TargetManagementController implements Initializable {
             float targetWeight = Float.parseFloat(targetWeightField.getText());
             float currentWeight = Float.parseFloat(currentWeightField.getText());
             LocalDate startDate = startDatePicker.getValue();
+            
             LocalDate endDate = endDatePicker.getValue();
+            
             if (endDate.isBefore(startDate)) {
                 Utils.getAlert("Ngày kết thúc không thể trước ngày bắt đầu!").show();
                 return;
             }
-            TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, startDate, endDate);
+            
+            int caloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, startDate, endDate);
+            System.out.println("Calo " + caloNeeded);
+//            txtCalo.setText(String.valueOf(caloNeeded));
+            TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight,caloNeeded, startDate, endDate);
+            System.out.println("Userid :" + userInfoId);
+            System.out.println("Đã thêm mục tiêu");
             loadGoals();
         } catch (Exception e) {
             e.printStackTrace();
@@ -213,5 +246,79 @@ public class TargetManagementController implements Initializable {
         }
     }
 
+    public int calCaloriesNeeded(String username, float targetWeight, LocalDate startDate, LocalDate endDate) {
+        UserInfoServices s = new UserInfoServices();
+        UserInfo u = s.getUserInfo(username);
+        double BMR;
+        int age = calculateAge(u.getDOB());
+        if (u.getGender().equalsIgnoreCase("Male")) {
+            BMR = baseMaleBMR + (maleWeightCoefficient * u.getWeight())
+                    + (maleHeightCoefficient * u.getHeight()) - (maleAgeCoefficient * calculateAge(u.getDOB()));
+            
+        } else {
+            BMR = baseFemaleBMR + (femaleWeightCoefficient * u.getWeight())
+                    + (femaleHeightCoefficient * u.getHeight()) - (femaleAgeCoefficient * calculateAge(u.getDOB()));
+        }
+      
+        float activityLevel = Utils.convertToFloat(getActivityCoefficient(u.getActivityLevel()));
+        float TDEE = Utils.convertToFloat(BMR * activityLevel);
+        
+        float weightChange = targetWeight - u.getWeight();
+        float totalCaloriesNeeded = weightChange * 7700;
+        long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
+
+        if (totalDays <= 0) {
+            throw new IllegalArgumentException("End date must be after start date.");
+        }
+
+        float dailyCalorieChange = totalCaloriesNeeded / totalDays;
+        float dailyCalorieIntake = Utils.convertToFloat(TDEE + dailyCalorieChange);
+//        System.out.println("TDEE: " + TDEE);
+//        System.out.println("Daily Calorie Change: " + dailyCalorieChange);
+//        System.out.println("Daily Calorie Intake: " + dailyCalorieIntake);
+//        
+        
+        return (int) Math.round(dailyCalorieIntake);
+
+    }
+
+    private double getActivityCoefficient(String activityLevel) {
+        switch (activityLevel.toLowerCase()) {
+            case "sedentary":
+                return sedentaryCoefficient;
+            case "lightlyactive":
+                return lightlyActiveCoefficient;
+            case "moderatelyactive":
+                return moderatelyActiveCoefficient;
+            case "veryactive":
+                return veryActiveCoefficient;
+            case "extremelyactive":
+                return extremelyActiveCoefficient;
+            default:
+                throw new IllegalArgumentException("Invalid activity level");
+        }
+    }
+
+    public static int calculateAge(Date dob) {
+        if (dob == null) {
+            throw new IllegalArgumentException("Ngày sinh không được null");
+        }
+
+        // Chuyển đổi từ Date -> LocalDate
+        LocalDate birthDate;
+        if (dob instanceof java.sql.Date) {
+            birthDate = ((java.sql.Date) dob).toLocalDate(); // Dành cho java.sql.Date
+        } else {
+            birthDate = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Dành cho java.util.Date
+        }
+
+
+        // Lấy ngày hiện tại
+        LocalDate currentDate = LocalDate.now();
+
+        // Tính tuổi bằng Period.between()
+        int age = Period.between(birthDate, currentDate).getYears();
+        return age;
+    }
 }
 //============================================================================

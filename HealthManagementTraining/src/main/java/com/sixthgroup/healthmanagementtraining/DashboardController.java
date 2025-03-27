@@ -176,6 +176,14 @@ public class DashboardController implements Initializable {
         s.switchScene(event, "NutritionTrack.fxml");
 
     }
+     public void switchToTarget(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        Utils.setSelectedDate(datePicker.getValue());
+
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "TargetManagement.fxml");
+
+    }
 
     public void switchToUserInfo(ActionEvent event) throws IOException {
         Utils.setSelectedDate(datePicker.getValue());
