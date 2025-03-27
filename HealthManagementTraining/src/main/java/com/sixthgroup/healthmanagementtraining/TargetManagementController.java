@@ -187,14 +187,30 @@ public class TargetManagementController implements Initializable {
                 goal.setTargetWeight(targetWeight);
                 goal.setCurrentWeight(currentWeight);
                 goal.setEndDate(endDate);
-                goalTableView.refresh(); // Cập nhật bảng
+                loadGoals();
+                checkProgressWarning(goal); // kiem tra tien do
             }
         } catch (SQLException e) {
             e.printStackTrace();
             Utils.getAlert("Lỗi khi cập nhật mục tiêu!").show();
         }
     }
+    //ham tinh tien do hoan thanh bai tap
+    private void checkProgressWarning(Goal goal) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate startDate = goal.getStartDate();
+        LocalDate endDate = goal.getEndDate();
 
+        if (startDate != null && endDate != null && !startDate.equals(endDate)) {
+            double progressTime = ((double) ChronoUnit.DAYS.between(startDate, currentDate)
+                    / ChronoUnit.DAYS.between(startDate, endDate)) * 100;
+
+            if (progressTime > 50 && goal.getCurrentProgress() < 50) {
+                Utils.getAlert("CẢNH BÁO!!!!!.....Bạn đang chậm tiến độ! Hãy cố gắng hơn.").show();
+            }
+        }
+    }
+    
     //add goal
     @FXML
     private void addGoal() {
@@ -209,7 +225,16 @@ public class TargetManagementController implements Initializable {
             LocalDate startDate = startDatePicker.getValue();
             
             LocalDate endDate = endDatePicker.getValue();
-            
+
+            String targetType = "";
+            if (currentWeight > targetWeight) {
+                targetType = "gain";
+            } else if (currentWeight < targetWeight) {
+                targetType = "loss";
+            } else if (currentWeight == targetWeight) {
+                Utils.getAlert("Cân Nặng Hiện Tại Và Cân Nặng Mục Tiêu Không Được Bằng Nhau").show();
+                return;
+            }
             if (endDate.isBefore(startDate)) {
                 Utils.getAlert("Ngày kết thúc không thể trước ngày bắt đầu!").show();
                 return;
@@ -217,8 +242,7 @@ public class TargetManagementController implements Initializable {
             
             int caloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, startDate, endDate);
             System.out.println("Calo " + caloNeeded);
-//            txtCalo.setText(String.valueOf(caloNeeded));
-            TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight,caloNeeded, startDate, endDate);
+            TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight,caloNeeded, startDate, endDate, targetType);
             System.out.println("Userid :" + userInfoId);
             System.out.println("Đã thêm mục tiêu");
             loadGoals();

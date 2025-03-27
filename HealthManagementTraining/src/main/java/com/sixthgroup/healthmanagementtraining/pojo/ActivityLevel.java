@@ -9,5 +9,5 @@ package com.sixthgroup.healthmanagementtraining.pojo;
  * @author DELL
  */
 public enum ActivityLevel {
-    sedentary,lightlyActive,moderatelyActive,veryActive,ExtremekyActive;
+    sedentary,lightlyActive,moderatelyActive,veryActive,ExtremelyActive;
 }
