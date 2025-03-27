@@ -41,22 +41,20 @@ public class NutritionTrackService {
         List<Food> foods = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
 
+            String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
+                    + "f.foodCategory_id, fc.categoryName, f.unitType "
+                    + "FROM food f "
+                    + "JOIN foodcategory fc ON f.foodCategory_id = fc.id";
+
             PreparedStatement stm;
-            if (kw != null) {
-                 String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
-                    + "f.foodCategory_id, fc.categoryName, f.unitType "
-                    + "FROM food f JOIN foodcategory fc ON f.foodCategory_id = fc.id "
-                    + "WHERE f.foodName LIKE ?";
+            if (kw != null && !kw.isEmpty()) { // Nếu có từ khóa, thêm điều kiện tìm kiếm
+                sql += " WHERE f.foodName LIKE ?";
                 stm = conn.prepareStatement(sql);
-                stm.setString(1, "%" + kw + "%"); // Tìm kiếm gần đúng
-            } else {
-                String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
-                    + "f.foodCategory_id, fc.categoryName, f.unitType "
-                    + "FROM food f JOIN foodcategory fc ON f.foodCategory_id = fc.id";
+                stm.setString(1, "%" + kw + "%");
+            } else { // Nếu không có từ khóa, lấy tất cả
                 stm = conn.prepareStatement(sql);
             }
             ResultSet rs = stm.executeQuery();
-
             while (rs.next()) {
                 // Lấy giá trị unitType từ CSDL dưới dạng chuỗi
                 String unitTypeStr = rs.getString("unitType");
@@ -83,25 +81,23 @@ public class NutritionTrackService {
     public List<Food> getFoodsByCate(int cate_id) throws SQLException {
         List<Food> foods = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
-            PreparedStatement stm;
-            if (cate_id != 0) {
-                String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
+            String sql = "SELECT f.id, f.foodName, f.caloriesPerUnit, f.lipidPerUnit, f.proteinPerUnit, f.fiberPerUnit, "
                     + "f.foodCategory_id, fc.categoryName, f.unitType "
-                    + "FROM food f JOIN foodcategory fc ON f.foodCategory_id = fc.id "
-                    + "WHERE f.foodCategory_id = ?";
-                stm = conn.prepareCall(sql);
-                stm.setInt(1, cate_id);
-            } else {
-                stm = conn.prepareCall("SELECT * FROM food ");
+                    + "FROM food f "
+                    + "JOIN foodcategory fc ON f.foodCategory_id = fc.id ";
+
+            if (cate_id > 0) { // Nếu chọn danh mục cụ thể, thêm điều kiện lọc
+                sql += "WHERE f.foodCategory_id = ?";
             }
+
+            PreparedStatement stm = conn.prepareStatement(sql);
+            if (cate_id > 0) {
+                stm.setInt(1, cate_id);
+            }
+
             ResultSet rs = stm.executeQuery();
-
             while (rs.next()) {
-                // Lấy giá trị unitType từ CSDL dưới dạng chuỗi
-                String unitTypeStr = rs.getString("unitType");
-
-                // Chuyển đổi từ String thành Enum UnitType
-                UnitType unitType = UnitType.valueOf(unitTypeStr);
+                UnitType unitType = UnitType.valueOf(rs.getString("unitType"));
                 Food f = new Food(
                         rs.getInt("id"),
                         rs.getString("foodName"),
@@ -109,13 +105,13 @@ public class NutritionTrackService {
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),
-                        rs.getInt("foodCategory_id"), // Lấy ID danh mục
-                        rs.getString("categoryName"), // Lấy tên danh mục
+                        rs.getInt("foodCategory_id"),
+                        rs.getString("categoryName"),
                         unitType
                 );
                 foods.add(f);
             }
-            return foods;
         }
+        return foods;
     }
 }

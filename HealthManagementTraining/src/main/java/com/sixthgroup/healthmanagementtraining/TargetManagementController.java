@@ -11,6 +11,7 @@ import com.sixthgroup.healthmanagementtraining.services.Utils;
 import java.net.URL;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
@@ -162,14 +163,30 @@ public class TargetManagementController implements Initializable {
                 goal.setTargetWeight(targetWeight);
                 goal.setCurrentWeight(currentWeight);
                 goal.setEndDate(endDate);
-                goalTableView.refresh(); // Cập nhật bảng
+                loadGoals();
+                checkProgressWarning(goal); // kiem tra tien do
             }
         } catch (SQLException e) {
             e.printStackTrace();
             Utils.getAlert("Lỗi khi cập nhật mục tiêu!").show();
         }
     }
+    //ham tinh tien do hoan thanh bai tap
+    private void checkProgressWarning(Goal goal) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate startDate = goal.getStartDate();
+        LocalDate endDate = goal.getEndDate();
 
+        if (startDate != null && endDate != null && !startDate.equals(endDate)) {
+            double progressTime = ((double) ChronoUnit.DAYS.between(startDate, currentDate)
+                    / ChronoUnit.DAYS.between(startDate, endDate)) * 100;
+
+            if (progressTime > 50 && goal.getCurrentProgress() < 50) {
+                Utils.getAlert("CẢNH BÁO!!!!!.....Bạn đang chậm tiến độ! Hãy cố gắng hơn.").show();
+            }
+        }
+    }
+    
     //add goal
     @FXML
     private void addGoal() {
@@ -183,11 +200,22 @@ public class TargetManagementController implements Initializable {
             float currentWeight = Float.parseFloat(currentWeightField.getText());
             LocalDate startDate = startDatePicker.getValue();
             LocalDate endDate = endDatePicker.getValue();
+
+            String targetType = "";
+            if (currentWeight > targetWeight) {
+                targetType = "gain";
+            } else if (currentWeight < targetWeight) {
+                targetType = "loss";
+            } else if (currentWeight == targetWeight) {
+                Utils.getAlert("Cân Nặng Hiện Tại Và Cân Nặng Mục Tiêu Không Được Bằng Nhau").show();
+                return;
+            }
+            System.out.println(targetType);
             if (endDate.isBefore(startDate)) {
                 Utils.getAlert("Ngày kết thúc không thể trước ngày bắt đầu!").show();
                 return;
             }
-            TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, startDate, endDate);
+            TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, startDate, endDate, targetType);
             loadGoals();
         } catch (Exception e) {
             e.printStackTrace();

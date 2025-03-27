@@ -11,6 +11,7 @@ import com.sixthgroup.healthmanagementtraining.services.AdminFoodServices;
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -78,6 +79,8 @@ public class AdminFoodController implements Initializable {
     private TableColumn<Food, Float> colFiber;
     @FXML
     private TextField searchField; // Thêm TextField tìm kiếm
+    @FXML
+    private ComboBox<FoodCategory> filterByCateButton;
 
     private NavbarServices navbarServices = new NavbarServices(); // Khởi tạo NavbarServices
     private AdminFoodServices foodService = new AdminFoodServices(); // Gọi service để lấy dữ liệu
@@ -95,7 +98,7 @@ public class AdminFoodController implements Initializable {
 
         // Kiểm tra nếu có trường nào bị trống
         if (foodName.isEmpty() || caloriesText.isEmpty() || lipidText.isEmpty()
-                || proteinText.isEmpty() || fiberText.isEmpty() || selectedCategory == null || selectedUnit == null) {
+                || proteinText.isEmpty() || fiberText.isEmpty() || selectedCategory == null || selectedCategory.getId() < 0 || selectedUnit == null) {
 
             System.out.println("Vui lòng nhập đầy đủ thông tin!");
             return null;
@@ -278,9 +281,15 @@ public class AdminFoodController implements Initializable {
         }
     }
 
-    private void filterFood(String keyword) {
+    private void filterFoodByKeywordAndCategory(String keyword, FoodCategory category) {
         try {
-            List<Food> filteredList = foodService.searchFood(keyword);
+            List<Food> filteredList;
+            if (category == null || category.getId() < 0) {
+                filteredList = foodService.searchFood(keyword); // Chỉ tìm kiếm nếu không chọn loại thức ăn
+            } else {
+                // Kết hợp tìm kiếm và lọc theo loại thức ăn
+                filteredList = foodService.searchFoodByCategoryAndKeyword(category.getId(), keyword);
+            }
             ObservableList<Food> observableList = FXCollections.observableArrayList(filteredList);
             foodTableView.setItems(observableList);
         } catch (SQLException e) {
@@ -289,14 +298,24 @@ public class AdminFoodController implements Initializable {
         }
     }
 
+    private void filterFood(String keyword) {
+        FoodCategory selectedCategory = filterByCateButton.getValue();
+        filterFoodByKeywordAndCategory(keyword, selectedCategory);
+    }
+
+    private void filterFoodByCategory(FoodCategory category) {
+        String keyword = searchField.getText().trim();
+        filterFoodByKeywordAndCategory(keyword, category);
+    }
+
     private void clearInputFields() {
         foodNameField.clear();
         caloriesField.clear();
         lipidField.clear();
         proteinField.clear();
         fiberField.clear();
-        foodTypeComboBox.setValue(null);
-        unitTypeComboBox.setValue(null);
+        loadFoodCategories();
+        loadUnitTypes();
     }
 
     public void loadColumn() {
@@ -342,10 +361,40 @@ public class AdminFoodController implements Initializable {
         }
     }
 
+    public void loadUnitTypes() {
+        // Đặt danh sách các giá trị từ enum UnitType vào ComboBox
+        unitTypeComboBox.setItems(FXCollections.observableArrayList(UnitType.values()));
+
+        // Chọn giá trị GRAM làm giá trị mặc định
+        unitTypeComboBox.setValue(UnitType.gram);
+    }
+
     public void loadFoodCategories() {
         AdminFoodServices foodServices = new AdminFoodServices();
         try {
-            foodTypeComboBox.getItems().setAll(foodServices.getFoodCategories());
+            List<FoodCategory> categories = foodServices.getFoodCategories();
+
+            // Tạo một FoodCategory đặc biệt cho tùy chọn "Không chọn loại nào"
+            FoodCategory defaultCategory1 = new FoodCategory(-1, "Tất cả"); // Hoặc "Không chọn loại nào"
+            FoodCategory defaultCategory2 = new FoodCategory(-1, "Không chọn");
+            // Thêm tùy chọn mặc định vào đầu danh sách
+            List<FoodCategory> allCategories1 = new ArrayList<>();
+            allCategories1.add(defaultCategory1);
+            allCategories1.addAll(categories);
+
+            List<FoodCategory> allCategories2 = new ArrayList<>();
+            allCategories2.add(defaultCategory2);
+            allCategories2.addAll(categories);
+
+            // Đặt danh sách vào ComboBox
+            filterByCateButton.setItems(FXCollections.observableArrayList(allCategories1));
+
+            // Chọn tùy chọn mặc định
+            filterByCateButton.setValue(defaultCategory1);
+
+            foodTypeComboBox.setItems(FXCollections.observableArrayList(allCategories2));
+            foodTypeComboBox.setValue(defaultCategory2);
+
         } catch (SQLException ex) {
             Logger.getLogger(AdminFoodController.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -367,14 +416,19 @@ public class AdminFoodController implements Initializable {
         }
         loadColumn();
         loadData();
+        loadFoodCategories();
+        loadUnitTypes();
+        // Thêm sự kiện lắng nghe thay đổi lựa chọn trong filterByCateButton
+        filterByCateButton.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            filterFoodByCategory(newValue);
+        });
+
         // Thêm sự kiện lắng nghe thay đổi văn bản trong TextField tìm kiếm
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterFood(newValue);
         });
-        loadFoodCategories();
         foodTableView.setEditable(true); // Cho phép chỉnh sửa TableView
 
-        unitTypeComboBox.setItems(FXCollections.observableArrayList(UnitType.values()));
         // Gọi phương thức thiết lập chỉnh sửa===========================================================
         // Đặt TableView có thể chỉnh sửa
         foodTableView.setEditable(true);

@@ -4,6 +4,7 @@
  */
 package com.sixthgroup.healthmanagementtraining.pojo;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -14,7 +15,7 @@ public class NutritionLog {
 
     private int id; // auto_increment
     private int numberOfUnit; // int
-    private Date servingDate; // datetime
+    private LocalDate servingDate; // datetime
     private int foodId; // foreign key
     private String userInfoId; // char(8)
 
@@ -46,19 +47,6 @@ public class NutritionLog {
         this.numberOfUnit = numberOfUnit;
     }
 
-    /**
-     * @return the servingDate
-     */
-    public Date getServingDate() {
-        return servingDate;
-    }
-
-    /**
-     * @param servingDate the servingDate to set
-     */
-    public void setServingDate(Date servingDate) {
-        this.servingDate = servingDate;
-    }
 
     /**
      * @return the foodId
@@ -86,5 +74,19 @@ public class NutritionLog {
      */
     public void setUserInfoId(String userInfoId) {
         this.userInfoId = userInfoId;
+    }
+
+    /**
+     * @return the servingDate
+     */
+    public LocalDate getServingDate() {
+        return servingDate;
+    }
+
+    /**
+     * @param servingDate the servingDate to set
+     */
+    public void setServingDate(LocalDate servingDate) {
+        this.servingDate = servingDate;
     }
 }
