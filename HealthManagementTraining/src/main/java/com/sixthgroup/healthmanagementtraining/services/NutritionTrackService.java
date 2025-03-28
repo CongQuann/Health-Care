@@ -198,7 +198,7 @@ public class NutritionTrackService {
             if (rowsAffected == 0) {
                 System.out.println("Không có dữ liệu nào bị xóa!");
             } else {
-                System.out.println("Xóa thành công món ăn khỏi nhật ký!");
+                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa món ăn khỏi nhật kí");
             }
         }
     }

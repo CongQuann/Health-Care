@@ -19,6 +19,7 @@ import java.sql.ResultSet;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -65,13 +66,14 @@ public class ExercisesManageController implements Initializable {
     @FXML
     private TextField txtSearch;
     @FXML
-    private TableView<WorkoutLog> tbWorkoutLog;
+    private TableView<Exercise> tbSelectedExers;
     @FXML
     private Label dateLabel;
     @FXML
     private Text txtTotalDuration;
     @FXML
     private Text txtTotalCalories;
+    private final float DEFAULT_MINUTE = 1;
     private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
     private static int totalCalories;
     private static int totalDuration;
@@ -104,8 +106,6 @@ public class ExercisesManageController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        totalCalories = 0;
-        totalDuration = 0;
         // Lấy ngày từ biến tĩnh và hiển thị
         LocalDate date = Utils.getSelectedDate();
         if (date != null) {
@@ -126,10 +126,27 @@ public class ExercisesManageController implements Initializable {
         } else {
             System.out.println("toggleNavButton chưa được khởi tạo!");
         }
-        ObservableList<WorkoutLog> selectedExercises = FXCollections.observableArrayList();
-        this.tbWorkoutLog.setItems(selectedExercises);
-        loadColumnsForSelectedTable();
+        ObservableList<Exercise> selectedExercises = FXCollections.observableArrayList();
+        this.tbSelectedExers.setItems(selectedExercises);
+        try {
+            ExercisesService e = new ExercisesService();
+            List<Exercise> selectedExerciseFromLog;
+            selectedExerciseFromLog = e.getWorkoutLogOfUser(Utils.getUUIdByName(Utils.getUser()), Utils.getSelectedDate());
+            if (selectedExerciseFromLog.isEmpty()) {
+                System.out.println("Chưa có món ăn nào được chọn hôm nay.");
+                tbSelectedExers.getItems().clear(); // Đảm bảo bảng trống
+
+            } else {
+                // Hiển thị danh sách trên bảng
+                tbSelectedExers.getItems().setAll(selectedExerciseFromLog);
+                loadTotalWorkout(selectedExerciseFromLog);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(NutritionController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         loadColumns();
+        loadColumnsForSelectedTable();
         loadTableData("");
         txtSearch.textProperty().addListener((e) -> {
             loadTableData(txtSearch.getText());
@@ -147,65 +164,23 @@ public class ExercisesManageController implements Initializable {
     }
 
     public void loadColumnsForSelectedTable() {
+        TableColumn colExerciseName = new TableColumn("Tên bài tập");
+        colExerciseName.setCellValueFactory(new PropertyValueFactory("exerciseName"));
+        colExerciseName.setPrefWidth(125);
 
-        TableColumn colExerciseID = new TableColumn("Mã bài tập");
-        colExerciseID.setCellValueFactory(new PropertyValueFactory("exerciseId"));
-        colExerciseID.setPrefWidth(125);
-
-        TableColumn colDuration = new TableColumn("Thời gian tập");
-        colDuration.setCellValueFactory(new PropertyValueFactory("duration"));
+        TableColumn<Exercise, Integer> colDuration = new TableColumn<>("Thời gian tập");
+        colDuration.setCellValueFactory(new PropertyValueFactory<>("duration"));
         colDuration.setPrefWidth(125);
 
-        TableColumn colDate = new TableColumn("Ngày tập");
-        colDate.setCellValueFactory(new PropertyValueFactory("workoutDate"));
-        colDate.setPrefWidth(125);
+        TableColumn colCaloPerMinute = new TableColumn("Calo tiêu thụ/phút");
+        colCaloPerMinute.setCellValueFactory(new PropertyValueFactory("caloriesPerMinute"));
+        colCaloPerMinute.setPrefWidth(125);
 
-        TableColumn colActionST = new TableColumn();
-        colActionST.setCellFactory(column -> new TableCell<WorkoutLog, Void>() {
-            private final Button btn = new Button("Xóa");
-
-            {
-                btn.setOnAction(event -> {
-                    WorkoutLog log = getTableView().getItems().get(getIndex());
-                    if (log != null) {
-                        // Hiển thị thông báo xác nhận trước khi xóa
-                        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                        alert.setTitle("Xác nhận xóa");
-                        alert.setHeaderText("Bạn có chắc muốn xóa bài tập này?");
-                        alert.setContentText("Bài tập ID: " + log.getExerciseId());
-
-                        Optional<ButtonType> result = alert.showAndWait();
-                        if (result.isPresent() && result.get() == ButtonType.OK) {
-                            // Xóa bài tập khỏi danh sách
-                            getTableView().getItems().remove(log);
-                            totalDuration -= log.getDuration();
-                            totalCalories -= getExerciseCaloriesByExerciseId(log.getExerciseId()) * log.getDuration();
-                            txtTotalDuration.setText(String.valueOf(totalDuration));
-                            txtTotalCalories.setText(String.valueOf(totalCalories));
-                            System.out.println("Đã xóa bài tập có ID: " + log.getExerciseId());
-                        }
-                    }
-                });
-            }
-
-            @Override
-
-            protected void updateItem(Void item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || getIndex() >= getTableView().getItems().size()) {
-                    setGraphic(null);  // Không hiển thị nút nếu hàng trống
-                } else {
-                    setGraphic(btn);  // Hiển thị nút nếu có dữ liệu
-                }
-            }
-        }
-        );
-
-        this.tbWorkoutLog.getColumns().addAll(colExerciseID, colDuration, colDate, colActionST);
+        this.tbSelectedExers.getColumns().addAll(colExerciseName, colDuration, colCaloPerMinute);
     }
 
     public void loadColumns() {
-        TableColumn colExerciseID = new TableColumn("Ma bài tập");
+        TableColumn colExerciseID = new TableColumn("Mã bài tập");
         colExerciseID.setCellValueFactory(new PropertyValueFactory("id"));
         colExerciseID.setPrefWidth(125);
 
@@ -222,33 +197,26 @@ public class ExercisesManageController implements Initializable {
         TableColumn<Exercise, Integer> colDuration = new TableColumn<>("Thời gian tập");
         colDuration.setCellFactory(column -> new TableCell<>() {
             private final ComboBox<Integer> comboBox = new ComboBox<>(durations);
-
             {
                 comboBox.setPrefWidth(100);
-                comboBox.setValue(15); // Giá trị mặc định
-
+                comboBox.setValue(10); // Giá trị mặc định
                 // Khi người dùng chọn, lưu vào TableRow
                 comboBox.setOnAction(event -> {
-                    if (getTableRow() != null) {
-                        getTableRow().setUserData(comboBox.getValue());
-
+                    Exercise exercise = getTableView().getItems().get(getIndex());
+                    if (exercise != null){
+                        exercise.setDuration(comboBox.getValue());
                     }
                 });
-
             }
-
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
                 if (empty || getIndex() >= getTableView().getItems().size()) {
                     setGraphic(null);
                 } else {
+                    Exercise e = getTableView().getItems().get(getIndex());
+                    comboBox.setValue(e.getDuration()); // Hiển thị giá trị khi cập nhật
                     setGraphic(comboBox);
-
-                    //Luôn lưu giá trị mặc định vào TableRow khi hàng được tạo
-                    if (getTableRow() != null && getTableRow().getUserData() == null) {
-                        getTableRow().setUserData(15); // Gán giá trị mặc định
-                    }
                 }
             }
         });
@@ -263,43 +231,27 @@ public class ExercisesManageController implements Initializable {
                     Exercise exercise = getTableView().getItems().get(getIndex());
 
                     if (exercise != null) {
+                        int selectedDuration = exercise.getDuration();
                         System.out.println("Đã thêm: " + exercise.getExerciseName());
 
-                        // Lấy giá trị thời gian từ TableRow
-                        int selectedDuration = (int) getTableRow().getUserData();
 
                         // Hiển thị giá trị đã chọn
                         System.out.println("Thời gian tập: " + selectedDuration + " phút");
 
                         //  Kiểm tra xem bài tập đã tồn tại trong tbSelectedExers chưa
-                        boolean isExist = tbWorkoutLog.getItems().stream()
-                                .anyMatch(log -> log.getExerciseId() == exercise.getId());
+                        boolean isExist = tbSelectedExers.getItems().stream()
+                                .anyMatch(log -> log.getId()== exercise.getId());
 
                         if (isExist) {
-                            // Hiển thị cảnh báo nếu bài tập đã tồn tại
-                            Alert alert = new Alert(Alert.AlertType.WARNING);
-                            alert.setTitle("Lỗi");
-                            alert.setHeaderText(null);
-                            alert.setContentText("Bài tập này đã được thêm trước đó!");
-                            alert.showAndWait();
+                            Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Bài tập này đã được thêm trước đó!");
                         } else {
-                            // Nếu chưa tồn tại, thêm vào danh sách
-                            LocalDate date = Utils.getSelectedDate();
-                            System.out.println("Ngày tập: " + date);
-                            String id = null;
-                            String username = Utils.getUser();
-                            System.out.println("Username: " + username);
-                            id = Utils.getUUIdByName(username);
-                            System.out.println("UUID: " + id);
-                            WorkoutLog w = new WorkoutLog();
-                            w.setDuration(selectedDuration);
-                            w.setWorkoutDate(date);
-                            w.setUserInfoId(id);
-                            w.setExerciseId(exercise.getId());
-                            // Lưu bài tập vào bảng mới (tbWorkoutLog)
-                            tbWorkoutLog.getItems().add(w);
+                            Exercise selectedExercise = new Exercise(exercise.getId(),exercise.getExerciseName(),exercise.getCaloriesPerMinute());
+                            selectedExercise.setDuration(selectedDuration);
+                            
+                            tbSelectedExers.getItems().add(selectedExercise);
+                            
                             totalDuration += selectedDuration;
-                            totalCalories += selectedDuration * exercise.getCaloriesPerMinute();
+                            totalCalories += (selectedDuration * exercise.getCaloriesPerMinute()) / DEFAULT_MINUTE;
                             txtTotalDuration.setText(String.valueOf(totalDuration));
                             txtTotalCalories.setText(String.valueOf(totalCalories));
                             System.out.println("Thêm bài tập thành công!");
@@ -323,43 +275,67 @@ public class ExercisesManageController implements Initializable {
         this.tbExers.getColumns().addAll(colExerciseID, colExerciseName, colCalories, colDuration, colAction);
     }
 
-    public void saveBtnHandler() {
+    public void saveHandler() {
 
-        // Nếu cần lưu vào database, gọi phương thức xử lý ở đây
-        // saveToDatabase(selectedDate, selectedExercises);
-        Alert a = new Alert(Alert.AlertType.INFORMATION, "Du lieu da duoc luu", ButtonType.OK);
-        a.show();
-
-    }
-
-    public void addLog() {
-
-        if (tbWorkoutLog.getItems().isEmpty()) {
-            Alert a = Utils.getAlert("Không có bài tập nào trong danh sách.");
-            a.show();
+        if (tbSelectedExers.getItems().isEmpty()) {
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Danh sách bài tập trống!");
             return;
-        } else {
-            String sql = "INSERT INTO workoutlog (duration, workoutDate, userInfo_id, exercise_id) VALUES (?, ?, ?, ?)";
-            try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-                for (WorkoutLog log : this.tbWorkoutLog.getItems()) {
-                    stmt.setInt(1, log.getDuration());
-                    stmt.setDate(2, java.sql.Date.valueOf(log.getWorkoutDate()));
-                    System.out.println("UserId " + log.getUserInfoId());
-                    stmt.setString(3, log.getUserInfoId());
-                    stmt.setInt(4, log.getExerciseId());
-                    stmt.addBatch(); // Thêm vào batch để tối ưu hiệu suất
-                }
-
-                stmt.executeUpdate(); // Thực thi tất cả câu lệnh cùng lúc
-                System.out.println("Lưu thành công các bài tập vào WorkoutLog.");
-
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
+        String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
+        LocalDate workoutDate = Utils.getSelectedDate(); // Lấy ngày ăn
+
+        ExercisesService e = new ExercisesService();
+        e.addExerciseToLog(tbSelectedExers.getItems(), userId, workoutDate);
+    }
+    public void deleteHandler() {
+        Exercise selectedExercise = tbSelectedExers.getSelectionModel().getSelectedItem();
+
+        if (selectedExercise == null) {
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Vui lòng chọn bài tập cần xóa!");
+            return;
+        }
+        String userId = Utils.getUUIdByName(Utils.getUser());
+        LocalDate workoutDate = Utils.getSelectedDate();
+
+        try {
+            // Gọi ExercisesService để xóa bài tập khỏi DB
+            ExercisesService e = new ExercisesService();
+            e.deleteExerciseFromLog(selectedExercise.getId(), userId, workoutDate);
+
+            // Cập nhật giao diện (Xóa khỏi danh sách đã chọn)
+            removeExerciseFromSelectedList(selectedExercise);
+
+            Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Món ăn đã được xóa khỏi nhật ký!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi xóa dữ liệu!");
+        }
+    }
+     private void removeExerciseFromSelectedList(Exercise exercise) {
+        tbSelectedExers.getItems().remove(exercise);
+
+        // Cập nhật lại tổng calo, thời gian tập
+        totalCalories -= (exercise.getDuration()* exercise.getCaloriesPerMinute()) / DEFAULT_MINUTE;
+        txtTotalCalories.setText(String.valueOf(totalCalories));
+
+        totalDuration -= exercise.getDuration();
+        txtTotalDuration.setText(String.valueOf(totalDuration));
 
     }
+    private void loadTotalWorkout(List<Exercise> selectedExercise) {
+       totalCalories = 0;
+       totalDuration =0;
+
+       for (Exercise e : selectedExercise) {
+           totalCalories += (e.getCaloriesPerMinute()* e.getDuration()) / DEFAULT_MINUTE;
+           totalDuration += e.getDuration();
+       }
+
+       txtTotalCalories.setText(String.valueOf(totalCalories));
+       txtTotalDuration.setText(String.valueOf(totalDuration));
+      
+   }
 
     public void backHandler(ActionEvent event) throws IOException {
         ScenceSwitcher s = new ScenceSwitcher();
@@ -367,44 +343,10 @@ public class ExercisesManageController implements Initializable {
     }
 
 
-    public static String getUUIdByName(String username) {
-        String id = null;  // Giá trị mặc định nếu không tìm thấy
-        if (username != null) {
-            try (Connection conn = JdbcUtils.getConn()) {
-                String sql = "SELECT id FROM userinfo WHERE username = ? ";
-                PreparedStatement stm = conn.prepareCall(sql);
-                stm.setString(1, username);
-                ResultSet rs = stm.executeQuery();
-                while (rs.next()) {
-                    id = rs.getString("id");
-                    return id;
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        return id;
-    }
+    
 
     
-    public int getExerciseCaloriesByExerciseId(int exerciseId){
-
-        int calories = -1;
-        try (Connection conn = JdbcUtils.getConn()) {
-            String sql = "SELECT caloriesPerMinute FROM exercise WHERE id = ? ";
-            PreparedStatement stm = conn.prepareCall(sql);
-            stm.setInt(1, exerciseId);
-            ResultSet rs = stm.executeQuery();
-            while (rs.next()) {
-                calories = rs.getInt("caloriesPerMinute");
-                return calories;
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return calories;
-    }
-
+    
     public void switchToNutrition(ActionEvent event) throws IOException {
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "NutritionTrack.fxml");

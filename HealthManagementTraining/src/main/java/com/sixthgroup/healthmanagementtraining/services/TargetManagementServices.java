@@ -77,7 +77,7 @@ public class TargetManagementServices {
     }
 
     // Cập nhật mục tiêu (bao gồm tính toán currentProgress)
-    public static boolean updateGoal(String userInfoId, int goalId, float targetWeight, float currentWeight, LocalDate newEndDate) throws SQLException {
+    public static boolean updateGoal(String userInfoId, int goalId, float targetWeight, float currentWeight,int caloriesNeeded, LocalDate newEndDate) throws SQLException {
         String checkSql = "SELECT endDate, targetWeight, initialWeight, targetType FROM goal WHERE id = ? AND userInfo_id = ?";
 
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
@@ -113,15 +113,16 @@ public class TargetManagementServices {
                 }
 
                 // Cập nhật cơ sở dữ liệu
-                String updateSql = "UPDATE goal SET targetWeight = ?, currentWeight = ?, endDate = ?, currentProgress = ?, initialWeight = ? WHERE id = ? AND userInfo_id = ?";
+                String updateSql = "UPDATE goal SET targetWeight = ?, currentWeight = ?, endDate = ?, currentProgress = ?, initialWeight = ?, dailyCaloNeeded = ? WHERE id = ? AND userInfo_id = ?";
                 try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
                     stmt.setFloat(1, targetWeight);
                     stmt.setFloat(2, currentWeight);
                     stmt.setDate(3, Date.valueOf(newEndDate));
                     stmt.setInt(4, newProgress);
                     stmt.setFloat(5, initialWeight);
-                    stmt.setInt(6, goalId);
-                    stmt.setString(7, userInfoId);
+                    stmt.setInt(6, caloriesNeeded);
+                    stmt.setInt(7, goalId);
+                    stmt.setString(8, userInfoId);
                     stmt.executeUpdate();
                 }
                 return true;

@@ -13,10 +13,14 @@ public class Exercise {
     private int id; // char(8)
     private String exerciseName; // nvarchar(40)
     private int caloriesPerMinute; // int
+    private int duration = 15;//Giá trị mặc định
     public Exercise(int id, String exerciseName, int caloriesPerMinute) {
         this.id = id;
         this.exerciseName = exerciseName;
         this.caloriesPerMinute = caloriesPerMinute;
+    }
+    public Exercise(){
+        
     }
     // Getters and Setters
 
@@ -60,6 +64,20 @@ public class Exercise {
      */
     public void setCaloriesPerMinute(int caloriesPerMinute) {
         this.caloriesPerMinute = caloriesPerMinute;
+    }
+
+    /**
+     * @return the duration
+     */
+    public int getDuration() {
+        return duration;
+    }
+
+    /**
+     * @param duration the duration to set
+     */
+    public void setDuration(int duration) {
+        this.duration = duration;
     }
     
 }

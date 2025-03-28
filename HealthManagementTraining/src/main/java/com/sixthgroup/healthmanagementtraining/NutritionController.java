@@ -143,17 +143,16 @@ public class NutritionController implements Initializable {
             if (selectedFoodsFromLog.isEmpty()) {
                 System.out.println("Chưa có món ăn nào được chọn hôm nay.");
                 tbSelectedFood.getItems().clear(); // Đảm bảo bảng trống
-                
+
             } else {
                 // Hiển thị danh sách trên bảng
                 tbSelectedFood.getItems().setAll(selectedFoodsFromLog);
-                updateTotalNutrition(selectedFoodsFromLog);
+                loadTotalNutrition(selectedFoodsFromLog);
             }
         } catch (SQLException ex) {
             Logger.getLogger(NutritionController.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-       
         loadFoodCate();
         loadColumns();
         loadColumnsForSelectedTable();
@@ -163,6 +162,7 @@ public class NutritionController implements Initializable {
         });
 
     }
+
     public void loadFoodCate() {
         NutritionTrackService n = new NutritionTrackService();
         try {
@@ -280,11 +280,7 @@ public class NutritionController implements Initializable {
                                 .anyMatch(log -> log.getId() == food.getId());
 
                         if (isExist) {
-                            Alert alert = new Alert(Alert.AlertType.WARNING);
-                            alert.setTitle("Lỗi");
-                            alert.setHeaderText(null);
-                            alert.setContentText("Món ăn này đã được thêm trước đó!");
-                            alert.showAndWait();
+                            Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Món ăn này đã được thêm trước đó!");
                         } else {
                             // Cập nhật selectedQuantity vào đối tượng trước khi thêm vào danh sách
                             Food selectedFood = new Food(food.getId(), food.getFoodName(), food.getCaloriesPerUnit(),
@@ -395,7 +391,7 @@ public class NutritionController implements Initializable {
         txtTotalFiber.setText(String.valueOf(Utils.roundFloat(totalFiber, 1)));
     }
 
-    private void updateTotalNutrition(List<Food> selectedFoods) {
+    private void loadTotalNutrition(List<Food> selectedFoods) {
         totalCalo = 0;
         totalProtein = 0;
         totalLipid = 0;
