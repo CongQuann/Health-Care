@@ -182,7 +182,8 @@ public class TargetManagementController implements Initializable {
     // update Goal
     private void updateGoal(Goal goal, float targetWeight, float currentWeight, LocalDate endDate) {
         try {
-            boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, endDate);
+            int updateCaloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, goal.getStartDate(), endDate);
+            boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
             if (!success) {
                 Utils.getAlert("Ngày kết thúc không thể giảm!").show();
             } else {
