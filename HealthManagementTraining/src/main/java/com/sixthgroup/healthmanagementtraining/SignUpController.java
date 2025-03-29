@@ -51,6 +51,11 @@ public class SignUpController implements Initializable {
         List<String> levels = signUpServices.getActivityLevels("userinfo", "activityLevel");
         activityLevelComboBox.setItems(FXCollections.observableArrayList(levels));
     }
+    
+    @FXML
+    private void switchToSecondary() throws IOException {
+        App.setRoot("secondary");
+    }
 
     @FXML
     private void handleSignUp(ActionEvent event) throws IOException {
