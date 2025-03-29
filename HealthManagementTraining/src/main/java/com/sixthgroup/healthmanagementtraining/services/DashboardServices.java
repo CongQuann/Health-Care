@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import javafx.scene.control.DatePicker;
 
 /**
  *
@@ -101,10 +103,30 @@ public class DashboardServices {
             stm.setString(1, userName);
             stm.setDate(2, java.sql.Date.valueOf(workoutDate));
             ResultSet rs = stm.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 totalCalo = rs.getInt(1);
             }
         }
         return totalCalo;
     }
+
+    public int getCaloNeededByDate(String userName, LocalDate servingDate) throws SQLException {
+        int dailyCaloNeeded = 0;
+        try (Connection conn = JdbcUtils.getConn()) {
+            // Sửa lỗi: Thêm điều kiện WHERE userName = ?
+            String sql = "SELECT g.dailyCaloNeeded FROM goal g JOIN userinfo u ON g.userInfo_id = u.id WHERE userName = ? AND startDate <= ? AND endDate >= ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, userName);
+            stmt.setTimestamp(2, java.sql.Timestamp.valueOf(servingDate.atStartOfDay())); // Chuyển LocalDate thành Timestamp
+            stmt.setTimestamp(3, java.sql.Timestamp.valueOf(servingDate.atStartOfDay()));
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                dailyCaloNeeded = rs.getInt(1);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return dailyCaloNeeded;
+    }
+
 }
