@@ -13,6 +13,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import javafx.scene.control.Alert;
 
 /**
  *
@@ -49,6 +50,38 @@ public class UserInfoServices {
             e.printStackTrace();
         }
         return userInfo;
+    }
+
+    public boolean checkUserName(String userName) {
+        if (userName == null || userName.isEmpty()) {
+            showAlert("Lỗi", "Không tìm thấy người dùng hiện tại.", Alert.AlertType.ERROR);
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkPassInput(String oldPassword, String newPassword,String confirmPassword) {
+        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
+            showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin.", Alert.AlertType.ERROR);
+            return false;
+        }
+        return true;
+    }
+    
+    public boolean checkConfirmPass(String newPassword, String confirmPassword){
+        if (!newPassword.equals(confirmPassword)) {
+            showAlert("Lỗi", "Mật khẩu mới không khớp. Vui lòng nhập lại!", Alert.AlertType.ERROR);
+            return false;
+        }
+        return true;
+    }
+
+    public void showAlert(String title, String content, Alert.AlertType alertType) {
+        Alert alert = new Alert(alertType);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(content);
+        alert.showAndWait();
     }
 
     public boolean updateUserInfo(UserInfo userInfo) {

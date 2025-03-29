@@ -70,6 +70,17 @@ public class AdminFoodServices {
         return -1; //tra ve -1 neu khong tim thay
     }
 
+    public boolean checkInputData(String foodName, String caloriesText, String lipidText, String proteinText, String fiberText, FoodCategory selectedCategory, UnitType selectedUnit) {
+        // Kiểm tra nếu có trường nào bị trống
+        if (foodName.isEmpty() || caloriesText.isEmpty() || lipidText.isEmpty()
+                || proteinText.isEmpty() || fiberText.isEmpty() || selectedCategory == null || selectedCategory.getId() < 0 || selectedUnit == null) {
+
+            System.out.println("Vui lòng nhập đầy đủ thông tin!");
+            return false;
+        }
+        return true;
+    }
+
     public boolean addFood(Food food) throws SQLException {
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm = conn.prepareStatement("INSERT INTO food (foodName, caloriesPerUnit, lipidPerUnit, proteinPerUnit, fiberPerUnit, foodCategory_id, unitType) VALUES (?, ?, ?, ?, ?, ?, ?)");
@@ -157,7 +168,6 @@ public class AdminFoodServices {
         return filteredList;
     }
 
-
     public List<Food> searchFoodByCategoryAndKeyword(int categoryId, String keyword) throws SQLException {
         List<Food> filteredList = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
@@ -189,4 +199,3 @@ public class AdminFoodServices {
         return filteredList;
     }
 }
-

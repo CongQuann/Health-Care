@@ -163,18 +163,15 @@ public class UserInfoManagementController implements Initializable {
 
         // Lấy username hiện tại từ Utils
         String userName = Utils.getUser();
-        if (userName == null || userName.isEmpty()) {
-            showAlert("Lỗi", "Không tìm thấy người dùng hiện tại.", Alert.AlertType.ERROR);
+
+        if (userInfoServices.checkUserName(userName) == false) {
             return;
         }
 
-        if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin.", Alert.AlertType.ERROR);
+        if (userInfoServices.checkPassInput(oldPassword, newPassword, confirmPassword) == false) {
             return;
         }
-
-        if (!newPassword.equals(confirmPassword)) {
-            showAlert("Lỗi", "Mật khẩu mới không khớp. Vui lòng nhập lại!", Alert.AlertType.ERROR);
+        if (userInfoServices.checkConfirmPass(newPassword, confirmPassword) == false) {
             return;
         }
 
@@ -182,21 +179,17 @@ public class UserInfoManagementController implements Initializable {
         boolean isUpdated = userInfoServices.updateUserPassword(userName, oldPassword, newPassword);
 
         if (isUpdated) {
-            showAlert("Thành công", "Đổi mật khẩu thành công!", Alert.AlertType.INFORMATION);
+            String successTitle = "Thành công";
+            String successContent = "Đổi mật khẩu thành công!";
+            userInfoServices.showAlert(successTitle, successContent, Alert.AlertType.INFORMATION);
             oldPasswordField.clear();
             newPasswordField.clear();
             confirmPasswordField.clear();
         } else {
-            showAlert("Lỗi", "Sai mật khẩu cũ hoặc có lỗi xảy ra!", Alert.AlertType.ERROR);
+            String failedTitle = "Lỗi";
+            String failedContent = "Sai mật khẩu cũ hoặc có lỗi xảy ra!";
+            userInfoServices.showAlert(failedTitle, failedContent, Alert.AlertType.ERROR);
         }
-    }
-
-    private void showAlert(String title, String content, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 
     @Override
@@ -257,7 +250,7 @@ public class UserInfoManagementController implements Initializable {
         // Lưu ngày vào biến tĩnh
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "TargetManagement.fxml");
-       
+
     }
 
 }
