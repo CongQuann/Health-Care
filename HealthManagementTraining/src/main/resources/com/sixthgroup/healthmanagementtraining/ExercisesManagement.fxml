@@ -26,46 +26,6 @@
                 </graphic>365Health</Label>
         </HBox>
         <TitledPane animated="false" layoutX="117.0" layoutY="-199.0" text="untitled" />
-        <!-- Navbar (ban đầu ẩn bên trái) -->
-        <!--==========================================================-->
-        <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
-            <children>
-                <HBox alignment="CENTER_RIGHT" spacing="26">
-                    <Button fx:id="closeNavButton" mnemonicParsing="false" styleClass="close-btn" text="✖" />
-                </HBox>
-                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToUserInfo" styleClass="nav-btn" text="Tài khoản">
-                    <graphic>
-                        <SVGPath content="M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z" styleClass="nav-icon" />                    
-                    </graphic>
-                </Button>
-                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#backHandler" styleClass="nav-btn" text="Tổng quan">
-                    <graphic>
-                        <SVGPath content="M13,3V9H21V3M13,21H21V11H13M3,21H11V15H3M3,13H11V3H3V13Z" styleClass="nav-icon" />                    
-                    </graphic>
-                </Button>
-                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToNutrition" styleClass="nav-btn" text="Quản lý dinh dưỡng">
-                    <graphic>
-                        <SVGPath content="M20,10C22,13 17,22 15,22C13,22 13,21 12,21C11,21 11,22 9,22C7,22 2,13 4,10C6,7 9,7 11,8V5C5.38,8.07 4.11,3.78 4.11,3.78C4.11,3.78 6.77,0.19 11,5V3H13V8C15,7 18,7 20,10Z" styleClass="nav-icon" />
-                    </graphic>
-                </Button>
-                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" styleClass="nav-btn" text="Ghi lại tập luyện">
-                    <graphic>
-                        <SVGPath content="M16.5,5.5A2,2 0 0,0 18.5,3.5A2,2 0 0,0 16.5,1.5A2,2 0 0,0 14.5,3.5A2,2 0 0,0 16.5,5.5M12.9,19.4L13.9,15L16,17V23H18V15.5L15.9,13.5L16.5,10.5C17.89,12.09 19.89,13 22,13V11C20.24,11.03 18.6,10.11 17.7,8.6L16.7,7C16.34,6.4 15.7,6 15,6C14.7,6 14.5,6.1 14.2,6.1L9,8.3V13H11V9.6L12.8,8.9L11.2,17L6.3,16L5.9,18L12.9,19.4M4,9A1,1 0 0,1 3,8A1,1 0 0,1 4,7H7V9H4M5,5A1,1 0 0,1 4,4A1,1 0 0,1 5,3H10V5H5M3,13A1,1 0 0,1 2,12A1,1 0 0,1 3,11H7V13H3Z" styleClass="nav-icon" />
-                    </graphic>
-                </Button>
-                <Button alignment="CENTER_LEFT" layoutX="20.0" layoutY="220.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToTarget" styleClass="nav-btn" text="Quản lý mục tiêu">
-                    <graphic>
-                        <SVGPath content="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,10.84 21.79,9.69 21.39,8.61L19.79,10.21C19.93,10.8 20,11.4 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.6,4 13.2,4.07 13.79,4.21L15.4,2.6C14.31,2.21 13.16,2 12,2M19,2L15,6V7.5L12.45,10.05C12.3,10 12.15,10 12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12C14,11.85 14,11.7 13.95,11.55L16.5,9H18L22,5H19V2M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12H16A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8V6Z" styleClass="nav-icon" />
-                    </graphic>
-                </Button>
-                <Button alignment="CENTER_LEFT" layoutX="20.0" layoutY="220.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToLogin" styleClass="nav-btn" text="Đăng xuất">
-                    <graphic>
-                        <SVGPath content="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12M4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z" styleClass="nav-icon" />
-                    </graphic>
-                </Button>
-               
-            </children>
-        </VBox>
         <VBox layoutX="7.0" layoutY="649.0" prefHeight="200.0" prefWidth="557.0" styleClass="input-container">
             <children>
                 <HBox prefHeight="54.0" prefWidth="408.0">
@@ -122,6 +82,46 @@
             <Label alignment="CENTER" prefHeight="21.0" prefWidth="1013.0" styleClass="lb-Title" text="Quản lí lịch tập" />
          </children>
       </HBox>
+        <!-- Navbar (ban đầu ẩn bên trái) -->
+        <!--==========================================================-->
+        <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="898.0" prefWidth="250.0" styleClass="nav-bar">
+            <children>
+                <HBox alignment="CENTER_RIGHT" spacing="26">
+                    <Button fx:id="closeNavButton" mnemonicParsing="false" styleClass="close-btn" text="✖" />
+                </HBox>
+                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToUserInfo" styleClass="nav-btn" text="Tài khoản">
+                    <graphic>
+                        <SVGPath content="M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z" styleClass="nav-icon" />                    
+                    </graphic>
+                </Button>
+                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#backHandler" styleClass="nav-btn" text="Tổng quan">
+                    <graphic>
+                        <SVGPath content="M13,3V9H21V3M13,21H21V11H13M3,21H11V15H3M3,13H11V3H3V13Z" styleClass="nav-icon" />                    
+                    </graphic>
+                </Button>
+                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToNutrition" styleClass="nav-btn" text="Quản lý dinh dưỡng">
+                    <graphic>
+                        <SVGPath content="M20,10C22,13 17,22 15,22C13,22 13,21 12,21C11,21 11,22 9,22C7,22 2,13 4,10C6,7 9,7 11,8V5C5.38,8.07 4.11,3.78 4.11,3.78C4.11,3.78 6.77,0.19 11,5V3H13V8C15,7 18,7 20,10Z" styleClass="nav-icon" />
+                    </graphic>
+                </Button>
+                <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" styleClass="nav-btn" text="Ghi lại tập luyện">
+                    <graphic>
+                        <SVGPath content="M16.5,5.5A2,2 0 0,0 18.5,3.5A2,2 0 0,0 16.5,1.5A2,2 0 0,0 14.5,3.5A2,2 0 0,0 16.5,5.5M12.9,19.4L13.9,15L16,17V23H18V15.5L15.9,13.5L16.5,10.5C17.89,12.09 19.89,13 22,13V11C20.24,11.03 18.6,10.11 17.7,8.6L16.7,7C16.34,6.4 15.7,6 15,6C14.7,6 14.5,6.1 14.2,6.1L9,8.3V13H11V9.6L12.8,8.9L11.2,17L6.3,16L5.9,18L12.9,19.4M4,9A1,1 0 0,1 3,8A1,1 0 0,1 4,7H7V9H4M5,5A1,1 0 0,1 4,4A1,1 0 0,1 5,3H10V5H5M3,13A1,1 0 0,1 2,12A1,1 0 0,1 3,11H7V13H3Z" styleClass="nav-icon" />
+                    </graphic>
+                </Button>
+                <Button alignment="CENTER_LEFT" layoutX="20.0" layoutY="220.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToTarget" styleClass="nav-btn" text="Quản lý mục tiêu">
+                    <graphic>
+                        <SVGPath content="M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12C22,10.84 21.79,9.69 21.39,8.61L19.79,10.21C19.93,10.8 20,11.4 20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.6,4 13.2,4.07 13.79,4.21L15.4,2.6C14.31,2.21 13.16,2 12,2M19,2L15,6V7.5L12.45,10.05C12.3,10 12.15,10 12,10A2,2 0 0,0 10,12A2,2 0 0,0 12,14A2,2 0 0,0 14,12C14,11.85 14,11.7 13.95,11.55L16.5,9H18L22,5H19V2M12,6A6,6 0 0,0 6,12A6,6 0 0,0 12,18A6,6 0 0,0 18,12H16A4,4 0 0,1 12,16A4,4 0 0,1 8,12A4,4 0 0,1 12,8V6Z" styleClass="nav-icon" />
+                    </graphic>
+                </Button>
+                <Button alignment="CENTER_LEFT" layoutX="20.0" layoutY="220.0" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToLogin" styleClass="nav-btn" text="Đăng xuất">
+                    <graphic>
+                        <SVGPath content="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12M4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z" styleClass="nav-icon" />
+                    </graphic>
+                </Button>
+               
+                  </children>
+        </VBox>
         <!--========================================================================-->
     </children>
 

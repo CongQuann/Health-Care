@@ -151,7 +151,7 @@
                
             </children>
         </VBox>
-      <Label layoutX="481.0" layoutY="69.0" styleClass="lb-SubTitle" text="Label" />
+      <Label fx:id="dateLabel" layoutX="481.0" layoutY="69.0" styleClass="lb-SubTitle" text="Label" />
         <!--========================================================================-->
     </children>
 </Pane>
