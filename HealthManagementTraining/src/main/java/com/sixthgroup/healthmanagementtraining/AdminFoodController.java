@@ -97,11 +97,9 @@ public class AdminFoodController implements Initializable {
         FoodCategory selectedCategory = foodTypeComboBox.getValue();
         UnitType selectedUnit = unitTypeComboBox.getValue();
 
-        // Kiểm tra nếu có trường nào bị trống
-        if (foodName.isEmpty() || caloriesText.isEmpty() || lipidText.isEmpty()
-                || proteinText.isEmpty() || fiberText.isEmpty() || selectedCategory == null || selectedCategory.getId() < 0 || selectedUnit == null) {
-
-            System.out.println("Vui lòng nhập đầy đủ thông tin!");
+        AdminFoodServices afs = new AdminFoodServices();
+        if(afs.checkInputData(foodName, caloriesText, lipidText, proteinText, fiberText, selectedCategory, selectedUnit) == false)
+        {
             return null;
         }
 
@@ -118,7 +116,7 @@ public class AdminFoodController implements Initializable {
                     foodName,
                     calories,
                     lipid,
-                  protein,
+                    protein,
                     fiber,
                     selectedCategory.getId(),
                     selectedCategory.getCategoryName(),
@@ -128,9 +126,9 @@ public class AdminFoodController implements Initializable {
             System.out.println("Lỗi: Vui lòng nhập số hợp lệ!");
             return null;
         }
-   }
+    }
 
-   public void handleAddFood(ActionEvent event) throws SQLException {
+    public void handleAddFood(ActionEvent event) throws SQLException {
         Food food = getFoodFromInput(); // lay food tu giao dien qua hàm getFoodFromInput đã tạo ở trên
         //kiem tra neu food == null thi thong bao chua nhap du thong tin
         if (food == null) {
@@ -441,12 +439,12 @@ public class AdminFoodController implements Initializable {
         // Thiết lập các cột có thể chỉnh sửa và xử lý sự kiện
         setupTableEditable();
     }
-    
+
     public void switchToAdminExercise(ActionEvent event) throws IOException {
         // Lưu ngày vào biến tĩnh
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "AdminExercise.fxml");
-        
+
     }
 
 }

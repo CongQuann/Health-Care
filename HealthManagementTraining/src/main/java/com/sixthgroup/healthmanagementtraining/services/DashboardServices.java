@@ -129,4 +129,12 @@ public class DashboardServices {
         return dailyCaloNeeded;
     }
 
+    public int calculatePercentage(int caloriesIntake, int caloriesDailyNeeded) {
+        if (caloriesDailyNeeded == 0) {
+            return 0; // Tránh lỗi chia cho 0
+        }
+        int percentage = (int) Math.round(((double) caloriesIntake / caloriesDailyNeeded) * 100);
+        return Math.min(percentage, 100);
+    }
+
 }

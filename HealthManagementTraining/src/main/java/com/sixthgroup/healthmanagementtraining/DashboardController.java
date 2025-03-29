@@ -129,17 +129,11 @@ public class DashboardController implements Initializable {
         });
     }
 
-    public int calculatePercentage(int caloriesIntake, int caloriesDailyNeeded) {
-        if (caloriesDailyNeeded == 0) {
-            return 0; // Tránh lỗi chia cho 0
-        }
-        int percentage = (int) Math.round(((double) caloriesIntake / caloriesDailyNeeded) * 100);
-        return Math.min(percentage, 100);
-    }
 
     // Hàm cập nhật biểu đồ với dữ liệu mới
     public void updateCaloPieChart(int caloriesIntake, int caloriesDailyNeeded) {
-        int percentage = calculatePercentage(caloriesIntake, caloriesDailyNeeded);
+        DashboardServices ds = new DashboardServices();
+        int percentage = ds.calculatePercentage(caloriesIntake, caloriesDailyNeeded);
         int remaining = Math.max(100 - percentage, 0); // Đảm bảo không có giá trị âm
 
         caloPieChart.getData().clear(); // Xóa dữ liệu cũ
@@ -158,6 +152,8 @@ public class DashboardController implements Initializable {
         localDate = datePicker.getValue();
         nutritionPieChart.setPrefWidth(300); // Điều chỉnh chiều rộng
         nutritionPieChart.setPrefHeight(250); // Điều chỉnh chiều cao
+        caloPieChart.setPrefHeight(250);
+        caloPieChart.setPrefWidth(300);
         updateDashboard();
 
 //        updateNutritionPieChart(proteinIntake, lipidIntake, fiberIntake); // Ví dụ: Chất đạm 100g, chất béo 50g, chất xơ 25g
