@@ -34,7 +34,7 @@ public class SignUpController implements Initializable {
     @FXML
     private TextField weightField;
     @FXML
-    private TextField genderField;
+    private ComboBox<String> genderComboBox;
     @FXML
     private DatePicker dobPicker;
     @FXML
@@ -44,12 +44,19 @@ public class SignUpController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        genderComboBox.setItems(FXCollections.observableArrayList("Nam", "Nữ"));
+        genderComboBox.setValue("Nam");
         loadActivityLevels();
     }
 
     private void loadActivityLevels() {
         List<String> levels = signUpServices.getActivityLevels("userinfo", "activityLevel");
         activityLevelComboBox.setItems(FXCollections.observableArrayList(levels));
+    }
+    
+    @FXML
+    private void switchToSecondary() throws IOException {
+        App.setRoot("secondary");
     }
 
     @FXML
@@ -67,7 +74,7 @@ public class SignUpController implements Initializable {
         String email = emailField.getText();
         double height = Double.parseDouble(heightField.getText());
         double weight = Double.parseDouble(weightField.getText());
-        String gender = genderField.getText();
+        String gender = genderComboBox.getValue();
         LocalDate dob = dobPicker.getValue();
         String activityLevel = activityLevelComboBox.getValue();
 

@@ -147,7 +147,7 @@ public class ExercisesManageController implements Initializable {
         
         loadColumns();
         loadColumnsForSelectedTable();
-        loadTableData("");
+        loadTableData(null);
         txtSearch.textProperty().addListener((e) -> {
             loadTableData(txtSearch.getText());
         });
@@ -166,15 +166,15 @@ public class ExercisesManageController implements Initializable {
     public void loadColumnsForSelectedTable() {
         TableColumn colExerciseName = new TableColumn("Tên bài tập");
         colExerciseName.setCellValueFactory(new PropertyValueFactory("exerciseName"));
-        colExerciseName.setPrefWidth(125);
+        colExerciseName.setPrefWidth(100);
 
         TableColumn<Exercise, Integer> colDuration = new TableColumn<>("Thời gian tập");
         colDuration.setCellValueFactory(new PropertyValueFactory<>("duration"));
-        colDuration.setPrefWidth(125);
+        colDuration.setPrefWidth(100);
 
         TableColumn colCaloPerMinute = new TableColumn("Calo tiêu thụ/phút");
         colCaloPerMinute.setCellValueFactory(new PropertyValueFactory("caloriesPerMinute"));
-        colCaloPerMinute.setPrefWidth(125);
+        colCaloPerMinute.setPrefWidth(100);
 
         this.tbSelectedExers.getColumns().addAll(colExerciseName, colDuration, colCaloPerMinute);
     }
