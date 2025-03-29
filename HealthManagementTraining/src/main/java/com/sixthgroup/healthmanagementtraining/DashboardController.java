@@ -53,6 +53,8 @@ public class DashboardController implements Initializable {
     @FXML
     private PieChart nutritionPieChart;
     @FXML
+    private PieChart caloPieChart;
+    @FXML
     private DatePicker datePicker;
 
     @FXML
@@ -75,6 +77,7 @@ public class DashboardController implements Initializable {
     private double lipidIntake;
     private double fiberIntake;
     private double proteinIntake;
+    private int caloriesDailyNeeded;
 
     private void updateDashboard() {
         try {
@@ -87,13 +90,16 @@ public class DashboardController implements Initializable {
             lipidIntake = dashboardServices.getDailyLipidIntake(userName, localDate);
             fiberIntake = dashboardServices.getDailyFiberIntake(userName, localDate);
             proteinIntake = dashboardServices.getDailyProteinIntake(userName, localDate);
+            caloriesDailyNeeded = dashboardServices.getCaloNeededByDate(userName, localDate);
 
-            calorieIntakeText.setText(calorieIntake + " kcal");
-            calorieBurnText.setText(caloriesBurn + " kcal");
+            calorieIntakeText.setText(calorieIntake + " cal");
+            calorieBurnText.setText(caloriesBurn + " cal");
             lipidIntakeText.setText(df.format(lipidIntake) + " g");
             fiberIntakeText.setText(df.format(fiberIntake) + " g");
             proteinIntakeText.setText(df.format(proteinIntake) + " g");
+            requiredCaloriesText.setText(caloriesDailyNeeded + " cal");
             updateNutritionPieChart(proteinIntake, lipidIntake, fiberIntake); // Cập nhật nutritionPieChart
+            updateCaloPieChart(calorieIntake, caloriesDailyNeeded); //cập nhật cho caloPieChart
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -121,6 +127,25 @@ public class DashboardController implements Initializable {
                 data.getNode().getStyleClass().add("fiber-slice");
             }
         });
+    }
+
+    public int calculatePercentage(int caloriesIntake, int caloriesDailyNeeded) {
+        if (caloriesDailyNeeded == 0) {
+            return 0; // Tránh lỗi chia cho 0
+        }
+        int percentage = (int) Math.round(((double) caloriesIntake / caloriesDailyNeeded) * 100);
+        return Math.min(percentage, 100);
+    }
+
+    // Hàm cập nhật biểu đồ với dữ liệu mới
+    public void updateCaloPieChart(int caloriesIntake, int caloriesDailyNeeded) {
+        int percentage = calculatePercentage(caloriesIntake, caloriesDailyNeeded);
+        int remaining = Math.max(100 - percentage, 0); // Đảm bảo không có giá trị âm
+
+        caloPieChart.getData().clear(); // Xóa dữ liệu cũ
+        caloPieChart.getData().add(new PieChart.Data("Đã hấp thụ", percentage));
+        caloPieChart.getData().add(new PieChart.Data("Còn lại", remaining));
+        caloPieChart.setLegendVisible(false);
     }
 
     @FXML
