@@ -18,7 +18,7 @@
 
 .spacing_hbox{
     -fx-spacing: 20px; /* Khoảng cách giữa các phần tử con */
-    
+
 }
 
 /*PHẦN CSS CHO NAV-BAR*/
@@ -37,7 +37,7 @@
 }
 /*chỉnh màu cho icon*/
 .nav-toggle-btn SVGPath{
-        -fx-fill: #333; /* Màu icon */
+    -fx-fill: #333; /* Màu icon */
 
 }
 
@@ -47,7 +47,7 @@
     -fx-padding: 10px;
     -fx-spacing: 10px;
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5), 10, 0, 0, 0);
-/*    -fx-translate-x: -200px;  Ban đầu ẩn bên trái */
+    /*    -fx-translate-x: -200px;  Ban đầu ẩn bên trái */
 }
 /* Nút trong navbar */
 .nav-btn {
@@ -60,6 +60,7 @@
 .nav-btn:hover {
     -fx-background-color: #34495e;
 }
+
 
 
 .close-btn {
@@ -83,7 +84,7 @@
 }
 .nav-icon{
     -fx-fill:white;
-    
+
 }
 
 .header-hbox{
@@ -123,40 +124,37 @@
     -fx-font-weight: bold;
     -fx-text-fill:#2c3e50;
 }
-.addBtn {
-    -fx-background-color: #007bff; /* Màu nền */
-    -fx-text-fill: white; /* Màu chữ */
-    -fx-font-size: 16px; /* Kích thước chữ */
-    -fx-font-weight: bold; /* Đậm chữ */
-    -fx-padding: 4px 8px; /* Khoảng cách bên trong */
-    -fx-background-radius: 15; /* Bán kính bo tròn */
-    -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
+
+.lb-Title{
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill:#2c3e50;
+}
+.lb-SubTitle{
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill:#2c3e50;
+}
+.input-container {
+    -fx-background-color: #f0f0f0; /* Màu nền xám nhạt */
+    -fx-padding: 15;
+    -fx-border-color: #ccc;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
 }
 .deleteBtn{
-    -fx-background-color: #cf223d; /* Màu nền */
-    -fx-text-fill: white; /* Màu chữ */
-    -fx-font-size: 14px; /* Kích thước chữ */
-    -fx-font-weight: bold; /* Đậm chữ */
-    -fx-padding: 4px 8px; /* Khoảng cách bên trong */
-    -fx-background-radius: 15; /* Bán kính bo tròn */
-    -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
+    -fx-background-color: #ff4d4d;
+    -fx-text-fill: white;
+    -fx-font-size: 14px;
+    -fx-padding: 5px 15px;
+    -fx-background-radius: 5px;
+    -fx-cursor: hand;
 }
 .saveBtn{
-    -fx-background-color: #2fda38; /* Màu nền */
-    -fx-text-fill: white; /* Màu chữ */
-    -fx-font-size: 16px; /* Kích thước chữ */
-    -fx-font-weight: bold; /* Đậm chữ */
-    -fx-padding: 4px 8px; /* Khoảng cách bên trong */
-    -fx-background-radius: 15; /* Bán kính bo tròn */
-    -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
-}
-.backBtn{
-    -fx-background-color: #007bff; /* Màu nền */
-    -fx-text-fill: white; /* Màu chữ */
-    -fx-font-size: 16px; /* Kích thước chữ */
-    -fx-font-weight: bold; /* Đậm chữ */
-    -fx-padding: 4px 8px; /* Khoảng cách bên trong */
-    -fx-background-radius: 15; /* Bán kính bo tròn */
-    -fx-border-radius: 15; /* Bán kính bo tròn cho biên */
+    -fx-background-color:#34495e;
+    -fx-text-fill: white;
+    -fx-padding: 5px 15px;
+    -fx-font-size: 14px;
+    -fx-background-radius: 5;
 }
 /*========================================================================*/
