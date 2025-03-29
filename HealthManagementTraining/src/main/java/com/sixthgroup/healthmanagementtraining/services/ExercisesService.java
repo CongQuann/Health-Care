@@ -7,11 +7,14 @@ package com.sixthgroup.healthmanagementtraining.services;
 import com.sixthgroup.healthmanagementtraining.pojo.Exercise;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import javafx.scene.control.Alert;
 
 /**
  *
@@ -39,6 +42,76 @@ public class ExercisesService {
             return exs;
         }
     }
+     public List<Exercise> getWorkoutLogOfUser(String userId, LocalDate servingDate) throws SQLException {
+        List<Exercise> selectedExercises = new ArrayList<>();
+        String sql = "SELECT e.id, e.exerciseName, e.caloriesPerMinute, "
+                + "wl.duration "
+                + "FROM workoutlog wl "
+                + "JOIN exercise e ON wl.exercise_id = e.id "
+                + "WHERE wl.userInfo_id = ? AND wl.workoutDate = ?";
 
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setString(1, userId);
+            stmt.setDate(2, Date.valueOf(servingDate));
+
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (!rs.isBeforeFirst()) {
+                    System.out.println("Không có dữ liệu bài tập đã lưu cho user " + Utils.getUser());
+                    return selectedExercises; // Trả về danh sách rỗng
+                }
+
+                while (rs.next()) {
+                    Exercise exercise = new Exercise();
+                    exercise.setId(rs.getInt("id"));
+                    exercise.setExerciseName(rs.getString("exerciseName"));
+                    exercise.setCaloriesPerMinute(rs.getInt("caloriesPerMinute"));
+                    exercise.setDuration(rs.getInt("duration")); // Lưu thời gian tập đã chọn
+
+                    selectedExercises.add(exercise);
+                }
+            }
+        }
+        return selectedExercises;
+    }
+    public void addExerciseToLog(List<Exercise> selectedExercise, String userId, LocalDate workoutDate){
+        String sql = "INSERT INTO workoutlog (duration, workoutDate, userInfo_id, exercise_id) VALUES (?, ?, ?, ?)";
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            for (Exercise exercise : selectedExercise) {
+                pstmt.setInt(1, exercise.getDuration()); // Thời gian tập
+                pstmt.setDate(2, Date.valueOf(workoutDate)); // Ngày tập
+                pstmt.setString(3, userId); // ID người dùng
+                pstmt.setInt(4, exercise.getId()); // ID bài tập
+                pstmt.addBatch(); // Thêm vào batch để tăng tốc độ lưu
+            }
+
+            pstmt.executeBatch(); // Thực hiện lưu toàn bộ dữ liệu
+
+            Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Dữ liệu đã được lưu vào nhật kí tập luyện");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi lưu dữ liệu!");
+        }
+    }
+    public void deleteExerciseFromLog(int exerciseId, String userId, LocalDate workoutDate) throws SQLException{
+        String sql = "DELETE FROM workoutlog WHERE exercise_id = ? AND userInfo_id = ? AND workoutDate = ?";
+
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, exerciseId);
+            pstmt.setString(2, userId);
+            pstmt.setDate(3, Date.valueOf(workoutDate));
+
+            int rowsAffected = pstmt.executeUpdate();
+            if (rowsAffected == 0) {
+                System.out.println("Không có dữ liệu nào bị xóa!");
+            } else {
+                System.out.println("Xóa thành công món ăn khỏi nhật ký!");
+                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa bài tập khỏi nhật kí");
+            }
+        }
+    }
 
 }
