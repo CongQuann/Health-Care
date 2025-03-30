@@ -72,5 +72,23 @@ public class SignUpServices {
             return false;
         }
     }
+    
+    public boolean isUsernameTaken(String username) {
+        String query = "SELECT COUNT(*) FROM userinfo WHERE userName = ?";
+        
+        try (Connection conn = JdbcUtils.getConn();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setString(1, username);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
 }
