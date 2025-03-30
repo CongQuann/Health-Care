@@ -30,7 +30,7 @@ public class AdminExerciseServices {
                 Exercise e = new Exercise(
                         rs.getInt("id"),
                         rs.getString("exerciseName"),
-                        rs.getInt("caloriesPerMinute")
+                        rs.getFloat("caloriesPerMinute")
                 );
                 list.add(e);
             }
@@ -62,7 +62,7 @@ public class AdminExerciseServices {
                 Exercise e = new Exercise(
                         rs.getInt("id"),
                         rs.getString("exerciseName"),
-                        rs.getInt("caloriesPerMinute")
+                        rs.getFloat("caloriesPerMinute")
                 );
                 list.add(e);
             }

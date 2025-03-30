@@ -19,8 +19,8 @@ import javafx.scene.control.DatePicker;
  */
 public class DashboardServices {
 
-    public int getDailyCalorieIntake(String userName, LocalDate servingDate) throws SQLException {
-        int totalCalories = 0;
+    public float getDailyCalorieIntake(String userName, LocalDate servingDate) throws SQLException {
+        float totalCalories = 0;
         try (Connection conn = JdbcUtils.getConn()) {
             String sql = "SELECT SUM(f.caloriesPerUnit * n.numberOfUnit) "
                     + "FROM nutritionlog n "
@@ -95,8 +95,8 @@ public class DashboardServices {
         return totalProtein;
     }
 
-    public int getDailyCalorieBurn(String userName, LocalDate workoutDate) throws SQLException {
-        int totalCalo = 0;
+    public float getDailyCalorieBurn(String userName, LocalDate workoutDate) throws SQLException {
+        float totalCalo = 0;
         try (Connection conn = JdbcUtils.getConn()) {
             String sql = "SELECT SUM(e.caloriesPerMinute * w.duration) FROM (workoutlog w JOIN userinfo u) JOIN exercise e ON w.userInfo_id = u.id AND w.exercise_id = e.id WHERE u.userName = ? AND DATE(w.workoutDate) = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
@@ -104,14 +104,14 @@ public class DashboardServices {
             stm.setDate(2, java.sql.Date.valueOf(workoutDate));
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                totalCalo = rs.getInt(1);
+                totalCalo = rs.getFloat(1);
             }
         }
         return totalCalo;
     }
 
-    public int getCaloNeededByDate(String userName, LocalDate servingDate) throws SQLException {
-        int dailyCaloNeeded = 0;
+    public float getCaloNeededByDate(String userName, LocalDate servingDate) throws SQLException {
+        float dailyCaloNeeded = 0;
         try (Connection conn = JdbcUtils.getConn()) {
             // Sửa lỗi: Thêm điều kiện WHERE userName = ?
             String sql = "SELECT g.dailyCaloNeeded FROM goal g JOIN userinfo u ON g.userInfo_id = u.id WHERE userName = ? AND startDate <= ? AND endDate >= ?";
@@ -121,7 +121,7 @@ public class DashboardServices {
             stmt.setTimestamp(3, java.sql.Timestamp.valueOf(servingDate.atStartOfDay()));
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
-                dailyCaloNeeded = rs.getInt(1);
+                dailyCaloNeeded = rs.getFloat(1);
             }
         } catch (SQLException ex) {
             ex.printStackTrace();
@@ -129,11 +129,11 @@ public class DashboardServices {
         return dailyCaloNeeded;
     }
 
-    public int calculatePercentage(int caloriesIntake, int caloriesDailyNeeded) {
+    public float calculatePercentage(float caloriesIntake, float caloriesDailyNeeded) {
         if (caloriesDailyNeeded == 0) {
             return 0; // Tránh lỗi chia cho 0
         }
-        int percentage = (int) Math.round(((double) caloriesIntake / caloriesDailyNeeded) * 100);
+        float percentage = (float) Math.round(((double) caloriesIntake / caloriesDailyNeeded) * 100);
         return Math.min(percentage, 100);
     }
 

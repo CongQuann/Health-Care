@@ -10,6 +10,7 @@ package com.sixthgroup.healthmanagementtraining.pojo;
  * @author PC
  */
 public class Exercise {
+
     private int id; // char(8)
     private String exerciseName; // nvarchar(40)
     private float caloriesPerMinute; // int
@@ -19,8 +20,9 @@ public class Exercise {
         this.exerciseName = exerciseName;
         this.caloriesPerMinute = caloriesPerMinute;
     }
-    public Exercise(){
-        
+
+    public Exercise() {
+
     }
     // Getters and Setters
 
@@ -52,7 +54,21 @@ public class Exercise {
         this.exerciseName = exerciseName;
     }
 
-   
+
+    /**
+     * @return the caloriesPerMinute
+     */
+    public float getCaloriesPerMinute() {
+        return caloriesPerMinute;
+    }
+
+    /**
+     * @param caloriesPerMinute the caloriesPerMinute to set
+     */
+    public void setCaloriesPerMinute(float caloriesPerMinute) {
+        this.caloriesPerMinute = caloriesPerMinute;
+    }
+
 
     /**
      * @return the duration
@@ -68,18 +84,4 @@ public class Exercise {
         this.duration = duration;
     }
 
-    /**
-     * @return the caloriesPerMinute
-     */
-    public float getCaloriesPerMinute() {
-        return caloriesPerMinute;
-    }
-
-    /**
-     * @param caloriesPerMinute the caloriesPerMinute to set
-     */
-    public void setCaloriesPerMinute(float caloriesPerMinute) {
-        this.caloriesPerMinute = caloriesPerMinute;
-    }
-    
 }

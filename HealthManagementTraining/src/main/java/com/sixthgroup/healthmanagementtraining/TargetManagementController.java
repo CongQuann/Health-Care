@@ -184,6 +184,7 @@ public class TargetManagementController implements Initializable {
     private void updateGoal(Goal goal, float targetWeight, float currentWeight, LocalDate endDate) {
         try {
             float updateCaloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight,currentWeight, goal.getStartDate(), endDate);
+
             boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
             if (!success) {
                 Utils.getAlert("Ngày kết thúc không thể giảm!").show();
@@ -244,7 +245,9 @@ public class TargetManagementController implements Initializable {
                 return;
             }
             
+
             float caloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight,currentWeight, startDate, endDate);
+
             System.out.println("Calo " + caloNeeded);
             TargetManagementServices.addGoal(userInfoId,targetWeight, currentWeight,caloNeeded, startDate, endDate, targetType);
             System.out.println("Userid :" + userInfoId);
@@ -314,13 +317,15 @@ public class TargetManagementController implements Initializable {
     }
 
 
+
     public float calCaloriesNeeded(String username,float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate) {
+
         UserInfoServices s = new UserInfoServices();
         UserInfo u = s.getUserInfo(username);
         double BMR;
         int age = calculateAge(u.getDOB());
-        if (u.getGender().equalsIgnoreCase("Male")) {
-            BMR = baseMaleBMR + (maleWeightCoefficient * currentWeight)
+        if (u.getGender().equalsIgnoreCase("Nam")) {
+            BMR = baseMaleBMR + (maleWeightCoefficient * u.getWeight())
                     + (maleHeightCoefficient * u.getHeight()) - (maleAgeCoefficient * calculateAge(u.getDOB()));
             
         } else {
@@ -351,7 +356,9 @@ public class TargetManagementController implements Initializable {
 //        System.out.println("Daily Calorie Intake: " + dailyCalorieIntake);
 //        
         
+
         return dailyCalorieIntake;
+
 
     }
 

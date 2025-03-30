@@ -90,7 +90,22 @@ public class Goal {
         this.endDate = endDate;
     }
 
-    
+    /**
+     * @return the dailyCaloNeeded
+     */
+
+    public float getDailyCaloNeeded() {
+        return dailyCaloNeeded;
+    }
+
+    /**
+     * @param dailyCaloNeeded the dailyCaloNeeded to set
+     */
+    public void setDailyCaloNeeded(float dailyCaloNeeded) {
+        this.dailyCaloNeeded = dailyCaloNeeded;
+    }
+
+
     /**
      * @return the currentProgress
      */
@@ -118,7 +133,7 @@ public class Goal {
     public void setUserInfoId(String userInfoId) {
         this.userInfoId = userInfoId;
     }
-    public Goal(int id, float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate, int dailyCaloNeeded, int currentProgress){
+    public Goal(int id, float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate, float dailyCaloNeeded, int currentProgress){
        this.id = id;
         this.targetWeight = targetWeight;
         this.currentWeight = currentWeight;
@@ -129,17 +144,4 @@ public class Goal {
         
     }
 
-    /**
-     * @return the dailyCaloNeeded
-     */
-    public float getDailyCaloNeeded() {
-        return dailyCaloNeeded;
-    }
-
-    /**
-     * @param dailyCaloNeeded the dailyCaloNeeded to set
-     */
-    public void setDailyCaloNeeded(float dailyCaloNeeded) {
-        this.dailyCaloNeeded = dailyCaloNeeded;
-    }
 }

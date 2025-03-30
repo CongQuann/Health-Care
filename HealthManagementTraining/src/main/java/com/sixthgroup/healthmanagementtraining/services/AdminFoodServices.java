@@ -43,7 +43,7 @@ public class AdminFoodServices {
                 Food food = new Food(
                         rs.getInt("id"),
                         rs.getString("foodName"),
-                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("caloriesPerUnit"),
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),
@@ -154,7 +154,7 @@ public class AdminFoodServices {
                 Food food = new Food(
                         rs.getInt("id"),
                         rs.getString("foodName"),
-                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("caloriesPerUnit"),
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),
@@ -185,7 +185,7 @@ public class AdminFoodServices {
                 Food food = new Food(
                         rs.getInt("id"),
                         rs.getString("foodName"),
-                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("caloriesPerUnit"),
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),

@@ -49,7 +49,7 @@ public class TargetManagementServices {
                         rs.getFloat("currentWeight"),
                         rs.getDate("startDate").toLocalDate(),
                         rs.getDate("endDate").toLocalDate(),
-                        rs.getInt("dailyCaloNeeded"),
+                        rs.getFloat("dailyCaloNeeded"),
                         rs.getInt("currentProgress")
                 ));
             }
