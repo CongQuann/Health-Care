@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="793.0" prefWidth="1057.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="712.0" prefWidth="1057.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
     <children>
         <!-- Nút kích hoạt navbar ========================================================-->
         <HBox prefHeight="42.0" prefWidth="1057.0" styleClass="header-hbox">
@@ -32,8 +32,8 @@
                 <Font name="System Bold" size="27.0" />
             </font>
         </Text>
-        <TextField fx:id="txtSearch" layoutX="18.0" layoutY="171.0" prefHeight="25.0" prefWidth="140.0" promptText="(Nhập tên món)" />
-        <VBox layoutX="506.0" layoutY="485.0" prefHeight="222.0" prefWidth="526.0" spacing="10.0" styleClass="input-container">
+        <TextField fx:id="txtSearch" layoutX="14.0" layoutY="126.0" prefHeight="25.0" prefWidth="140.0" promptText="(Nhập tên món)" />
+        <VBox layoutX="495.0" layoutY="425.0" prefHeight="222.0" prefWidth="526.0" spacing="10.0" styleClass="input-container">
             <children>
                 <HBox prefHeight="31.0" prefWidth="469.0">
                     <children>
@@ -107,10 +107,10 @@
                 </HBox>
             </children>
         </VBox>
-        <TableView fx:id="tbFoods" layoutX="18.0" layoutY="196.0" prefHeight="266.0" prefWidth="1007.0" />
-        <TableView fx:id="tbSelectedFood" layoutX="14.0" layoutY="472.0" prefHeight="266.0" prefWidth="421.0" />
+        <TableView fx:id="tbFoods" layoutX="14.0" layoutY="151.0" prefHeight="266.0" prefWidth="1007.0" />
+        <TableView fx:id="tbSelectedFood" layoutX="14.0" layoutY="425.0" prefHeight="205.0" prefWidth="421.0" />
         <HBox layoutX="465.0" layoutY="113.0" prefHeight="31.0" prefWidth="250.0" />
-          <ComboBox fx:id="cbFoodCates" layoutX="18.0" layoutY="144.0" onAction="#choseHandler" prefHeight="25.0" prefWidth="186.0" promptText="Loại thức ăn" />
+          <ComboBox fx:id="cbFoodCates" layoutX="14.0" layoutY="99.0" onAction="#choseHandler" prefHeight="25.0" prefWidth="186.0" promptText="Loại thức ăn" />
         <!-- Navbar (ban đầu ẩn bên trái) -->
         <!--==========================================================-->
         <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">

@@ -12,7 +12,7 @@ public class Food {
 
     private int id; // auto_increment
     private String foodName; // nvarchar(50)
-    private int caloriesPerUnit; // int
+    private float caloriesPerUnit; // int
     private float lipidPerUnit; // float
     private float proteinPerUnit; // float
     private float fiberPerUnit; // float
@@ -21,7 +21,7 @@ public class Food {
     private UnitType unitType; // Sử dụng enum
     private int selectedQuantity=10; //Giá trị mặc định
 
-    public Food(int id, String foodName, int caloriesPerUnit, float lipidPerUnit, float proteinPerUnit,
+    public Food(int id, String foodName, float caloriesPerUnit, float lipidPerUnit, float proteinPerUnit,
             float fiberPerUnit, int foodCategoryId, String foodCategoryName, UnitType unitType) {
         this.id = id;
         this.foodName = foodName;
@@ -65,19 +65,6 @@ public class Food {
         this.foodName = foodName;
     }
 
-    /**
-     * @return the caloriesPerUnit
-     */
-    public int getCaloriesPerUnit() {
-        return caloriesPerUnit;
-    }
-
-    /**
-     * @param caloriesPerUnit the caloriesPerUnit to set
-     */
-    public void setCaloriesPerUnit(int caloriesPerUnit) {
-        this.caloriesPerUnit = caloriesPerUnit;
-    }
 
     /**
      * @return the lipidPerUnit
@@ -178,5 +165,19 @@ public class Food {
      */
     public void setSelectedQuantity(int selectedQuantity) {
         this.selectedQuantity = selectedQuantity;
+    }
+
+    /**
+     * @return the caloriesPerUnit
+     */
+    public float getCaloriesPerUnit() {
+        return caloriesPerUnit;
+    }
+
+    /**
+     * @param caloriesPerUnit the caloriesPerUnit to set
+     */
+    public void setCaloriesPerUnit(float caloriesPerUnit) {
+        this.caloriesPerUnit = caloriesPerUnit;
     }
 }

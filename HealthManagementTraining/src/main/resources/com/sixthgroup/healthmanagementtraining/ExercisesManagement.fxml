@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="898.0" prefWidth="1013.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.ExercisesManageController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="709.0" prefWidth="1013.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.ExercisesManageController">
     <children>
         <!-- Nút kích hoạt navbar ========================================================-->
         <HBox prefHeight="42.0" prefWidth="1013.0" styleClass="header-hbox">
@@ -26,7 +26,7 @@
                 </graphic>365Health</Label>
         </HBox>
         <TitledPane animated="false" layoutX="117.0" layoutY="-199.0" text="untitled" />
-        <VBox layoutX="7.0" layoutY="649.0" prefHeight="200.0" prefWidth="557.0" styleClass="input-container">
+        <VBox layoutX="14.0" layoutY="489.0" prefHeight="200.0" prefWidth="557.0" styleClass="input-container">
             <children>
                 <HBox prefHeight="54.0" prefWidth="408.0">
                     <children>
@@ -72,8 +72,8 @@
                 </HBox>
             </children>
         </VBox>
-          <TableView fx:id="tbSelectedExers" layoutX="687.0" layoutY="161.0" prefHeight="463.0" prefWidth="325.0" />
-          <TableView fx:id="tbExers" layoutX="7.0" layoutY="164.0" prefHeight="463.0" prefWidth="649.0" />
+          <TableView fx:id="tbSelectedExers" layoutX="687.0" layoutY="161.0" prefHeight="297.0" prefWidth="325.0" />
+          <TableView fx:id="tbExers" layoutX="7.0" layoutY="164.0" prefHeight="297.0" prefWidth="649.0" />
           <TextField fx:id="txtSearch" layoutX="7.0" layoutY="117.0" prefHeight="44.0" prefWidth="270.0" promptText="Nhập tên bài tập" />
       <Label fx:id="dateLabel" layoutX="483.0" layoutY="87.0" styleClass="lb-SubTitle" text="Label" />
       <Label alignment="CENTER" layoutX="687.0" layoutY="131.0" prefHeight="30.0" prefWidth="325.0" styleClass="lb-SubTitle" text="Danh sách bài tập đã chọn" />
@@ -84,7 +84,7 @@
       </HBox>
         <!-- Navbar (ban đầu ẩn bên trái) -->
         <!--==========================================================-->
-        <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="898.0" prefWidth="250.0" styleClass="nav-bar">
+        <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="735.0" prefWidth="250.0" styleClass="nav-bar">
             <children>
                 <HBox alignment="CENTER_RIGHT" spacing="26">
                     <Button fx:id="closeNavButton" mnemonicParsing="false" styleClass="close-btn" text="✖" />
