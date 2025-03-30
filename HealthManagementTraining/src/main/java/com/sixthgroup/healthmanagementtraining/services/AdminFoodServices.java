@@ -43,7 +43,7 @@ public class AdminFoodServices {
                 Food food = new Food(
                         rs.getInt("id"),
                         rs.getString("foodName"),
-                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("caloriesPerUnit"),
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),
@@ -85,7 +85,7 @@ public class AdminFoodServices {
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm = conn.prepareStatement("INSERT INTO food (foodName, caloriesPerUnit, lipidPerUnit, proteinPerUnit, fiberPerUnit, foodCategory_id, unitType) VALUES (?, ?, ?, ?, ?, ?, ?)");
             stm.setString(1, food.getFoodName());
-            stm.setInt(2, food.getCaloriesPerUnit());
+            stm.setFloat(2, food.getCaloriesPerUnit());
             stm.setFloat(3, food.getLipidPerUnit());
             stm.setFloat(4, food.getProteinPerUnit());
             stm.setFloat(5, food.getFiberPerUnit());
@@ -112,7 +112,7 @@ public class AdminFoodServices {
             String sql = "UPDATE food SET foodName = ?, caloriesPerUnit = ?, lipidPerUnit = ?, proteinPerUnit = ?, fiberPerUnit = ? WHERE id = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, food.getFoodName());
-            stm.setInt(2, food.getCaloriesPerUnit());
+            stm.setFloat(2, food.getCaloriesPerUnit());
             stm.setFloat(3, food.getLipidPerUnit());
             stm.setFloat(4, food.getProteinPerUnit());
             stm.setFloat(5, food.getFiberPerUnit());
@@ -154,7 +154,7 @@ public class AdminFoodServices {
                 Food food = new Food(
                         rs.getInt("id"),
                         rs.getString("foodName"),
-                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("caloriesPerUnit"),
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),
@@ -185,7 +185,7 @@ public class AdminFoodServices {
                 Food food = new Food(
                         rs.getInt("id"),
                         rs.getString("foodName"),
-                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("caloriesPerUnit"),
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),
