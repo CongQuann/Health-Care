@@ -28,7 +28,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.IntegerStringConverter;
+import javafx.util.converter.FloatStringConverter;
 
 /**
  * FXML Controller class
@@ -56,7 +56,7 @@ public class AdminExerciseController implements Initializable {
     private TableColumn<Exercise, String> colName;
 
     @FXML
-    private TableColumn<Exercise, Integer> colCalories;
+    private TableColumn<Exercise, Float> colCalories;
 
     @FXML
     private TextField txtExerciseName;
@@ -125,7 +125,7 @@ public class AdminExerciseController implements Initializable {
             exercise.setExerciseName(event.getNewValue());
             updateExercise(exercise);
         });
-        colCalories.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        colCalories.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
         colCalories.setOnEditCommit(event -> {
             Exercise exercise = event.getRowValue();
             exercise.setCaloriesPerMinute(event.getNewValue());
@@ -155,7 +155,7 @@ public class AdminExerciseController implements Initializable {
         }
 
         try {
-            int calories = Integer.parseInt(caloriesStr);
+            float calories = Float.parseFloat(caloriesStr);
             Exercise e = new Exercise(0, name, calories); // id sẽ tự động tăng
 
             boolean success = AdminExerciseServices.addExercise(e);

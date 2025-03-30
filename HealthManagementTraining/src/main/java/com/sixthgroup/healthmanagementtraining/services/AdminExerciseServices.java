@@ -30,7 +30,7 @@ public class AdminExerciseServices {
                 Exercise e = new Exercise(
                         rs.getInt("id"),
                         rs.getString("exerciseName"),
-                        rs.getInt("caloriesPerMinute")
+                        rs.getFloat("caloriesPerMinute")
                 );
                 list.add(e);
             }
@@ -43,7 +43,7 @@ public class AdminExerciseServices {
         String sql = "INSERT INTO exercise(exerciseName, caloriesPerMinute) VALUES (?, ?)";
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, e.getExerciseName());
-            stmt.setInt(2, e.getCaloriesPerMinute());
+            stmt.setFloat(2, e.getCaloriesPerMinute());
 
             int rows = stmt.executeUpdate();
             return rows > 0;
@@ -62,7 +62,7 @@ public class AdminExerciseServices {
                 Exercise e = new Exercise(
                         rs.getInt("id"),
                         rs.getString("exerciseName"),
-                        rs.getInt("caloriesPerMinute")
+                        rs.getFloat("caloriesPerMinute")
                 );
                 list.add(e);
             }
@@ -91,7 +91,7 @@ public class AdminExerciseServices {
          PreparedStatement stmt = conn.prepareStatement(sql)) {
 
         stmt.setString(1, exercise.getExerciseName());
-        stmt.setInt(2, exercise.getCaloriesPerMinute());
+        stmt.setFloat(2, exercise.getCaloriesPerMinute());
         stmt.setInt(3, exercise.getId());
 
         stmt.executeUpdate();

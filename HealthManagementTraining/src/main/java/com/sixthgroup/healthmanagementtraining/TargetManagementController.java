@@ -182,7 +182,7 @@ public class TargetManagementController implements Initializable {
     // update Goal
     private void updateGoal(Goal goal, float targetWeight, float currentWeight, LocalDate endDate) {
         try {
-            int updateCaloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, goal.getStartDate(), endDate);
+            float updateCaloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, goal.getStartDate(), endDate);
             boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
             if (!success) {
                 Utils.getAlert("Ngày kết thúc không thể giảm!").show();
@@ -243,7 +243,7 @@ public class TargetManagementController implements Initializable {
                 return;
             }
             
-            int caloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, startDate, endDate);
+            float caloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, startDate, endDate);
             System.out.println("Calo " + caloNeeded);
             TargetManagementServices.addGoal(userInfoId,targetWeight, currentWeight,caloNeeded, startDate, endDate, targetType);
             System.out.println("Userid :" + userInfoId);
@@ -313,12 +313,12 @@ public class TargetManagementController implements Initializable {
     }
 
 
-    public int calCaloriesNeeded(String username, float targetWeight, LocalDate startDate, LocalDate endDate) {
+    public float calCaloriesNeeded(String username, float targetWeight, LocalDate startDate, LocalDate endDate) {
         UserInfoServices s = new UserInfoServices();
         UserInfo u = s.getUserInfo(username);
         double BMR;
         int age = calculateAge(u.getDOB());
-        if (u.getGender().equalsIgnoreCase("Male")) {
+        if (u.getGender().equalsIgnoreCase("Nam")) {
             BMR = baseMaleBMR + (maleWeightCoefficient * u.getWeight())
                     + (maleHeightCoefficient * u.getHeight()) - (maleAgeCoefficient * calculateAge(u.getDOB()));
             
@@ -345,7 +345,7 @@ public class TargetManagementController implements Initializable {
 //        System.out.println("Daily Calorie Intake: " + dailyCalorieIntake);
 //        
         
-        return (int) Math.round(dailyCalorieIntake);
+        return (float) (dailyCalorieIntake);
 
     }
 

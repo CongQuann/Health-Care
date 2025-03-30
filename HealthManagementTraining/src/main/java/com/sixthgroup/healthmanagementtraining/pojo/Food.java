@@ -65,6 +65,19 @@ public class Food {
         this.foodName = foodName;
     }
 
+    /**
+     * @return the caloriesPerUnit
+     */
+    public float getCaloriesPerUnit() {
+        return caloriesPerUnit;
+    }
+
+    /**
+     * @param caloriesPerUnit the caloriesPerUnit to set
+     */
+    public void setCaloriesPerUnit(float caloriesPerUnit) {
+        this.caloriesPerUnit = caloriesPerUnit;
+    }
 
     /**
      * @return the lipidPerUnit
@@ -170,14 +183,4 @@ public class Food {
     /**
      * @return the caloriesPerUnit
      */
-    public float getCaloriesPerUnit() {
-        return caloriesPerUnit;
-    }
-
-    /**
-     * @param caloriesPerUnit the caloriesPerUnit to set
-     */
-    public void setCaloriesPerUnit(float caloriesPerUnit) {
-        this.caloriesPerUnit = caloriesPerUnit;
-    }
 }
