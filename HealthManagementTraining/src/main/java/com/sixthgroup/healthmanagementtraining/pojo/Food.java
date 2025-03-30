@@ -179,4 +179,8 @@ public class Food {
     public void setSelectedQuantity(int selectedQuantity) {
         this.selectedQuantity = selectedQuantity;
     }
+
+    /**
+     * @return the caloriesPerUnit
+     */
 }
