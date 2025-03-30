@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.ZoneId;
+
 import javafx.scene.control.Alert;
 
 /**
@@ -60,15 +60,15 @@ public class UserInfoServices {
         return true;
     }
 
-    public boolean checkPassInput(String oldPassword, String newPassword,String confirmPassword) {
+    public boolean checkPassInput(String oldPassword, String newPassword, String confirmPassword) {
         if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
             showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin.", Alert.AlertType.ERROR);
             return false;
         }
         return true;
     }
-    
-    public boolean checkConfirmPass(String newPassword, String confirmPassword){
+
+    public boolean checkConfirmPass(String newPassword, String confirmPassword) {
         if (!newPassword.equals(confirmPassword)) {
             showAlert("Lỗi", "Mật khẩu mới không khớp. Vui lòng nhập lại!", Alert.AlertType.ERROR);
             return false;
@@ -104,6 +104,22 @@ public class UserInfoServices {
             return false;
         }
     }
+
+    public boolean checkExistEmail(String email) throws SQLException {
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT email FROM userinfo WHERE email = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, email);
+
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+  
 
     public boolean updateUserPassword(String userName, String oldPassword, String newPassword) {
         try (Connection conn = JdbcUtils.getConn()) {

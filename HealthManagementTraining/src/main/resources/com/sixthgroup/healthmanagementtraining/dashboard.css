@@ -65,6 +65,13 @@
 .fiber-slice {
     -fx-pie-color: #0a8210;
 }
+.absorbed-slice {
+    -fx-pie-color: #ab1a28;
+}
+
+.remaining-slice {
+    -fx-pie-color: #ad555e;
+}
 
 .pie-chart-pane{
     -fx-background-color: #ffffff; /* White background */

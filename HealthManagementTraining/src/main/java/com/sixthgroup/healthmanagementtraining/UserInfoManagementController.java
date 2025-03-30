@@ -5,7 +5,6 @@
 package com.sixthgroup.healthmanagementtraining;
 
 import com.sixthgroup.healthmanagementtraining.pojo.ActivityLevel;
-import com.sixthgroup.healthmanagementtraining.pojo.UnitType;
 import com.sixthgroup.healthmanagementtraining.pojo.UserInfo;
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
 import com.sixthgroup.healthmanagementtraining.services.UserInfoServices;
@@ -13,6 +12,7 @@ import com.sixthgroup.healthmanagementtraining.services.Utils;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -63,6 +63,7 @@ public class UserInfoManagementController implements Initializable {
     private PasswordField newPasswordField;
     @FXML
     private PasswordField confirmPasswordField;
+    String currentEmail;
 
     public void loadActivityLevel() {
         // Đặt danh sách các giá trị từ enum UnitType vào ComboBox
@@ -96,35 +97,81 @@ public class UserInfoManagementController implements Initializable {
         UserInfo userInfo = new UserInfo();
         System.out.println("Đang cập nhật thông tin cho userName: " + Utils.getUser());
 
+        // Lấy dữ liệu từ giao diện
+        String name = nameField.getText().trim();
+        String email = emailField.getText().trim();
+        String heightText = heightField.getText().trim();
+        String weightText = weightField.getText().trim();
+        LocalDate localDate = dobPicker.getValue();
+        String gender = genderComboBox.getValue();
+        String activityLevel = (activityLevelComboBox.getValue() != null) ? activityLevelComboBox.getValue().toString() : "";
+
+        // Kiểm tra nếu có trường nào bị bỏ trống
+        if (name.isEmpty() || email.isEmpty() || heightText.isEmpty() || weightText.isEmpty() || dobPicker.getEditor().getText().isEmpty() || gender == null || activityLevel.isEmpty()) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập đầy đủ thông tin!");
+            loadUserInfo();
+            return;
+        }
+        // Kiểm tra chiều cao và cân nặng có phải là số hợp lệ không
+        if (!heightText.matches("^[0-9]+(\\.[0-9]+)?$") || !weightText.matches("^[0-9]+(\\.[0-9]+)?$")) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Chiều cao và cân nặng phải là số hợp lệ!");
+            loadUserInfo();
+            return;
+        }
+        // Kiểm tra tên có hợp lệ không (chỉ chấp nhận chữ cái và khoảng trắng)
+        if (!name.matches("^[a-zA-Z\\s]+$")) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Tên không được chứa số và ký tự đặc biệt!");
+            loadUserInfo();
+            return;
+        }
+        // Kiểm tra email có hợp lệ không
+        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Email không đúng định dạng!");
+            loadUserInfo();
+            return;
+        }
+
         userInfo.setUserName(Utils.getUser());
         userInfo.setName(nameField.getText());
         userInfo.setEmail(emailField.getText());
+
         userInfo.setHeight(Float.parseFloat(heightField.getText()));
         userInfo.setWeight(Float.parseFloat(weightField.getText()));
 
-        LocalDate localDate = dobPicker.getValue();
         if (localDate != null) {
             userInfo.setDOB(Date.valueOf(localDate)); // Chuyển đổi LocalDate thành Date
         }
 
         userInfo.setGender(genderComboBox.getValue());
         userInfo.setActivityLevel(activityLevelComboBox.getValue().toString());
-        if (userInfoServices.updateUserInfo(userInfo)) {
-            System.out.println("Cập nhật thông tin thành công!");
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText(null);
-            alert.setContentText("Cập nhật thông tin thành công!");
-            alert.showAndWait();
-        } else {
-            System.out.println("Cập nhật thông tin thất bại!");
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText(null);
-            alert.setContentText("Cập nhật thông tin thất bại ");
-            alert.showAndWait();
-            loadUserInfo();
 
+        //kiem tra email ton tai truoc
+        try {
+
+            if (userInfoServices.checkExistEmail(userInfo.getEmail()) && (!currentEmail.equals(userInfo.getEmail()))) {
+                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Email không được trùng!");
+                loadUserInfo();
+                return; // Dừng hàm, không thực hiện cập nhật
+            }
+            float height = Float.parseFloat(heightText);
+            float weight = Float.parseFloat(weightText);
+
+//          
+            if (height > 999 || weight > 999) {
+                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Chiều cao hoặc cân nặng phải trong mức hợp lý");
+                loadUserInfo();
+                return; // Dừng hàm, không thực hiện cập nhật
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return;
+        }
+        //thuc hien cap nhat neu khong trung
+        if (userInfoServices.updateUserInfo(userInfo)) {
+            Utils.showAlert(Alert.AlertType.INFORMATION, "Lỗi", "Cập nhật thành công!");
+
+        } else {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Cập nhật thất bại!");
             // Hiển thị thông báo thất bại cho người dùng
         }
     }
@@ -143,12 +190,7 @@ public class UserInfoManagementController implements Initializable {
                     dobPicker.setValue(parsedDate); // Cập nhật giá trị nếu hợp lệ
                     System.out.println("Cập nhật ngày sinh: " + parsedDate);
                 } catch (DateTimeParseException e) {
-                    System.out.println("Ngày nhập không hợp lệ: " + input);
-                    Alert alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Lỗi nhập ngày");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Ngày nhập không hợp lệ! Vui lòng nhập đúng định dạng MM/dd/yyyy.");
-                    alert.showAndWait();
+                    Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Nhập ngày đúng định dạng(mm/dd/yyyy)!");
                     dobPicker.getEditor().clear(); // Xóa nội dung nhập sai
                 }
             }
@@ -174,7 +216,16 @@ public class UserInfoManagementController implements Initializable {
         if (userInfoServices.checkConfirmPass(newPassword, confirmPassword) == false) {
             return;
         }
-
+        // Kiểm tra mật khẩu không có dấu cách
+        if (oldPassword.contains(" ") || newPassword.contains(" ") || confirmPassword.contains(" ")) {
+            userInfoServices.showAlert("Lỗi", "Mật khẩu phải hợp lệ!", Alert.AlertType.ERROR);
+            return;
+        }
+        // Kiểm tra mật khẩu mới có đủ mạnh không
+        if (!newPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$")) {
+            userInfoServices.showAlert("Lỗi", "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!", Alert.AlertType.ERROR);
+            return;
+        }
 //         Gọi phương thức đổi mật khẩu từ services
         boolean isUpdated = userInfoServices.updateUserPassword(userName, oldPassword, newPassword);
 
@@ -197,6 +248,7 @@ public class UserInfoManagementController implements Initializable {
         navBar.setTranslateX(-250);
         loadActivityLevel();
         loadUserInfo();
+        currentEmail = emailField.getText();
         setupDatePickerValidation();
 
         //nạp combobox cho giới tính

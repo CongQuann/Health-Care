@@ -9,6 +9,7 @@ import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.pojo.UnitType;
 import com.sixthgroup.healthmanagementtraining.services.AdminFoodServices;
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
+import com.sixthgroup.healthmanagementtraining.services.Utils;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
@@ -98,8 +99,7 @@ public class AdminFoodController implements Initializable {
         UnitType selectedUnit = unitTypeComboBox.getValue();
 
         AdminFoodServices afs = new AdminFoodServices();
-        if(afs.checkInputData(foodName, caloriesText, lipidText, proteinText, fiberText, selectedCategory, selectedUnit) == false)
-        {
+        if (afs.checkInputData(foodName, caloriesText, lipidText, proteinText, fiberText, selectedCategory, selectedUnit) == false) {
             return null;
         }
 
@@ -445,6 +445,13 @@ public class AdminFoodController implements Initializable {
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "AdminExercise.fxml");
 
+    }
+
+    public void switchToLogin(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "secondary.fxml");
+        Utils.clearUser();
     }
 
 }
