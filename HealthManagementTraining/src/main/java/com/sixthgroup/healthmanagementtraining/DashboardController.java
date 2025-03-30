@@ -72,12 +72,12 @@ public class DashboardController implements Initializable {
 
     private String userName;
     private LocalDate localDate; //ngay dang chon trong datePicker
-    private int calorieIntake;
-    private int caloriesBurn;
+    private float calorieIntake;
+    private float caloriesBurn;
     private double lipidIntake;
     private double fiberIntake;
     private double proteinIntake;
-    private int caloriesDailyNeeded;
+    private float caloriesDailyNeeded;
 
     private void updateDashboard() {
         try {
@@ -131,10 +131,10 @@ public class DashboardController implements Initializable {
 
 
     // Hàm cập nhật biểu đồ với dữ liệu mới
-    public void updateCaloPieChart(int caloriesIntake, int caloriesDailyNeeded) {
+    public void updateCaloPieChart(float caloriesIntake, float caloriesDailyNeeded) {
         DashboardServices ds = new DashboardServices();
-        int percentage = ds.calculatePercentage(caloriesIntake, caloriesDailyNeeded);
-        int remaining = Math.max(100 - percentage, 0); // Đảm bảo không có giá trị âm
+        double percentage = ds.calculatePercentage(caloriesIntake, caloriesDailyNeeded);
+        double remaining = Math.max(100 - percentage, 0); // Đảm bảo không có giá trị âm
 
         caloPieChart.getData().clear(); // Xóa dữ liệu cũ
         caloPieChart.getData().add(new PieChart.Data("Đã hấp thụ", percentage));
