@@ -28,7 +28,18 @@ public class SecondaryController {
     private void handleLogin(ActionEvent event) throws IOException {
         String username = txtUsername.getText();
         String password = txtPassword.getText();
-
+        if(username.isEmpty() && password.isEmpty()){
+            Utils.getAlert("Bạn Chưa Điền Thông Tin Đăng Nhập!!!!").show();
+            return;
+        }
+        else if(username.isEmpty()){
+            Utils.getAlert("Tên Đăng Nhập Không Được Để Trống!!!").show();
+            return;
+        }
+        else if(password.isEmpty()){
+            Utils.getAlert("Mật Khẩu Không Được Để Trống!!!").show();
+            return;
+        }
         try {
             LoginServices.Role role = LoginServices.checkLogin(username, password);
 
