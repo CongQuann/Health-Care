@@ -49,7 +49,7 @@ public class TargetManagementServices {
                         rs.getFloat("currentWeight"),
                         rs.getDate("startDate").toLocalDate(),
                         rs.getDate("endDate").toLocalDate(),
-                        rs.getInt("dailyCaloNeeded"),
+                        rs.getFloat("dailyCaloNeeded"),
                         rs.getInt("currentProgress")
                 ));
             }
@@ -58,7 +58,7 @@ public class TargetManagementServices {
     }
 
     // Thêm mục tiêu mới
-    public static void addGoal(String userInfoId, float targetWeight, float currentWeight,int caloriesNeeded, LocalDate startDate, LocalDate endDate, String targetType) throws SQLException {
+    public static void addGoal(String userInfoId, float targetWeight, float currentWeight,float caloriesNeeded, LocalDate startDate, LocalDate endDate, String targetType) throws SQLException {
         String sql = "INSERT INTO goal (targetWeight, currentWeight, startDate, endDate, userInfo_id, currentProgress, targetType, dailyCaloNeeded, initialWeight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         //dailyCaloNeeded
         try (Connection conn = JdbcUtils.getConn();
@@ -70,14 +70,14 @@ public class TargetManagementServices {
             stmt.setString(5, userInfoId);
             stmt.setInt(6, 0);
             stmt.setString(7, targetType);
-            stmt.setInt(8,caloriesNeeded);
+            stmt.setFloat(8,caloriesNeeded);
             stmt.setFloat(9,currentWeight);
             stmt.executeUpdate();
         }
     }
 
     // Cập nhật mục tiêu (bao gồm tính toán currentProgress)
-    public static boolean updateGoal(String userInfoId, int goalId, float targetWeight, float currentWeight,int caloriesNeeded, LocalDate newEndDate) throws SQLException {
+    public static boolean updateGoal(String userInfoId, int goalId, float targetWeight, float currentWeight,float caloriesNeeded, LocalDate newEndDate) throws SQLException {
         String checkSql = "SELECT endDate, targetWeight, initialWeight, targetType FROM goal WHERE id = ? AND userInfo_id = ?";
 
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
@@ -120,7 +120,7 @@ public class TargetManagementServices {
                     stmt.setDate(3, Date.valueOf(newEndDate));
                     stmt.setInt(4, newProgress);
                     stmt.setFloat(5, initialWeight);
-                    stmt.setInt(6, caloriesNeeded);
+                    stmt.setFloat(6, caloriesNeeded);
                     stmt.setInt(7, goalId);
                     stmt.setString(8, userInfoId);
                     stmt.executeUpdate();
