@@ -199,6 +199,12 @@ public class AdminExerciseController implements Initializable {
         s.switchScene(event, "AdminFood.fxml");
         
     }
+      public void switchToLogin(ActionEvent event) throws IOException {
+        // Lưu ngày vào biến tĩnh
+        ScenceSwitcher s = new ScenceSwitcher();
+        s.switchScene(event, "secondary.fxml");
+        Utils.clearUser();
+    }
     
     
 }

@@ -13,6 +13,8 @@ import java.net.URL;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -25,6 +27,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.layout.AnchorPane;
@@ -129,7 +132,6 @@ public class DashboardController implements Initializable {
         });
     }
 
-
     // Hàm cập nhật biểu đồ với dữ liệu mới
     public void updateCaloPieChart(float caloriesIntake, float caloriesDailyNeeded) {
         DashboardServices ds = new DashboardServices();
@@ -137,9 +139,21 @@ public class DashboardController implements Initializable {
         double remaining = Math.max(100 - percentage, 0); // Đảm bảo không có giá trị âm
 
         caloPieChart.getData().clear(); // Xóa dữ liệu cũ
-        caloPieChart.getData().add(new PieChart.Data("Đã hấp thụ", percentage));
-        caloPieChart.getData().add(new PieChart.Data("Còn lại", remaining));
+        ObservableList<PieChart.Data> pieChartData = FXCollections.observableArrayList(
+                new PieChart.Data("Đã hấp thụ", percentage),
+                new PieChart.Data("Còn lại", remaining)
+        );
+        caloPieChart.setData(pieChartData);
         caloPieChart.setLegendVisible(false);
+
+        // Thêm CSS class cho từng phần
+        pieChartData.forEach(data -> {
+            if (data.getName().equals("Đã hấp thụ")) {
+                data.getNode().getStyleClass().add("absorbed-slice");
+            } else if (data.getName().equals("Còn lại")) {
+                data.getNode().getStyleClass().add("remaining-slice");
+            }
+        });
     }
 
     @FXML
@@ -170,17 +184,19 @@ public class DashboardController implements Initializable {
             System.out.println("toggleNavButton chưa được khởi tạo!");
         }
 
-        // Lấy Stage sau khi giao diện người dùng đã được hiển thị
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            localDate = newValue;
-            System.out.println("da thay doi");
-            updateDashboard(); // Cập nhật dữ liệu khi DatePicker thay đổi
+            if (newValue == null) {
+                newValue = LocalDate.now();
+                datePicker.setValue(newValue);
+            }
+                localDate = newValue;
+                System.out.println("da thay doi");
+                updateDashboard(); // Cập nhật dữ liệu khi DatePicker thay đổi
         });
-
     }
 
     public void switchToExercises(ActionEvent event) throws IOException {
-        // Lưu ngày vào biến tĩnh
+
         Utils.setSelectedDate(datePicker.getValue());
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "ExercisesManagement.fxml");
@@ -188,7 +204,7 @@ public class DashboardController implements Initializable {
     }
 
     public void switchToNutrition(ActionEvent event) throws IOException {
-        // Lưu ngày vào biến tĩnh
+
         Utils.setSelectedDate(datePicker.getValue());
 
         ScenceSwitcher s = new ScenceSwitcher();
@@ -197,7 +213,6 @@ public class DashboardController implements Initializable {
     }
 
     public void switchToTarget(ActionEvent event) throws IOException {
-        // Lưu ngày vào biến tĩnh
 
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "TargetManagement.fxml");
@@ -205,13 +220,12 @@ public class DashboardController implements Initializable {
     }
 
     public void switchToUserInfo(ActionEvent event) throws IOException {
-        Utils.setSelectedDate(datePicker.getValue());
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "UserInfoManagement.fxml");
     }
 
     public void switchToLogin(ActionEvent event) throws IOException {
-        // Lưu ngày vào biến tĩnh
+
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "secondary.fxml");
         Utils.clearUser();
@@ -223,4 +237,16 @@ public class DashboardController implements Initializable {
         // Cập nhật ngày vào biến tĩnh khi người dùng chọn
         Utils.setSelectedDate(selectedDate);
     }
+
+    // Thêm hàm để kiểm tra định dạng ngày
+    private boolean isValidDate(String date) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+            LocalDate.parse(date, formatter);
+            return true;
+        } catch (DateTimeParseException e) {
+            return false;
+        }
+    }
+
 }
