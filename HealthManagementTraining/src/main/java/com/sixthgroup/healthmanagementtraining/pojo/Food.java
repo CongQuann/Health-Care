@@ -12,7 +12,7 @@ public class Food {
 
     private int id; // auto_increment
     private String foodName; // nvarchar(50)
-    private float caloriesPerUnit; // int
+    private float caloriesPerUnit; // float
     private float lipidPerUnit; // float
     private float proteinPerUnit; // float
     private float fiberPerUnit; // float

@@ -85,12 +85,12 @@
         <Label layoutX="362.0" layoutY="50.0" styleClass="dashboard-label" text="TỔNG QUAN" />
         <Pane layoutX="132.0" layoutY="387.0" prefHeight="274.0" prefWidth="328.0" styleClass="pie-chart-pane">
             <children>
-                <PieChart fx:id="nutritionPieChart" layoutX="15.0" layoutY="12.0" prefHeight="250.0" prefWidth="299.0" title="Tỷ lệ dinh dưỡng" />
+                <PieChart fx:id="nutritionPieChart" layoutX="15.0" layoutY="12.0" prefHeight="250.0" prefWidth="299.0" startAngle="90.0" title="Tỷ lệ dinh dưỡng" />
             </children>
         </Pane>
         <Pane layoutX="480.0" layoutY="387.0" prefHeight="274.0" prefWidth="328.0" styleClass="pie-chart-pane">
             <children>
-                <PieChart fx:id="caloPieChart" layoutX="15.0" layoutY="12.0" prefHeight="250.0" prefWidth="299.0" title="Tỷ lệ calo" />
+                <PieChart fx:id="caloPieChart" layoutX="15.0" layoutY="12.0" prefHeight="250.0" prefWidth="299.0" startAngle="90.0" title="Tỷ lệ calo" />
             </children>
         </Pane>
         <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="735.0" prefWidth="250.0" styleClass="nav-bar">

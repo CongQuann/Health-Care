@@ -10,17 +10,20 @@ package com.sixthgroup.healthmanagementtraining.pojo;
  * @author PC
  */
 public class Exercise {
+
     private int id; // char(8)
     private String exerciseName; // nvarchar(40)
     private float caloriesPerMinute; // int
     private int duration = 15;//Giá trị mặc định
+
     public Exercise(int id, String exerciseName, float caloriesPerMinute) {
         this.id = id;
         this.exerciseName = exerciseName;
         this.caloriesPerMinute = caloriesPerMinute;
     }
-    public Exercise(){
-        
+
+    public Exercise() {
+
     }
     // Getters and Setters
 
@@ -79,5 +82,5 @@ public class Exercise {
     public void setDuration(int duration) {
         this.duration = duration;
     }
-    
+
 }

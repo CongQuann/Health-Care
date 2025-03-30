@@ -71,7 +71,7 @@ public class AdminFoodController implements Initializable {
     @FXML
     private TableColumn<Food, String> colFoodName, colFoodType, colUnitType;
     @FXML
-    private TableColumn<Food, Integer> colCalo;
+    private TableColumn<Food, Float> colCalo;
     @FXML
     private TableColumn<Food, Float> colLipid;
     @FXML
@@ -105,7 +105,7 @@ public class AdminFoodController implements Initializable {
 
         try {
             // Chuyển đổi sang số sau khi đã kiểm tra dữ liệu đầu vào
-            int calories = Integer.parseInt(caloriesText);
+            float calories = Float.parseFloat(caloriesText);
             float lipid = Float.parseFloat(lipidText);
             float protein = Float.parseFloat(proteinText);
             float fiber = Float.parseFloat(fiberText);
@@ -224,7 +224,7 @@ public class AdminFoodController implements Initializable {
             }
         });
 
-        colCalo.setCellFactory(TextFieldTableCell.forTableColumn(new IntegerStringConverter()));
+        colCalo.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
         colCalo.setOnEditCommit(event -> {
             Food food = event.getRowValue();
             if (food != null) {
