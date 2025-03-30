@@ -16,7 +16,7 @@ public class Goal {
     private float currentWeight; // float
     private LocalDate startDate; // datetime
     private LocalDate endDate; // datetime
-    private float dailyCaloNeeded; // float
+    private float dailyCaloNeeded; // int
     private int currentProgress; // int
     private String userInfoId; // char(8)
 
@@ -143,6 +143,5 @@ public class Goal {
         this.currentProgress = currentProgress;
         
     }
-
 
 }

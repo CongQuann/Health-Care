@@ -100,7 +100,8 @@ public class TargetManagementController implements Initializable {
 
     private final double baseMaleBMR = 66;
     private final double baseFemaleBMR = 655;
-
+    
+    private final int caloriesPerWeight = 7700;
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -144,7 +145,7 @@ public class TargetManagementController implements Initializable {
         currentWeightCol.setOnEditCommit(event -> {
             Goal goal = event.getRowValue();
             float newValue = event.getNewValue();
-            updateGoal(goal, goal.getTargetWeight(), newValue, goal.getEndDate());
+            updateGoal(goal,goal.getTargetWeight(), newValue, goal.getEndDate());
         });
 
         // Cho phép chỉnh sửa endDate (chỉ tăng)
@@ -153,7 +154,7 @@ public class TargetManagementController implements Initializable {
         endDateCol.setOnEditCommit(event -> {
             Goal goal = event.getRowValue();
             LocalDate newValue = event.getNewValue();
-            updateGoal(goal, goal.getTargetWeight(), goal.getCurrentWeight(), newValue);
+            updateGoal(goal,goal.getTargetWeight(), goal.getCurrentWeight(), newValue);
         });
 
         //check login and set current user value
@@ -182,7 +183,8 @@ public class TargetManagementController implements Initializable {
     // update Goal
     private void updateGoal(Goal goal, float targetWeight, float currentWeight, LocalDate endDate) {
         try {
-            float updateCaloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, goal.getStartDate(), endDate);
+            float updateCaloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight,currentWeight, goal.getStartDate(), endDate);
+
             boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
             if (!success) {
                 Utils.getAlert("Ngày kết thúc không thể giảm!").show();
@@ -243,7 +245,9 @@ public class TargetManagementController implements Initializable {
                 return;
             }
             
-            float caloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, startDate, endDate);
+
+            float caloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight,currentWeight, startDate, endDate);
+
             System.out.println("Calo " + caloNeeded);
             TargetManagementServices.addGoal(userInfoId,targetWeight, currentWeight,caloNeeded, startDate, endDate, targetType);
             System.out.println("Userid :" + userInfoId);
@@ -313,7 +317,9 @@ public class TargetManagementController implements Initializable {
     }
 
 
-    public float calCaloriesNeeded(String username, float targetWeight, LocalDate startDate, LocalDate endDate) {
+
+    public float calCaloriesNeeded(String username,float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate) {
+
         UserInfoServices s = new UserInfoServices();
         UserInfo u = s.getUserInfo(username);
         double BMR;
@@ -323,29 +329,36 @@ public class TargetManagementController implements Initializable {
                     + (maleHeightCoefficient * u.getHeight()) - (maleAgeCoefficient * calculateAge(u.getDOB()));
             
         } else {
-            BMR = baseFemaleBMR + (femaleWeightCoefficient * u.getWeight())
+            BMR = baseFemaleBMR + (femaleWeightCoefficient * currentWeight)
                     + (femaleHeightCoefficient * u.getHeight()) - (femaleAgeCoefficient * calculateAge(u.getDOB()));
         }
-      
-        float activityLevel = Utils.convertToFloat(getActivityCoefficient(u.getActivityLevel()));
-        float TDEE = Utils.convertToFloat(BMR * activityLevel);
-        
-        float weightChange = targetWeight - u.getWeight();
-        float totalCaloriesNeeded = weightChange * 7700;
+        System.out.println("BMR: " + BMR);
+        float activityLevel = Utils.parseDoubleToFloat(getActivityCoefficient(u.getActivityLevel()),3);
+        float TDEE = Utils.roundFloat(Utils.parseDoubleToFloat(BMR, 2) * activityLevel,3);
+        System.out.println("TDEE: " + TDEE );
+        float weightChange = targetWeight - currentWeight;
+        System.out.println("weightChange: "  + weightChange);
+        float totalCaloriesNeeded = weightChange * caloriesPerWeight;
+        System.out.println("totalCaloriesNeeded: "  + totalCaloriesNeeded);
         long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
-
+        System.out.println("totalDays : " + totalDays);
         if (totalDays <= 0) {
             throw new IllegalArgumentException("End date must be after start date.");
         }
 
         float dailyCalorieChange = totalCaloriesNeeded / totalDays;
-        float dailyCalorieIntake = Utils.convertToFloat(TDEE + dailyCalorieChange);
+        System.out.println("dailyCalorieChange: "+ dailyCalorieChange);
+        float dailyCalorieIntake = Utils.roundFloat(TDEE + dailyCalorieChange,1);
+        System.out.println("dailyCalorieIntake: " + dailyCalorieIntake);
+        
 //        System.out.println("TDEE: " + TDEE);
 //        System.out.println("Daily Calorie Change: " + dailyCalorieChange);
 //        System.out.println("Daily Calorie Intake: " + dailyCalorieIntake);
 //        
         
-        return (float) (dailyCalorieIntake);
+
+        return dailyCalorieIntake;
+
 
     }
 
