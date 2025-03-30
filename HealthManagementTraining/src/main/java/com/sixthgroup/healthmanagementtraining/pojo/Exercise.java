@@ -12,9 +12,9 @@ package com.sixthgroup.healthmanagementtraining.pojo;
 public class Exercise {
     private int id; // char(8)
     private String exerciseName; // nvarchar(40)
-    private int caloriesPerMinute; // int
+    private float caloriesPerMinute; // int
     private int duration = 15;//Giá trị mặc định
-    public Exercise(int id, String exerciseName, int caloriesPerMinute) {
+    public Exercise(int id, String exerciseName, float caloriesPerMinute) {
         this.id = id;
         this.exerciseName = exerciseName;
         this.caloriesPerMinute = caloriesPerMinute;
@@ -52,19 +52,7 @@ public class Exercise {
         this.exerciseName = exerciseName;
     }
 
-    /**
-     * @return the caloriesPerMinute
-     */
-    public int getCaloriesPerMinute() {
-        return caloriesPerMinute;
-    }
-
-    /**
-     * @param caloriesPerMinute the caloriesPerMinute to set
-     */
-    public void setCaloriesPerMinute(int caloriesPerMinute) {
-        this.caloriesPerMinute = caloriesPerMinute;
-    }
+   
 
     /**
      * @return the duration
@@ -78,6 +66,20 @@ public class Exercise {
      */
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+
+    /**
+     * @return the caloriesPerMinute
+     */
+    public float getCaloriesPerMinute() {
+        return caloriesPerMinute;
+    }
+
+    /**
+     * @param caloriesPerMinute the caloriesPerMinute to set
+     */
+    public void setCaloriesPerMinute(float caloriesPerMinute) {
+        this.caloriesPerMinute = caloriesPerMinute;
     }
     
 }

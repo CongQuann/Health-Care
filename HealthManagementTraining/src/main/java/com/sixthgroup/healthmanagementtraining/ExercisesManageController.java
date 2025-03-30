@@ -20,7 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -34,7 +34,6 @@ import javafx.fxml.Initializable;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
@@ -144,7 +143,7 @@ public class ExercisesManageController implements Initializable {
         } catch (SQLException ex) {
             Logger.getLogger(NutritionController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         loadColumns();
         loadColumnsForSelectedTable();
         loadTableData(null);
@@ -193,21 +192,30 @@ public class ExercisesManageController implements Initializable {
         colCalories.setPrefWidth(125);
 
         // Danh sách thời gian có thể chọn
-        ObservableList<Integer> durations = FXCollections.observableArrayList(5, 10, 15, 30, 45, 60);
+        ObservableList<Integer> durations = FXCollections.observableArrayList();
         TableColumn<Exercise, Integer> colDuration = new TableColumn<>("Thời gian tập");
         colDuration.setCellFactory(column -> new TableCell<>() {
-            private final ComboBox<Integer> comboBox = new ComboBox<>(durations);
+            private final TextField textField = new TextField();
+
             {
-                comboBox.setPrefWidth(100);
-                comboBox.setValue(10); // Giá trị mặc định
-                // Khi người dùng chọn, lưu vào TableRow
-                comboBox.setOnAction(event -> {
+                textField.setPrefWidth(100);
+                textField.setOnAction(event -> {
                     Exercise exercise = getTableView().getItems().get(getIndex());
-                    if (exercise != null){
-                        exercise.setDuration(comboBox.getValue());
+                    if (exercise != null) {
+                        try {
+                            int duration = Integer.parseInt(textField.getText());
+                            if (duration > 0) {  // Kiểm tra giá trị hợp lệ
+                                exercise.setDuration(duration);
+                            } else {
+                                Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Thời gian tập phải lớn hơn 0!");
+                            }
+                        } catch (NumberFormatException e) {
+                            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập một số nguyên!");
+                        }
                     }
                 });
             }
+
             @Override
             protected void updateItem(Integer item, boolean empty) {
                 super.updateItem(item, empty);
@@ -215,17 +223,17 @@ public class ExercisesManageController implements Initializable {
                     setGraphic(null);
                 } else {
                     Exercise e = getTableView().getItems().get(getIndex());
-                    comboBox.setValue(e.getDuration()); // Hiển thị giá trị khi cập nhật
-                    setGraphic(comboBox);
+                    textField.setText(String.valueOf(e.getDuration())); // Hiển thị giá trị hiện tại
+                    setGraphic(textField);
                 }
             }
         });
+        
         colDuration.setPrefWidth(125);
 
         TableColumn colAction = new TableColumn();
         colAction.setCellFactory(column -> new TableCell<Exercise, Void>() {
             private final Button btn = new Button("Thêm");
-
             {
                 btn.setOnAction(event -> {
                     Exercise exercise = getTableView().getItems().get(getIndex());
@@ -234,33 +242,31 @@ public class ExercisesManageController implements Initializable {
                         int selectedDuration = exercise.getDuration();
                         System.out.println("Đã thêm: " + exercise.getExerciseName());
 
-
                         // Hiển thị giá trị đã chọn
                         System.out.println("Thời gian tập: " + selectedDuration + " phút");
 
                         //  Kiểm tra xem bài tập đã tồn tại trong tbSelectedExers chưa
                         boolean isExist = tbSelectedExers.getItems().stream()
-                                .anyMatch(log -> log.getId()== exercise.getId());
+                                .anyMatch(log -> log.getId() == exercise.getId());
 
                         if (isExist) {
                             Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Bài tập này đã được thêm trước đó!");
                         } else {
-                            Exercise selectedExercise = new Exercise(exercise.getId(),exercise.getExerciseName(),exercise.getCaloriesPerMinute());
+                            Exercise selectedExercise = new Exercise(exercise.getId(), exercise.getExerciseName(), exercise.getCaloriesPerMinute());
                             selectedExercise.setDuration(selectedDuration);
-                            
+
                             tbSelectedExers.getItems().add(selectedExercise);
-                            
+
                             totalDuration += selectedDuration;
                             totalCalories += (selectedDuration * exercise.getCaloriesPerMinute()) / DEFAULT_MINUTE;
                             txtTotalDuration.setText(String.valueOf(totalDuration));
-                            txtTotalCalories.setText(String.valueOf(totalCalories));
+                            txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalories, 1)));
                             System.out.println("Thêm bài tập thành công!");
                         }
 
                     }
                 });
             }
-
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -287,6 +293,7 @@ public class ExercisesManageController implements Initializable {
         ExercisesService e = new ExercisesService();
         e.addExerciseToLog(tbSelectedExers.getItems(), userId, workoutDate);
     }
+
     public void deleteHandler() {
         Exercise selectedExercise = tbSelectedExers.getSelectionModel().getSelectedItem();
 
@@ -312,41 +319,38 @@ public class ExercisesManageController implements Initializable {
             Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi xóa dữ liệu!");
         }
     }
-     private void removeExerciseFromSelectedList(Exercise exercise) {
+
+    private void removeExerciseFromSelectedList(Exercise exercise) {
         tbSelectedExers.getItems().remove(exercise);
 
         // Cập nhật lại tổng calo, thời gian tập
-        totalCalories -= (exercise.getDuration()* exercise.getCaloriesPerMinute()) / DEFAULT_MINUTE;
+        totalCalories -= (exercise.getDuration() * exercise.getCaloriesPerMinute()) / DEFAULT_MINUTE;
         txtTotalCalories.setText(String.valueOf(totalCalories));
 
         totalDuration -= exercise.getDuration();
         txtTotalDuration.setText(String.valueOf(totalDuration));
 
     }
+
     private void loadTotalWorkout(List<Exercise> selectedExercise) {
-       totalCalories = 0;
-       totalDuration =0;
+        totalCalories = 0;
+        totalDuration = 0;
 
-       for (Exercise e : selectedExercise) {
-           totalCalories += (e.getCaloriesPerMinute()* e.getDuration()) / DEFAULT_MINUTE;
-           totalDuration += e.getDuration();
-       }
+        for (Exercise e : selectedExercise) {
+            totalCalories += (e.getCaloriesPerMinute() * e.getDuration()) / DEFAULT_MINUTE;
+            totalDuration += e.getDuration();
+        }
 
-       txtTotalCalories.setText(String.valueOf(totalCalories));
-       txtTotalDuration.setText(String.valueOf(totalDuration));
-      
-   }
+        txtTotalCalories.setText(String.valueOf(totalCalories));
+        txtTotalDuration.setText(String.valueOf(totalDuration));
+
+    }
 
     public void backHandler(ActionEvent event) throws IOException {
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "Dashboard.fxml");
     }
 
-
-    
-
-    
-    
     public void switchToNutrition(ActionEvent event) throws IOException {
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "NutritionTrack.fxml");
@@ -356,7 +360,7 @@ public class ExercisesManageController implements Initializable {
         // Lưu ngày vào biến tĩnh
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "TargetManagement.fxml");
-        
+
     }
 
     public void switchToUserInfo(ActionEvent event) throws IOException {
