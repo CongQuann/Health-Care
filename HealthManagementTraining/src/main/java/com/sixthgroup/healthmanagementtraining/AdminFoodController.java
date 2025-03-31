@@ -100,6 +100,12 @@ public class AdminFoodController implements Initializable {
 
         AdminFoodServices afs = new AdminFoodServices();
         if (afs.checkInputData(foodName, caloriesText, lipidText, proteinText, fiberText, selectedCategory, selectedUnit) == false) {
+            Utils.showAlert(AlertType.ERROR, "Lỗi", "Các trường nhập liệu không được bỏ trống!");
+            return null;
+        }
+
+        if (!AdminFoodServices.checkValidInput(caloriesText, lipidText, proteinText, fiberText, foodName)) {
+            Utils.showAlert(AlertType.ERROR, "Lỗi", "Các trường nhập liệu phải đúng định dạng!");
             return null;
         }
 
@@ -132,24 +138,19 @@ public class AdminFoodController implements Initializable {
         Food food = getFoodFromInput(); // lay food tu giao dien qua hàm getFoodFromInput đã tạo ở trên
         //kiem tra neu food == null thi thong bao chua nhap du thong tin
         if (food == null) {
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Lỗi");
-            alert.setHeaderText(null);
-            alert.setContentText("Hãy nhập đầy đủ thông tin món !");
-            alert.showAndWait();
             return;
         }
+
         //goi service de them du lieu tu food vao database
         AdminFoodServices afs = new AdminFoodServices();
+        if (afs.checkExistFoodName(foodNameField.getText())) {
+            Utils.showAlert(AlertType.ERROR, "Lỗi", "Tên món ăn đã tồn tại!");
+            return;
+        }
         try {
             boolean success = afs.addFood(food);
             if (success) {
-                System.out.println("Them mon an thanh cong! ");
-                Alert alert = new Alert(AlertType.INFORMATION);
-                alert.setTitle("Thông báo");
-                alert.setHeaderText(null);
-                alert.setContentText("Thêm món ăn thành công!");
-                alert.showAndWait();
+                Utils.showAlert(AlertType.INFORMATION, "Thành công", "Thêm món ăn thành công!");
                 loadData();
                 clearInputFields(); //xoa du lieu trong input-container sau khi them
 
@@ -173,11 +174,7 @@ public class AdminFoodController implements Initializable {
         Food selectedFood = (Food) foodTableView.getSelectionModel().getSelectedItem();
         if (selectedFood == null) {
             //Hiển thị ra cảnh báo
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Cảnh báo");
-            alert.setHeaderText(null);
-            alert.setContentText("Vui lòng chọn một món ăn để xóa!");
-            alert.showAndWait();
+            Utils.showAlert(AlertType.WARNING, "Cảnh báo", "Vui lòng chọn món ăn để xóa!");
             return;
         }
 
@@ -192,20 +189,12 @@ public class AdminFoodController implements Initializable {
                 try {
                     foodService.deleteFood(selectedFood.getId());//Gọi hàm xóa trong CSDL
                     // Hiển thị thông báo thành công
-                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
-                    successAlert.setTitle("Thông báo");
-                    successAlert.setHeaderText(null);
-                    successAlert.setContentText("Xóa món ăn thành công!");
-                    successAlert.showAndWait();
+                    Utils.showAlert(AlertType.INFORMATION, "Thông báo", "Xóa món ăn thành công!");
                     loadData();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     // Hiển thị thông báo lỗi
-                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
-                    errorAlert.setTitle("Lỗi");
-                    errorAlert.setHeaderText(null);
-                    errorAlert.setContentText("Có lỗi xảy ra khi xóa món ăn!");
-                    errorAlert.showAndWait();
+                    Utils.showAlert(AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi xóa món ăn!");
                 }
             }
         });
@@ -214,6 +203,7 @@ public class AdminFoodController implements Initializable {
 
     //==================================CẬP NHẬT=========================================
     private void setupTableEditable() {
+        AdminFoodServices afs = new AdminFoodServices();
         // Thiết lập cell factory và sự kiện cho từng cột
         colFoodName.setCellFactory(TextFieldTableCell.forTableColumn());
         colFoodName.setOnEditCommit(event -> {
@@ -264,19 +254,27 @@ public class AdminFoodController implements Initializable {
 
     private void updateFoodInDatabase(Food food) {
         try {
+            AdminFoodServices afs = new AdminFoodServices();
+            // Lấy tên món ăn từ đối tượng Food đã được chỉnh sửa
+            String editedFoodName = food.getFoodName();
+
+            // Kiểm tra xem tên món ăn đã tồn tại hay chưa
+            if (afs.checkExistFoodName(editedFoodName)) {
+                Utils.showAlert(AlertType.ERROR, "Lỗi", "Tên món ăn đã tồn tại!");
+                loadData();
+                return;
+            }
+            if(editedFoodName != null){
+                Utils.showAlert(AlertType.ERROR, "Lỗi", "Tên không được để trống!");
+                loadData();
+                return;
+            }
             foodService.updateFood(food);
-            Alert alert = new Alert(AlertType.INFORMATION);
-            alert.setTitle("Thông báo");
-            alert.setHeaderText(null);
-            alert.setContentText("Cập nhật thông tin thành công!");
-            alert.showAndWait();
+            Utils.showAlert(AlertType.INFORMATION, "Thông báo", "Cập nhật thông tin thành công!");
+
         } catch (SQLException e) {
             e.printStackTrace();
-            Alert alert = new Alert(AlertType.ERROR);
-            alert.setTitle("Lỗi");
-            alert.setHeaderText(null);
-            alert.setContentText("Có lỗi xảy ra khi cập nhật thông tin!");
-            alert.showAndWait();
+            Utils.showAlert(AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi xóa món ăn!");
         }
     }
 
@@ -426,14 +424,7 @@ public class AdminFoodController implements Initializable {
         searchField.textProperty().addListener((observable, oldValue, newValue) -> {
             filterFood(newValue);
         });
-        foodTableView.setEditable(true); // Cho phép chỉnh sửa TableView
 
-        // Gọi phương thức thiết lập chỉnh sửa===========================================================
-        // Đặt TableView có thể chỉnh sửa
-        foodTableView.setEditable(true);
-
-// Lưu trữ dữ liệu gốc
-        // Thiết lập TableView có thể chỉnh sửa
         foodTableView.setEditable(true);
 
         // Thiết lập các cột có thể chỉnh sửa và xử lý sự kiện

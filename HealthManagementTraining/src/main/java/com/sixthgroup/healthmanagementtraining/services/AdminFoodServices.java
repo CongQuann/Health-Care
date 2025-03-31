@@ -198,4 +198,30 @@ public class AdminFoodServices {
         }
         return filteredList;
     }
+
+    public static boolean checkValidInput(String caloriesText, String lipidText, String proteinText, String fiberText, String foodName) {
+        return caloriesText.matches("^[0-9]+(\\.[0-9]+)?$")
+                && lipidText.matches("^[0-9]+(\\.[0-9]+)?$")
+                && proteinText.matches("^[0-9]+(\\.[0-9]+)?$")
+                && fiberText.matches("^[0-9]+(\\.[0-9]+)?$")
+                && foodName.matches("^[a-zA-Z\\s]+$")
+                && Float.parseFloat(caloriesText) <= 1000
+                && Float.parseFloat(lipidText) <= 1000
+                && Float.parseFloat(proteinText) <= 1000
+                && Float.parseFloat(fiberText) <= 1000;
+    }
+    
+    public boolean checkExistFoodName(String foodName) throws SQLException{
+        try(Connection conn = JdbcUtils.getConn()){
+            String sql = "SELECT foodName FROM food WHERE foodName = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1,foodName);
+            
+            ResultSet rs = stm.executeQuery();
+            if(rs.next()){
+                return true;
+            }
+        }
+        return false;
+    }
 }
