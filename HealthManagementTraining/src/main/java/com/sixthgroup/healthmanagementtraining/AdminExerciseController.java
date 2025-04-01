@@ -15,6 +15,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.regex.Pattern;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -104,16 +105,16 @@ public class AdminExerciseController implements Initializable {
         ObservableList<Exercise> data = FXCollections.observableArrayList(list);
         goalTableView.setItems(data);
     }
-    
+
     //Edit exercise
     private void updateExercise(Exercise exercise) {
-    try {
-        AdminExerciseServices.updateExercise(exercise);
-    } catch (SQLException e) {
-        e.printStackTrace();
+        try {
+            AdminExerciseServices.updateExercise(exercise);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
-}
-    
+
     @FXML
     public void initializeLoadED() {
         colId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -123,12 +124,43 @@ public class AdminExerciseController implements Initializable {
         colName.setOnEditCommit(event -> {
             Exercise exercise = event.getRowValue();
             exercise.setExerciseName(event.getNewValue());
+            if (!Pattern.matches("^[a-zA-ZÀ-ỹ\\s]+$", exercise.getExerciseName())) {
+                Utils.getAlert("Tên bài tập không được chứa số hoặc ký tự đặc biệt!").show();
+                loadExerciseData();
+                return;
+            }
+            if (AdminExerciseServices.isExerciseNameTaken(exercise.getExerciseName())) {
+                Utils.getAlert("Tên bài tập đã tồn tại!").show();
+                loadExerciseData();
+                return;
+            }
+
             updateExercise(exercise);
         });
-        colCalories.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
+        colCalories.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter(){
+            @Override
+            public Float fromString(String value){
+                try{
+                    return Float.parseFloat(value);
+                }catch(NumberFormatException e){
+                    Utils.getAlert("Lượng calo/phút phải là số").show();
+                    return null;
+                }
+            }
+        }));
         colCalories.setOnEditCommit(event -> {
             Exercise exercise = event.getRowValue();
+            Float newValue = event.getNewValue();
+            if(newValue == null){
+                loadExerciseData();
+                return;
+            }
             exercise.setCaloriesPerMinute(event.getNewValue());
+            if (exercise.getCaloriesPerMinute() <= 0 || exercise.getCaloriesPerMinute() > 100) {
+                Utils.getAlert("Lượng calo/phút phải > 0 và <=100 !").show();
+                loadExerciseData();
+                return;
+            }
             updateExercise(exercise);
         });
         loadExerciseData();
@@ -153,9 +185,22 @@ public class AdminExerciseController implements Initializable {
             Utils.getAlert("Vui lòng nhập đầy đủ thông tin.").show();
             return;
         }
-
+        // Kiểm tra tên bài tập
+        if (!Pattern.matches("^[a-zA-ZÀ-ỹ\\s]+$", name)) {
+            Utils.getAlert("Tên bài tập không được chứa số hoặc ký tự đặc biệt!").show();
+            return;
+        }
+        if (AdminExerciseServices.isExerciseNameTaken(name)) {
+            Utils.getAlert("Tên bài tập đã tồn tại!").show();
+            return;
+        }
         try {
             float calories = Float.parseFloat(caloriesStr);
+            if (calories <= 0 || calories > 100) {
+                Utils.getAlert("Lượng calo/phút phải > 0 và <=100 !").show();
+                return;
+            }
+
             Exercise e = new Exercise(0, name, calories); // id sẽ tự động tăng
 
             boolean success = AdminExerciseServices.addExercise(e);
@@ -168,7 +213,7 @@ public class AdminExerciseController implements Initializable {
                 Utils.getAlert("Thêm thất bại!").show();
             }
         } catch (NumberFormatException ex) {
-            System.out.println("Lượng calo phải là số!");
+            Utils.getAlert("Lượng calo phải là số!").show();
         }
     }
 
@@ -193,18 +238,20 @@ public class AdminExerciseController implements Initializable {
             e.printStackTrace();
         }
     }
-     public void switchToAdminFood(ActionEvent event) throws IOException {
+    
+
+    public void switchToAdminFood(ActionEvent event) throws IOException {
         // Lưu ngày vào biến tĩnh
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "AdminFood.fxml");
-        
+
     }
-      public void switchToLogin(ActionEvent event) throws IOException {
+
+    public void switchToLogin(ActionEvent event) throws IOException {
         // Lưu ngày vào biến tĩnh
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "secondary.fxml");
         Utils.clearUser();
     }
-    
-    
+
 }
