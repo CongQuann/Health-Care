@@ -95,6 +95,24 @@ public class AdminExerciseServices {
         stmt.setInt(3, exercise.getId());
 
         stmt.executeUpdate();
+        }
     }
-}
+    
+    public static boolean isExerciseNameTaken(String exercisename) {
+        String query = "SELECT COUNT(*) FROM exercise WHERE exerciseName = ?";
+        
+        try (Connection conn = JdbcUtils.getConn();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+            
+            stmt.setString(1, exercisename);
+            ResultSet rs = stmt.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

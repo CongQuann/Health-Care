@@ -150,16 +150,4 @@ public class SignUpController implements Initializable {
         }
     }
     
-    //hàm kiểm tra số
-    public static boolean isNumeric(String str) {
-    if (str == null || str.isEmpty()) {
-        return false;
-    }
-    for (char c : str.toCharArray()) {
-        if (!Character.isDigit(c) && c != '.') { // Cho phép số thập phân
-            return false;
-        }
-    }
-    return true;
-}
 }
