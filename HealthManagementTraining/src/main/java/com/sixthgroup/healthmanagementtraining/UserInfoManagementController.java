@@ -106,27 +106,7 @@ public class UserInfoManagementController implements Initializable {
         String gender = genderComboBox.getValue();
         String activityLevel = (activityLevelComboBox.getValue() != null) ? activityLevelComboBox.getValue().toString() : "";
 
-        // Kiểm tra nếu có trường nào bị bỏ trống
-        if (name.isEmpty() || email.isEmpty() || heightText.isEmpty() || weightText.isEmpty() || dobPicker.getEditor().getText().isEmpty() || gender == null || activityLevel.isEmpty()) {
-            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập đầy đủ thông tin!");
-            loadUserInfo();
-            return;
-        }
-        // Kiểm tra chiều cao và cân nặng có phải là số hợp lệ không
-        if (!heightText.matches("^[0-9]+(\\.[0-9]+)?$") || !weightText.matches("^[0-9]+(\\.[0-9]+)?$")) {
-            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Chiều cao và cân nặng phải là số hợp lệ!");
-            loadUserInfo();
-            return;
-        }
-        // Kiểm tra tên có hợp lệ không (chỉ chấp nhận chữ cái và khoảng trắng)
-        if (!name.matches("^[a-zA-Z\\s]+$")) {
-            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Tên không được chứa số và ký tự đặc biệt!");
-            loadUserInfo();
-            return;
-        }
-        // Kiểm tra email có hợp lệ không
-        if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
-            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Email không đúng định dạng!");
+        if (!userInfoServices.isUserInfoValid(name, email, heightText, weightText, dobPicker.getEditor().getText(), gender, activityLevel)) {
             loadUserInfo();
             return;
         }
@@ -153,15 +133,7 @@ public class UserInfoManagementController implements Initializable {
                 loadUserInfo();
                 return; // Dừng hàm, không thực hiện cập nhật
             }
-            float height = Float.parseFloat(heightText);
-            float weight = Float.parseFloat(weightText);
 
-//          
-            if (height > 999 || weight > 999) {
-                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Chiều cao hoặc cân nặng phải trong mức hợp lý");
-                loadUserInfo();
-                return; // Dừng hàm, không thực hiện cập nhật
-            }
         } catch (SQLException e) {
             e.printStackTrace();
             return;
@@ -217,12 +189,13 @@ public class UserInfoManagementController implements Initializable {
             return;
         }
         // Kiểm tra mật khẩu không có dấu cách
-        if (oldPassword.contains(" ") || newPassword.contains(" ") || confirmPassword.contains(" ")) {
-            userInfoServices.showAlert("Lỗi", "Mật khẩu phải hợp lệ!", Alert.AlertType.ERROR);
+        if (userInfoServices.hasWhiteSpace(oldPassword) || userInfoServices.hasWhiteSpace(newPassword) || userInfoServices.hasWhiteSpace(confirmPassword)) {
+            userInfoServices.showAlert("Lỗi", "Mật khẩu không được chứa khoảng trắng!", Alert.AlertType.ERROR);
             return;
         }
+
         // Kiểm tra mật khẩu mới có đủ mạnh không
-        if (!newPassword.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$")) {
+        if (!userInfoServices.isPasswordValid(newPassword)) {
             userInfoServices.showAlert("Lỗi", "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!", Alert.AlertType.ERROR);
             return;
         }
