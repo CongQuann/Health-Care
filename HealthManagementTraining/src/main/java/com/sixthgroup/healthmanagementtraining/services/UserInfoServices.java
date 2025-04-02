@@ -119,8 +119,6 @@ public class UserInfoServices {
         return false;
     }
 
-  
-
     public boolean updateUserPassword(String userName, String oldPassword, String newPassword) {
         try (Connection conn = JdbcUtils.getConn()) {
             // Lấy mật khẩu hiện tại từ cơ sở dữ liệu
@@ -154,5 +152,49 @@ public class UserInfoServices {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public boolean isUserInfoValid(String name, String email, String heightText, String weightText, String dob, String gender, String activityLevel) {
+        if (name.isEmpty() || email.isEmpty() || heightText.isEmpty() || weightText.isEmpty() || dob.isEmpty() || gender == null || activityLevel.isEmpty()) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập đầy đủ thông tin!");
+            return false;
+        }
+        if (!isHeightWeightValid(heightText, weightText)) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Chiều cao và cân nặng phải là số hợp lệ!");
+            return false;
+        }
+        if (!isNameValid(name)) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Tên không được chứa số và ký tự đặc biệt!");
+            return false;
+        }
+        if (!isEmailValid(email)) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Email không đúng định dạng!");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isPasswordValid(String password) {
+        return password.matches("^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=!])(?=\\S+$).{8,}$");
+    }
+
+    public boolean arePasswordsMatching(String newPassword, String confirmPassword) {
+        return newPassword.equals(confirmPassword);
+    }
+
+    public boolean hasWhiteSpace(String password) {
+        return password.contains(" ");
+    }
+
+    public boolean isHeightWeightValid(String heightText, String weightText) {
+        return heightText.matches("^[0-9]+(\\.[0-9]+)?$") && weightText.matches("^[0-9]+(\\.[0-9]+)?$") && Float.parseFloat(heightText) <= 999 && Float.parseFloat(weightText) <= 999;
+    }
+
+    public boolean isNameValid(String name) {
+        return name.matches("^[a-zA-Z\\s]+$");
+    }
+
+    public boolean isEmailValid(String email) {
+        return email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$");
     }
 }
