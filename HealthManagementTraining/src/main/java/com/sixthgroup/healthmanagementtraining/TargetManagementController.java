@@ -4,6 +4,7 @@
  */
 package com.sixthgroup.healthmanagementtraining;
 
+import com.sixthgroup.healthmanagementtraining.pojo.CalorieResult;
 import com.sixthgroup.healthmanagementtraining.pojo.Goal;
 import com.sixthgroup.healthmanagementtraining.pojo.UserInfo;
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
@@ -20,6 +21,7 @@ import java.time.format.DateTimeParseException;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
@@ -27,7 +29,10 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
@@ -238,7 +243,8 @@ public class TargetManagementController implements Initializable {
     // update Goal
     private void updateGoal(Goal goal, float targetWeight, float currentWeight, LocalDate endDate) {
         try {
-            float updateCaloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, goal.getStartDate(), endDate);
+            CalorieResult result = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, goal.getStartDate(), endDate);
+            float updateCaloNeeded = result.getDailyCalorieIntake();
 
             boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
             if (!success) {
@@ -326,15 +332,38 @@ public class TargetManagementController implements Initializable {
                 Utils.getAlert("Khoảng thời gian bị trùng, không thể thêm!").show();
                 return;
             }
-            float caloNeeded = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, startDate, endDate);
+            
+            CalorieResult caloResult = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, startDate, endDate);
+            float caloChange = caloResult.getDailyCalorieChange();
+            if (caloChange >= 400 || caloChange < 400) {
+                // Tạo hộp thoại xác nhận
+                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+                alert.setTitle("Cảnh báo");
+                alert.setHeaderText("Lượng calo thay đổi mỗi ngày không phù hợp!");
+                alert.setContentText("Bạn có muốn tiếp tục thêm mục tiêu này không?");
 
-            System.out.println("Calo " + caloNeeded);
-            TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, caloNeeded, startDate, endDate, targetType);
-            System.out.println("Userid :" + userInfoId);
-            System.out.println("Đã thêm mục tiêu");
-            startDatePicker.setValue(null);
-            endDatePicker.setValue(null);
-            loadGoals();
+                // Tạo nút "Tiếp tục" và "Hủy"
+                ButtonType continueButton = new ButtonType("Tiếp tục");
+                ButtonType cancelButton = new ButtonType("Hủy", ButtonBar.ButtonData.CANCEL_CLOSE);
+                alert.getButtonTypes().setAll(continueButton, cancelButton);
+
+                // Hiển thị hộp thoại và chờ phản hồi
+                Optional<ButtonType> result = alert.showAndWait();
+                if (result.isPresent() && result.get() == continueButton) {
+                    // Người dùng chọn "Tiếp tục"
+                    float caloNeeded = caloResult.getDailyCalorieIntake();
+                    TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, caloNeeded, startDate, endDate, targetType);
+                    System.out.println("Userid :" + userInfoId);
+                    System.out.println("Đã thêm mục tiêu");
+                    startDatePicker.setValue(null);
+                    endDatePicker.setValue(null);
+                    loadGoals();
+                } else {
+                    // Người dùng chọn "Hủy" hoặc đóng hộp thoại
+                    System.out.println("Người dùng đã hủy hành động.");
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             Utils.getAlert("Lỗi khi thêm mục tiêu!").show();
@@ -397,7 +426,7 @@ public class TargetManagementController implements Initializable {
         s.switchScene(event, "UserInfoManagement.fxml");
     }
 
-    public float calCaloriesNeeded(String username, float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate) {
+    public CalorieResult calCaloriesNeeded(String username, float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate) {
 
         UserInfoServices s = new UserInfoServices();
         UserInfo u = s.getUserInfo(username);
@@ -434,7 +463,7 @@ public class TargetManagementController implements Initializable {
 //        System.out.println("Daily Calorie Change: " + dailyCalorieChange);
 //        System.out.println("Daily Calorie Intake: " + dailyCalorieIntake);
 //        
-        return dailyCalorieIntake;
+        return new CalorieResult(dailyCalorieIntake, dailyCalorieChange);
 
     }
 

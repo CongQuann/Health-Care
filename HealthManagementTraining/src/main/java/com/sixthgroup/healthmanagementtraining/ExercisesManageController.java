@@ -74,8 +74,9 @@ public class ExercisesManageController implements Initializable {
     private Text txtTotalCalories;
     private final float DEFAULT_MINUTE = 1;
     private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
-    private static int totalCalories;
+    private static float totalCalories;
     private static int totalDuration;
+    private ExercisesService e = new ExercisesService();
 
     //kich hoat navbar
     private void toggleNavBar() {
@@ -163,6 +164,9 @@ public class ExercisesManageController implements Initializable {
     }
 
     public void loadColumnsForSelectedTable() {
+        // Thiết lập cột có thể chỉnh sửa
+        tbSelectedExers.setEditable(true);
+
         TableColumn colExerciseName = new TableColumn("Tên bài tập");
         colExerciseName.setCellValueFactory(new PropertyValueFactory("exerciseName"));
         colExerciseName.setPrefWidth(100);
@@ -214,6 +218,23 @@ public class ExercisesManageController implements Initializable {
                         }
                     }
                 });
+                textField.focusedProperty().addListener((obs, oldVal, newVal) -> {
+                    if (!newVal) { // Khi mất focus, lưu giá trị
+                        Exercise exercise = getTableView().getItems().get(getIndex());
+                        if (exercise != null) {
+                            try {
+                                int duration = Integer.parseInt(textField.getText());
+                                if (duration > 0) {
+                                    exercise.setDuration(duration);
+                                } else {
+                                    Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Thời gian tập lớn hơn 0!");
+                                }
+                            } catch (NumberFormatException e) {
+                                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập một số nguyên!");
+                            }
+                        }
+                    }
+                });
             }
 
             @Override
@@ -228,12 +249,13 @@ public class ExercisesManageController implements Initializable {
                 }
             }
         });
-        
+
         colDuration.setPrefWidth(125);
 
         TableColumn colAction = new TableColumn();
         colAction.setCellFactory(column -> new TableCell<Exercise, Void>() {
             private final Button btn = new Button("Thêm");
+
             {
                 btn.setOnAction(event -> {
                     Exercise exercise = getTableView().getItems().get(getIndex());
@@ -258,7 +280,7 @@ public class ExercisesManageController implements Initializable {
                             tbSelectedExers.getItems().add(selectedExercise);
 
                             totalDuration += selectedDuration;
-                            totalCalories += (selectedDuration * exercise.getCaloriesPerMinute()) / DEFAULT_MINUTE;
+                            totalCalories += (selectedDuration * exercise.getCaloriesPerMinute() / DEFAULT_MINUTE);
                             txtTotalDuration.setText(String.valueOf(totalDuration));
                             txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalories, 1)));
                             System.out.println("Thêm bài tập thành công!");
@@ -267,6 +289,7 @@ public class ExercisesManageController implements Initializable {
                     }
                 });
             }
+
             @Override
             protected void updateItem(Void item, boolean empty) {
                 super.updateItem(item, empty);
@@ -282,13 +305,24 @@ public class ExercisesManageController implements Initializable {
     }
 
     public void saveHandler() {
-
         if (tbSelectedExers.getItems().isEmpty()) {
             Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Danh sách bài tập trống!");
             return;
         }
+
         String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
-        LocalDate workoutDate = Utils.getSelectedDate(); // Lấy ngày ăn
+        LocalDate workoutDate = Utils.getSelectedDate(); // Lấy ngày tập
+
+        // Tính tổng thời gian tập
+        int totalDuration = tbSelectedExers.getItems().stream()
+                .mapToInt(Exercise::getDuration) // Lấy thời gian của từng bài tập
+                .sum();
+
+        // Kiểm tra xem tổng thời gian có vượt quá 24 giờ không
+        if (totalDuration > 1440) {
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Tổng thời gian tập không được vượt quá 24 giờ (1440 phút)!");
+            return;
+        }
 
         ExercisesService e = new ExercisesService();
         e.addExerciseToLog(tbSelectedExers.getItems(), userId, workoutDate);
@@ -311,8 +345,6 @@ public class ExercisesManageController implements Initializable {
 
             // Cập nhật giao diện (Xóa khỏi danh sách đã chọn)
             removeExerciseFromSelectedList(selectedExercise);
-
-            Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Món ăn đã được xóa khỏi nhật ký!");
 
         } catch (SQLException e) {
             e.printStackTrace();

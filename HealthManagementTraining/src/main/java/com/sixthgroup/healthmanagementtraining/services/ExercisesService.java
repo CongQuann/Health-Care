@@ -26,23 +26,23 @@ public class ExercisesService {
         List<Exercise> exs = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm;
-            if (kw!= null){
+            if (kw != null) {
                 stm = conn.prepareCall("SELECT * FROM exercise WHERE exerciseName like concat('%', ?, '%') ORDER BY id desc");
                 stm.setString(1, kw);
-            }
-            else{
+            } else {
                 stm = conn.prepareCall("SELECT * FROM exercise ");
             }
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                Exercise e = new Exercise(rs.getInt("id"), rs.getString("exerciseName"),rs.getInt("caloriesPerMinute"));
+                Exercise e = new Exercise(rs.getInt("id"), rs.getString("exerciseName"), rs.getInt("caloriesPerMinute"));
                 exs.add(e);
             }
 
             return exs;
         }
     }
-     public List<Exercise> getWorkoutLogOfUser(String userId, LocalDate servingDate) throws SQLException {
+
+    public List<Exercise> getWorkoutLogOfUser(String userId, LocalDate servingDate) throws SQLException {
         List<Exercise> selectedExercises = new ArrayList<>();
         String sql = "SELECT e.id, e.exerciseName, e.caloriesPerMinute, "
                 + "wl.duration "
@@ -74,28 +74,40 @@ public class ExercisesService {
         }
         return selectedExercises;
     }
-    public void addExerciseToLog(List<Exercise> selectedExercise, String userId, LocalDate workoutDate){
-        String sql = "INSERT INTO workoutlog (duration, workoutDate, userInfo_id, exercise_id) VALUES (?, ?, ?, ?)";
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+    public void addExerciseToLog(List<Exercise> selectedExercise, String userId, LocalDate workoutDate) {
+        String insertSql = "INSERT INTO workoutlog (duration, workoutDate, userInfo_id, exercise_id) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+
+            int insertedCount = 0;
 
             for (Exercise exercise : selectedExercise) {
-                pstmt.setInt(1, exercise.getDuration()); // Thời gian tập
-                pstmt.setDate(2, Date.valueOf(workoutDate)); // Ngày tập
-                pstmt.setString(3, userId); // ID người dùng
-                pstmt.setInt(4, exercise.getId()); // ID bài tập
-                pstmt.addBatch(); // Thêm vào batch để tăng tốc độ lưu
+                // Sử dụng phương thức kiểm tra
+                if (!isExerciseAlreadyLogged(userId, workoutDate, exercise.getId())) {
+                    insertStmt.setInt(1, exercise.getDuration());
+                    insertStmt.setDate(2, Date.valueOf(workoutDate));
+                    insertStmt.setString(3, userId);
+                    insertStmt.setInt(4, exercise.getId());
+                    insertStmt.addBatch();
+                    insertedCount++;
+                }
             }
 
-            pstmt.executeBatch(); // Thực hiện lưu toàn bộ dữ liệu
-
-            Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Dữ liệu đã được lưu vào nhật kí tập luyện");
+            if (insertedCount > 0) {
+                insertStmt.executeBatch(); // Chỉ thực thi nếu có dữ liệu mới
+                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã thêm " + insertedCount + " bài tập vào nhật ký.");
+            } else {
+                Utils.showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Tất cả bài tập đã có trong nhật ký.");
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
             Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi lưu dữ liệu!");
         }
     }
-    public void deleteExerciseFromLog(int exerciseId, String userId, LocalDate workoutDate) throws SQLException{
+
+    public void deleteExerciseFromLog(int exerciseId, String userId, LocalDate workoutDate) throws SQLException {
         String sql = "DELETE FROM workoutlog WHERE exercise_id = ? AND userInfo_id = ? AND workoutDate = ?";
 
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -108,10 +120,27 @@ public class ExercisesService {
             if (rowsAffected == 0) {
                 System.out.println("Không có dữ liệu nào bị xóa!");
             } else {
-                System.out.println("Xóa thành công món ăn khỏi nhật ký!");
                 Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa bài tập khỏi nhật kí");
             }
         }
     }
+     public boolean isExerciseAlreadyLogged(String userId, LocalDate workoutDate, int exerciseId) {
+        String checkSql = "SELECT COUNT(*) FROM workoutlog WHERE workoutDate = ? AND userInfo_id = ? AND exercise_id = ?";
 
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+
+            checkStmt.setDate(1, Date.valueOf(workoutDate));
+            checkStmt.setString(2, userId);
+            checkStmt.setInt(3, exerciseId);
+
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0; // Nếu COUNT > 0 -> Bài tập đã tồn tại
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false; // Trả về false nếu có lỗi xảy ra
+    }
 }

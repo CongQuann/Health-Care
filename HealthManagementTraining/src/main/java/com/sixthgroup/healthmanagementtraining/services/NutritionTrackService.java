@@ -156,32 +156,34 @@ public class NutritionTrackService {
     }
 
     public void addFoodToLog(List<Food> selectedFoods, String userId, LocalDate servingDate) {
-        String sql = "INSERT INTO nutritionlog (numberOfUnit, servingDate, food_id, userInfo_id) VALUES (?, ?, ?, ?)";
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        String insertSql = "INSERT INTO nutritionlog (numberOfUnit, servingDate, food_id, userInfo_id) VALUES (?, ?, ?, ?)";
+
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
+
+            int insertedCount = 0;
 
             for (Food food : selectedFoods) {
-                pstmt.setInt(1, food.getSelectedQuantity()); // Khối lượng đã chọn
-                pstmt.setDate(2, Date.valueOf(servingDate)); // Ngày ăn
-                pstmt.setInt(3, food.getId()); // ID món ăn
-                pstmt.setString(4, userId); // ID người dùng
-                pstmt.addBatch(); // Thêm vào batch để tăng tốc độ lưu
+                // Sử dụng phương thức kiểm tra
+                if (!isFoodAlreadyLogged(userId, servingDate, food.getId())) {
+                    insertStmt.setInt(1, food.getSelectedQuantity());
+                    insertStmt.setDate(2, Date.valueOf(servingDate));
+                    insertStmt.setInt(3, food.getId());
+                    insertStmt.setString(4, userId);
+                    insertStmt.addBatch();
+                    insertedCount++;
+                }
             }
 
-            pstmt.executeBatch(); // Thực hiện lưu toàn bộ dữ liệu
-
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Thành công");
-            alert.setHeaderText(null);
-            alert.setContentText("Dữ liệu đã được lưu vào nhật ký dinh dưỡng!");
-            alert.showAndWait();
+            if (insertedCount > 0) {
+                insertStmt.executeBatch(); // Thực hiện thêm tất cả món ăn mới
+                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã thêm " + insertedCount + " món ăn vào nhật ký.");
+            } else {
+                Utils.showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Tất cả món ăn đã có trong nhật ký.");
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Lỗi");
-            alert.setHeaderText(null);
-            alert.setContentText("Có lỗi xảy ra khi lưu dữ liệu!");
-            alert.showAndWait();
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi lưu dữ liệu!");
         }
     }
 
@@ -201,5 +203,42 @@ public class NutritionTrackService {
                 Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa món ăn khỏi nhật kí");
             }
         }
+    }
+
+    public float getDailyCaloNeeded(String username, LocalDate currentDate) {
+//        String sql1 = "SELECT g.dailyCaloNeeded FROM goal g JOIN userinfo u ON g.userInfo_id = u.id WHERE userName = ? AND startDate <= ? AND endDate >= ?";
+        String sql = "SELECT g.dailyCaloNeeded FROM goal g JOIN userinfo u ON g.userInfo_id = u.id WHERE userName = ? AND ? BETWEEN startDate AND endDate LIMIT 1";
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, username);
+            stmt.setDate(2, Date.valueOf(currentDate));
+            try (ResultSet rs = stmt.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getFloat("dailyCaloNeeded");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    public boolean isFoodAlreadyLogged(String userId, LocalDate servingDate, int foodId) {
+        String checkSql = "SELECT COUNT(*) FROM nutritionlog WHERE servingDate = ? AND userInfo_id = ? AND food_id = ?";
+
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+
+            checkStmt.setDate(1, Date.valueOf(servingDate));
+            checkStmt.setString(2, userId);
+            checkStmt.setInt(3, foodId);
+
+            try (ResultSet rs = checkStmt.executeQuery()) {
+                return rs.next() && rs.getInt(1) > 0; // Nếu COUNT > 0 -> Món ăn đã tồn tại
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return false; // Trả về false nếu có lỗi xảy ra
     }
 }
