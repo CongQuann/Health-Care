@@ -32,7 +32,7 @@ public class UserInfoServices {
 
             if (resultSet.next()) {
                 userInfo = new UserInfo();
-//                userInfo.setUserName(resultSet.getString("userName"));
+                userInfo.setUserName(resultSet.getString("userName"));
                 userInfo.setName(resultSet.getString("name"));
 
                 userInfo.setEmail(resultSet.getString("email"));

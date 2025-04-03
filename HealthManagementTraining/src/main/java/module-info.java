@@ -4,12 +4,14 @@ module com.sixthgroup.healthmanagementtraining {
     requires java.sql;
     requires java.base;
     requires java.prefs;
+    requires spring.security.crypto;
     opens com.sixthgroup.healthmanagementtraining to javafx.fxml;
     exports com.sixthgroup.healthmanagementtraining;
     exports com.sixthgroup.healthmanagementtraining.services;
+    exports com.sixthgroup.healthmanagementtraining.pojo;
+    opens com.sixthgroup.healthmanagementtraining.pojo to javafx.base, org.mockito;
     
-    opens com.sixthgroup.healthmanagementtraining.pojo to javafx.base;
-    requires spring.security.crypto;
-
+  
+  
 
 }

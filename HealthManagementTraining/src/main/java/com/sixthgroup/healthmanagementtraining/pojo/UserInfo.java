@@ -12,18 +12,18 @@ import java.util.Date;
  */
 public class UserInfo {
 
-    private String id; // 
-    private String userName; // nvarchar(30)
-    private String name;
-    private String password; // varchar(30)
-    private String role; // enum('user', 'administrator')
-    private String email; // varchar(40)
-    private Date createDate; // datetime
-    private float height; // float
-    private float weight; // float
-    private Date DOB; // datetime
-    private String gender; // varchar(10)
-    private String activityLevel; // enum('sedentary', 'lightlyActive', 'moderatelyActive', 'veryActive', 'ExtremekyActive')
+        private String id; // 
+        private String userName; // nvarchar(30)
+        private String name;
+        private String password; // varchar(30)
+        private String role; // enum('user', 'administrator')
+        private String email; // varchar(40)
+        private Date createDate; // datetime
+        private float height; // float
+        private float weight; // float
+        private Date DOB; // datetime
+        private String gender; // varchar(10)
+        private String activityLevel; // enum('sedentary', 'lightlyActive', 'moderatelyActive', 'veryActive', 'ExtremekyActive')
     
     // Getters and Setters
 
