@@ -21,6 +21,7 @@ public class DashboardServices {
 
     public float getDailyCalorieIntake(String userName, LocalDate servingDate) throws SQLException {
         float totalCalories = 0;
+
         try (Connection conn = JdbcUtils.getConn()) {
             String sql = "SELECT SUM(f.caloriesPerUnit * n.numberOfUnit) "
                     + "FROM nutritionlog n "
@@ -32,8 +33,9 @@ public class DashboardServices {
             stm.setDate(2, java.sql.Date.valueOf(servingDate));
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
-                totalCalories = rs.getInt(1);
+                totalCalories = rs.getFloat(1);
             }
+
             
         }
         return totalCalories;
