@@ -80,7 +80,7 @@ public class NutritionController implements Initializable {
     private Text txtTotalFiber;
     @FXML
     private Text txtRecomendedCalo;
-    private final float DEFAULT_QUANTITY = 10;
+    private final float DEFAULT_QUANTITY = 1;
     private final float DIFFERENT_CALO = 135;
     private static float totalCalo;
     private static float totalProtein;

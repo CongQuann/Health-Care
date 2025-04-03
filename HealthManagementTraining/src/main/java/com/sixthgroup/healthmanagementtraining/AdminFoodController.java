@@ -86,6 +86,7 @@ public class AdminFoodController implements Initializable {
 
     private NavbarServices navbarServices = new NavbarServices(); // Khởi tạo NavbarServices
     private AdminFoodServices foodService = new AdminFoodServices(); // Gọi service để lấy dữ liệu
+    private String currentName;
 
     private Food getFoodFromInput() {
         // Lấy dữ liệu từ ô nhập liệu
@@ -257,24 +258,28 @@ public class AdminFoodController implements Initializable {
             AdminFoodServices afs = new AdminFoodServices();
             // Lấy tên món ăn từ đối tượng Food đã được chỉnh sửa
             String editedFoodName = food.getFoodName();
+            String currentFoodName = afs.getFoodNameById(food.getId());
 
-            // Kiểm tra xem tên món ăn đã tồn tại hay chưa
-            if (afs.checkExistFoodName(editedFoodName)) {
-                Utils.showAlert(AlertType.ERROR, "Lỗi", "Tên món ăn đã tồn tại!");
+            if (editedFoodName == null) {
+                Utils.showAlert(AlertType.ERROR, "Lỗi", "Tên không được để trống!");
                 loadData();
                 return;
             }
-            if(editedFoodName != null){
-                Utils.showAlert(AlertType.ERROR, "Lỗi", "Tên không được để trống!");
+
+            // Kiểm tra xem tên món ăn đã tồn tại hay chưa
+            if (currentFoodName != null && !editedFoodName.equals(currentFoodName) && afs.checkExistFoodName(editedFoodName)) {
+                Utils.showAlert(AlertType.ERROR, "Lỗi", "Tên món ăn đã tồn tại!");
                 loadData();
                 return;
             }
             foodService.updateFood(food);
             Utils.showAlert(AlertType.INFORMATION, "Thông báo", "Cập nhật thông tin thành công!");
+            loadData();
 
         } catch (SQLException e) {
             e.printStackTrace();
             Utils.showAlert(AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi xóa món ăn!");
+            loadData();
         }
     }
 
