@@ -41,12 +41,17 @@ public class Utils {
         return new Alert(Alert.AlertType.INFORMATION, content, ButtonType.OK);
     }
 
-    public static String roundFloat(float value, int decimalPlaces) {
+    public static float roundFloat(float value, int decimalPlaces) {
         BigDecimal bigDecimal = new BigDecimal(Float.toString(value)); // Chuyển float thành BigDecimal
         bigDecimal = bigDecimal.setScale(decimalPlaces, RoundingMode.HALF_UP); // Làm tròn theo HALF_UP
-        return bigDecimal.toString(); // Trả về chuỗi đã làm tròn
+        return Float.parseFloat(bigDecimal.toString()); // Trả về chuỗi đã làm tròn
     }
 
+    public static float parseDoubleToFloat(double value, int decimalPlaces) {
+        float floatValue = (float) value;
+        float scale = (float) Math.pow(10, decimalPlaces);
+        return Math.round(floatValue * scale) / scale;
+    }
     //current user
     private static final Preferences prefs = Preferences.userRoot().node("HealthManagementTraining");
 

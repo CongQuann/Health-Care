@@ -44,7 +44,7 @@
             <Insets />
          </opaqueInsets>
       </TextField>
-      <DatePicker id="birthDatePicker" fx:id="dobPicker" layoutX="36.0" layoutY="475.0" prefHeight="37.0" prefWidth="282.0" promptText="Ngày sinh:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;" />
+      <DatePicker id="birthDatePicker" fx:id="dobPicker" editable="false" layoutX="36.0" layoutY="475.0" prefHeight="37.0" prefWidth="282.0" promptText="Ngày sinh:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;" />
       <ComboBox id="trainingLevelComboBox" fx:id="activityLevelComboBox" editable="false" layoutX="36.0" layoutY="523.0" prefHeight="37.0" prefWidth="282.0" promptText="Cường độ luyện tập:" style="-fx-pref-height: 40px; -fx-background-radius: 12; -fx-border-radius: 12; -fx-background-color: #c8c8c845; -fx-padding: 5px; -fx-font-size: 14px; -fx-border-color: #8a7b65;;" />
       <Button layoutX="109.0" layoutY="583.0" mnemonicParsing="false" onAction="#handleSignUp" prefHeight="48.0" prefWidth="128.0" style="-fx-background-color: #5D6C58; -fx-text-fill: #FFFFFF; -fx-font-size: 16px; -fx-background-radius: 25px; -fx-border-radius: 25px;" text="Đăng Ký">
          <font>

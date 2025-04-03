@@ -15,7 +15,6 @@ public class Exercise {
     private String exerciseName; // nvarchar(40)
     private float caloriesPerMinute; // int
     private int duration = 15;//Giá trị mặc định
-
     public Exercise(int id, String exerciseName, float caloriesPerMinute) {
         this.id = id;
         this.exerciseName = exerciseName;
@@ -55,6 +54,7 @@ public class Exercise {
         this.exerciseName = exerciseName;
     }
 
+
     /**
      * @return the caloriesPerMinute
      */
@@ -68,6 +68,7 @@ public class Exercise {
     public void setCaloriesPerMinute(float caloriesPerMinute) {
         this.caloriesPerMinute = caloriesPerMinute;
     }
+
 
     /**
      * @return the duration

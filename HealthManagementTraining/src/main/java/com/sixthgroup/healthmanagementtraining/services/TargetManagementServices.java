@@ -20,11 +20,11 @@ import java.util.List;
  * @author quanp
  */
 public class TargetManagementServices {
+
     // Lấy userInfo_id từ username
     public static String getUserInfoId(String username) throws SQLException {
         String sql = "SELECT id FROM userinfo WHERE username = ?";
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -38,8 +38,7 @@ public class TargetManagementServices {
     public static List<Goal> getGoalsByUser(String userInfoId) throws SQLException {
         List<Goal> goals = new ArrayList<>();
         String sql = "SELECT * FROM goal WHERE userInfo_id = ?";
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, userInfoId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -58,11 +57,10 @@ public class TargetManagementServices {
     }
 
     // Thêm mục tiêu mới
-    public static void addGoal(String userInfoId, float targetWeight, float currentWeight,float caloriesNeeded, LocalDate startDate, LocalDate endDate, String targetType) throws SQLException {
+    public static void addGoal(String userInfoId, float targetWeight, float currentWeight, float caloriesNeeded, LocalDate startDate, LocalDate endDate, String targetType) throws SQLException {
         String sql = "INSERT INTO goal (targetWeight, currentWeight, startDate, endDate, userInfo_id, currentProgress, targetType, dailyCaloNeeded, initialWeight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         //dailyCaloNeeded
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setFloat(1, targetWeight);
             stmt.setFloat(2, currentWeight);
             stmt.setDate(3, Date.valueOf(startDate));
@@ -70,14 +68,14 @@ public class TargetManagementServices {
             stmt.setString(5, userInfoId);
             stmt.setInt(6, 0);
             stmt.setString(7, targetType);
-            stmt.setFloat(8,caloriesNeeded);
-            stmt.setFloat(9,currentWeight);
+            stmt.setFloat(8, caloriesNeeded);
+            stmt.setFloat(9, currentWeight);
             stmt.executeUpdate();
         }
     }
 
     // Cập nhật mục tiêu (bao gồm tính toán currentProgress)
-    public static boolean updateGoal(String userInfoId, int goalId, float targetWeight, float currentWeight,float caloriesNeeded, LocalDate newEndDate) throws SQLException {
+    public static boolean updateGoal(String userInfoId, int goalId, float targetWeight, float currentWeight, float caloriesNeeded, LocalDate newEndDate) throws SQLException {
         String checkSql = "SELECT endDate, targetWeight, initialWeight, targetType FROM goal WHERE id = ? AND userInfo_id = ?";
 
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
@@ -101,10 +99,14 @@ public class TargetManagementServices {
                 if (oldTargetWeight == targetWeight && currentWeight != initialWeight) {
                     if ("loss".equals(targetType)) {
                         newProgress = (int) (((initialWeight - currentWeight) / (initialWeight - targetWeight)) * 100);
-                        if (newProgress < 0) newProgress = 0;
+                        if (newProgress < 0) {
+                            newProgress = 0;
+                        }
                     } else if ("gain".equals(targetType)) {
                         newProgress = (int) (((currentWeight - initialWeight) / (targetWeight - initialWeight)) * 100);
-                        if (newProgress < 0) newProgress = 0;
+                        if (newProgress < 0) {
+                            newProgress = 0;
+                        }
                     }
                 } // Nếu targetWeight thay đổi, reset progress
                 else if (oldTargetWeight != targetWeight) {
@@ -135,8 +137,7 @@ public class TargetManagementServices {
     // Xóa mục tiêu
     public static void deleteGoals(String userInfoId, List<Integer> goalIds) throws SQLException {
         String sql = "DELETE FROM goal WHERE id = ? AND userInfo_id = ?";
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             for (Integer goalId : goalIds) {
                 stmt.setInt(1, goalId);
                 stmt.setString(2, userInfoId);
@@ -145,4 +146,32 @@ public class TargetManagementServices {
             stmt.executeBatch();
         }
     }
+
+    public static boolean isDateOverlap(String userId, LocalDate newStartDate, LocalDate newEndDate) {
+        String query = "SELECT COUNT(*) FROM goal WHERE userInfo_id = ? AND "
+                + "(? BETWEEN startDate AND endDate OR "
+                + "? BETWEEN startDate AND endDate OR "
+                + "startDate BETWEEN ? AND ? OR "
+                + "endDate BETWEEN ? AND ?)";
+
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setString(1, userId);
+            stmt.setDate(2, Date.valueOf(newStartDate));
+            stmt.setDate(3, Date.valueOf(newEndDate));
+            stmt.setDate(4, Date.valueOf(newStartDate));
+            stmt.setDate(5, Date.valueOf(newEndDate));
+            stmt.setDate(6, Date.valueOf(newStartDate));
+            stmt.setDate(7, Date.valueOf(newEndDate));
+
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Nếu có bản ghi trùng thì trả về true
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
 }

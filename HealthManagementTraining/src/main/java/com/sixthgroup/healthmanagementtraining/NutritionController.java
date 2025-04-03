@@ -233,17 +233,44 @@ public class NutritionController implements Initializable {
         colType.setPrefWidth(107);
 
         // Danh sách thời gian có thể chọn
-        ObservableList<Integer> quantity = FXCollections.observableArrayList(10, 30, 50, 100, 200);
+        ObservableList<Integer> quantity = FXCollections.observableArrayList();
         TableColumn<Food, Integer> colQuantity = new TableColumn<>("Khối lượng thức ăn");
         colQuantity.setCellFactory(column -> new TableCell<>() {
-            private final ComboBox<Integer> comboBox = new ComboBox<>(FXCollections.observableArrayList(10, 30, 50, 100, 200));
+            private final TextField textField = new TextField();
 
             {
-                comboBox.setPrefWidth(100);
-                comboBox.setOnAction(event -> {
+                textField.setPrefWidth(100);
+                textField.setOnAction(event -> {
                     Food food = getTableView().getItems().get(getIndex());
                     if (food != null) {
-                        food.setSelectedQuantity(comboBox.getValue()); // Lưu giá trị đã chọn
+                        try {
+                            int quantity = Integer.parseInt(textField.getText());
+                            if (quantity > 0) {  // Kiểm tra giá trị hợp lệ
+                                food.setSelectedQuantity(quantity);
+                            } else {
+                                Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Khối lượng phải lớn hơn 0!");
+                            }
+                        } catch (NumberFormatException e) {
+                            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập một số nguyên!");
+                        }
+                    }
+                });
+
+                textField.focusedProperty().addListener((obs, oldVal, newVal) -> {
+                    if (!newVal) { // Khi mất focus, lưu giá trị
+                        Food food = getTableView().getItems().get(getIndex());
+                        if (food != null) {
+                            try {
+                                int quantity = Integer.parseInt(textField.getText());
+                                if (quantity > 0) {
+                                    food.setSelectedQuantity(quantity);
+                                } else {
+                                    Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Khối lượng phải lớn hơn 0!");
+                                }
+                            } catch (NumberFormatException e) {
+                                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập một số nguyên!");
+                            }
+                        }
                     }
                 });
             }
@@ -255,8 +282,8 @@ public class NutritionController implements Initializable {
                     setGraphic(null);
                 } else {
                     Food food = getTableView().getItems().get(getIndex());
-                    comboBox.setValue(food.getSelectedQuantity()); // Hiển thị giá trị khi cập nhật
-                    setGraphic(comboBox);
+                    textField.setText(String.valueOf(food.getSelectedQuantity())); // Hiển thị giá trị hiện tại
+                    setGraphic(textField);
                 }
             }
         });
@@ -366,7 +393,7 @@ public class NutritionController implements Initializable {
             // Cập nhật giao diện (Xóa khỏi danh sách đã chọn)
             removeFoodFromSelectedList(selectedFood);
 
-            Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Món ăn đã được xóa khỏi nhật ký!");
+            
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -404,10 +431,10 @@ public class NutritionController implements Initializable {
             totalFiber += (food.getSelectedQuantity() * food.getFiberPerUnit()) / DEFAULT_QUANTITY;
         }
 
-        txtTotalCalories.setText(Utils.roundFloat(totalCalo, 0));
-        txtTotalProtein.setText(Utils.roundFloat(totalProtein, 1));
-        txtTotalLipid.setText(Utils.roundFloat(totalLipid, 1));
-        txtTotalFiber.setText(Utils.roundFloat(totalFiber, 1));
+        txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalo, 0)));
+        txtTotalProtein.setText(String.valueOf(Utils.roundFloat(totalProtein, 1)));
+        txtTotalLipid.setText(String.valueOf(Utils.roundFloat(totalLipid, 1)));
+        txtTotalFiber.setText(String.valueOf(Utils.roundFloat(totalFiber, 1)));
     }
 
     public void backHandler(ActionEvent event) throws IOException {
