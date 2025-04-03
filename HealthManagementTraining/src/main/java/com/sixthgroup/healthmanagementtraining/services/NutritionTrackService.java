@@ -65,7 +65,7 @@ public class NutritionTrackService {
                 Food f = new Food(
                         rs.getInt("id"),
                         rs.getString("foodName"),
-                        rs.getInt("caloriesPerUnit"),
+                        rs.getFloat("caloriesPerUnit"),
                         rs.getFloat("lipidPerUnit"),
                         rs.getFloat("proteinPerUnit"),
                         rs.getFloat("fiberPerUnit"),

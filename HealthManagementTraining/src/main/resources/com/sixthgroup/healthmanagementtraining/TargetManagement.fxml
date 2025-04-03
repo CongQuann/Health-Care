@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.shape.SVGPath?>
 
-<AnchorPane id="AnchorPane" prefHeight="628.0" prefWidth="728.0" styleClass="mainFxmlClass" stylesheets="@targetmanagement.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.TargetManagementController">
+<AnchorPane id="AnchorPane" prefHeight="683.0" prefWidth="825.0" styleClass="mainFxmlClass" stylesheets="@targetmanagement.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.TargetManagementController">
     <children>
         <!-- Phần nhập dữ liệu có màu nền -->
         <VBox layoutX="26.0" layoutY="102.0" prefHeight="164.0" prefWidth="772.0" spacing="10.0" styleClass="input-container">
@@ -38,7 +38,7 @@
 
         <!-- Phần bảng hiển thị danh sách mục tiêu -->
         
-        <TableView fx:id="goalTableView" layoutX="26.0" layoutY="272.0" prefHeight="300.0" prefWidth="772.0">
+        <TableView fx:id="goalTableView" layoutX="26.0" layoutY="299.0" prefHeight="300.0" prefWidth="772.0">
             <columns>
                 <TableColumn fx:id="targetWeightCol" prefWidth="170.0" text="Cân nặng mục tiêu (kg)" />
                 <TableColumn fx:id="currentWeightCol" prefWidth="170.0" text="Cân nặng hiện tại (kg)" />
@@ -49,7 +49,7 @@
             </columns>
         </TableView>
         <Label layoutX="287.0" layoutY="42.0" prefHeight="46.0" prefWidth="250.0" styleClass="lb-Title" text="Quản lý mục tiêu" />
-        <Button fx:id="deleteTargetButton" layoutX="680.0" layoutY="584.0" onAction="#deleteGoal" styleClass="delete-button" text="Xóa mục tiêu" />
+        <Button fx:id="deleteTargetButton" layoutX="678.0" layoutY="620.0" onAction="#deleteGoal" styleClass="delete-button" text="Xóa mục tiêu" />
         <!--==========================NAV BAR===============================-->
         <HBox styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
