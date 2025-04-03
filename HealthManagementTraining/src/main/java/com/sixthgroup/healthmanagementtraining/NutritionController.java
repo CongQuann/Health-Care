@@ -80,8 +80,8 @@ public class NutritionController implements Initializable {
     private Text txtTotalFiber;
     @FXML
     private Text txtRecomendedCalo;
-    private final float DEFAULT_QUANTITY = 10;
-    private final float DIFFERENT_CALO = 135;
+    private final float DEFAULT_QUANTITY = 1;
+    private final float DIFFERENT_CALO = 235;
     private static float totalCalo;
     private static float totalProtein;
     private static float totalLipid;
@@ -203,62 +203,7 @@ public class NutritionController implements Initializable {
         colFoodName.setPrefWidth(125);
 
         TableColumn<Food, Integer> colSelectedQuantity = new TableColumn<>("Khối lượng đã chọn");
-        colSelectedQuantity.setEditable(true);
         colSelectedQuantity.setCellValueFactory(new PropertyValueFactory<>("selectedQuantity"));
-        colSelectedQuantity.setCellFactory(column -> new TableCell<Food, Integer>() {
-            private final TextField textField = new TextField();
-
-            // Thiết lập sự kiện cho textField
-            {
-                textField.setOnAction(event -> {
-                    try {
-                        int newValue = Integer.parseInt(textField.getText());
-                        Food food = getTableView().getItems().get(getIndex());
-
-                        // Lấy giá trị hiện tại của khối lượng đã chọn
-                        int currentQuantity = food.getSelectedQuantity();
-
-                        // Kiểm tra xem giá trị mới có lớn hơn giá trị hiện tại không
-                        if (newValue > currentQuantity) {
-                            String userId = Utils.getUUIdByName(Utils.getUser());
-                            LocalDate servingDate = Utils.getSelectedDate();
-
-                            if (n.isFoodAlreadyLogged(userId, servingDate, food.getId())) {
-                                Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Món ăn này đã có trong nhật ký, không thể chỉnh sửa!");
-                                return;
-                            } else {
-                                food.setSelectedQuantity(newValue); // Cập nhật giá trị mới
-
-                                // Cập nhật tổng Calories và các giá trị khác
-                                totalCalo += (newValue - currentQuantity) * food.getCaloriesPerUnit() / DEFAULT_QUANTITY;
-                                txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalo, 0)));
-                                totalProtein += (newValue - currentQuantity) * food.getProteinPerUnit() / DEFAULT_QUANTITY;
-                                txtTotalProtein.setText(String.valueOf(Utils.roundFloat(totalProtein, 1)));
-                                totalLipid += (newValue - currentQuantity) * food.getLipidPerUnit() / DEFAULT_QUANTITY;
-                                txtTotalLipid.setText(String.valueOf(Utils.roundFloat(totalLipid, 1)));
-                                totalFiber += (newValue - currentQuantity) * food.getFiberPerUnit() / DEFAULT_QUANTITY;
-                                txtTotalFiber.setText(String.valueOf(Utils.roundFloat(totalFiber, 1)));
-                            }
-                        } else {
-                            Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Khối lượng phải lớn hơn khối lượng hiện tại!");
-                        }
-                    } catch (NumberFormatException e) {
-                        Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập một số nguyên hợp lệ!");
-                    }
-                });
-            }
-
-            @Override
-            protected void updateItem(Integer item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setGraphic(null);
-                } else {
-                    textField.setText(item.toString());  // Hiển thị giá trị hiện tại
-                    setGraphic(textField);
-                }
-            }
-        });
         colSelectedQuantity.setPrefWidth(125);
 
         TableColumn colUnitType = new TableColumn("Loại đơn vị");
@@ -519,75 +464,7 @@ public class NutritionController implements Initializable {
         s.switchScene(event, "ExercisesManagement.fxml");
     }
 
-//    public int getCaloByFoodId(int foodId) {
-//        int calories = -1;
-//        try (Connection conn = JdbcUtils.getConn()) {
-//            String sql = "SELECT caloriesPerUnit FROM food WHERE id = ? ";
-//            PreparedStatement stm = conn.prepareCall(sql);
-//            stm.setInt(1, foodId);
-//            ResultSet rs = stm.executeQuery();
-//            while (rs.next()) {
-//                calories = rs.getInt("caloriesPerUnit");
-//                return calories;
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return calories;
-//    }
-//
-//    public float getProteinByFoodId(int foodId) {
-//        float protein = -1;
-//        try (Connection conn = JdbcUtils.getConn()) {
-//            String sql = "SELECT proteinPerUnit FROM food WHERE id = ? ";
-//            PreparedStatement stm = conn.prepareCall(sql);
-//            stm.setInt(1, foodId);
-//            ResultSet rs = stm.executeQuery();
-//            while (rs.next()) {
-//                protein = rs.getFloat("proteinPerUnit");
-//                return protein;
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return protein;
-//    }
-//
-//    public float getLipidByFoodId(int foodId) {
-//
-//        float lipid = -1;
-//        try (Connection conn = JdbcUtils.getConn()) {
-//            String sql = "SELECT lipidPerUnit FROM food WHERE id = ? ";
-//            PreparedStatement stm = conn.prepareCall(sql);
-//            stm.setInt(1, foodId);
-//            ResultSet rs = stm.executeQuery();
-//            while (rs.next()) {
-//                lipid = rs.getFloat("lipidPerUnit");
-//                return lipid;
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return lipid;
-//    }
-//
-//    public float getFiberByFoodId(int foodId) {
-//        float fiber = -1;
-//        try (Connection conn = JdbcUtils.getConn()) {
-//            String sql = "SELECT fiberPerUnit FROM food WHERE id = ? ";
-//            PreparedStatement stm = conn.prepareCall(sql);
-//            stm.setInt(1, foodId);
-//            ResultSet rs = stm.executeQuery();
-//            while (rs.next()) {
-//                fiber = rs.getFloat("fiberPerUnit");
-//                return fiber;
-//            }
-//        } catch (SQLException ex) {
-//            Logger.getLogger(LoginServices.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        return fiber;
-//    }
-    //=========================================================================
+
     public void switchToUserInfo(ActionEvent event) throws IOException {
         ScenceSwitcher s = new ScenceSwitcher();
         s.switchScene(event, "UserInfoManagement.fxml");

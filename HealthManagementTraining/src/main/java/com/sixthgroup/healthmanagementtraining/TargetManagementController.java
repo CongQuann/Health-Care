@@ -335,33 +335,18 @@ public class TargetManagementController implements Initializable {
             
             CalorieResult caloResult = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, startDate, endDate);
             float caloChange = caloResult.getDailyCalorieChange();
-            if (caloChange >= 400 || caloChange < 400) {
-                // Tạo hộp thoại xác nhận
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-                alert.setTitle("Cảnh báo");
-                alert.setHeaderText("Lượng calo thay đổi mỗi ngày không phù hợp!");
-                alert.setContentText("Bạn có muốn tiếp tục thêm mục tiêu này không?");
-
-                // Tạo nút "Tiếp tục" và "Hủy"
-                ButtonType continueButton = new ButtonType("Tiếp tục");
-                ButtonType cancelButton = new ButtonType("Hủy", ButtonBar.ButtonData.CANCEL_CLOSE);
-                alert.getButtonTypes().setAll(continueButton, cancelButton);
-
-                // Hiển thị hộp thoại và chờ phản hồi
-                Optional<ButtonType> result = alert.showAndWait();
-                if (result.isPresent() && result.get() == continueButton) {
-                    // Người dùng chọn "Tiếp tục"
-                    float caloNeeded = caloResult.getDailyCalorieIntake();
+            if (caloChange > 1000 || caloChange < -1000) {
+               Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Mục tiêu bạn tạo không phù hợp với lượng calo thay đổi mỗi ngày!");
+               return;
+            }
+            else{
+                float caloNeeded = caloResult.getDailyCalorieIntake();
                     TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, caloNeeded, startDate, endDate, targetType);
                     System.out.println("Userid :" + userInfoId);
                     System.out.println("Đã thêm mục tiêu");
                     startDatePicker.setValue(null);
                     endDatePicker.setValue(null);
                     loadGoals();
-                } else {
-                    // Người dùng chọn "Hủy" hoặc đóng hộp thoại
-                    System.out.println("Người dùng đã hủy hành động.");
-                }
             }
 
         } catch (Exception e) {
