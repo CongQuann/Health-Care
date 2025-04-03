@@ -129,7 +129,7 @@ public class AdminExerciseController implements Initializable {
                 loadExerciseData();
                 return;
             }
-            if (AdminExerciseServices.isExerciseNameTaken(exercise.getExerciseName())) {
+            if (AdminExerciseServices.isExerciseNameTakenUp(exercise.getExerciseName(), exercise.getId())) {
                 Utils.getAlert("Tên bài tập đã tồn tại!").show();
                 loadExerciseData();
                 return;

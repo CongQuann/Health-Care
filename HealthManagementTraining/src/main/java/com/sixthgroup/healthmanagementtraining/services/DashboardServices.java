@@ -34,6 +34,7 @@ public class DashboardServices {
             if (rs.next()) {
                 totalCalories = rs.getInt(1);
             }
+            
         }
         return totalCalories;
     }
