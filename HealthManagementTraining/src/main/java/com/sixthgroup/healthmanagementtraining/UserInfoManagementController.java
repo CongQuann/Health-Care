@@ -179,40 +179,39 @@ public class UserInfoManagementController implements Initializable {
         String userName = Utils.getUser();
 
         if (userInfoServices.checkUserName(userName) == false) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Không tìm thấy người dùng hiện tại!");
             return;
         }
 
         if (userInfoServices.checkPassInput(oldPassword, newPassword, confirmPassword) == false) {
+            Utils.showAlert(Alert.AlertType.ERROR,"Lỗi", "Vui lòng điền đầy đủ thông tin!");
             return;
         }
         if (userInfoServices.checkConfirmPass(newPassword, confirmPassword) == false) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Mật khẩu không khớp, vui lòng nhập lại!");
             return;
         }
         // Kiểm tra mật khẩu không có dấu cách
         if (userInfoServices.hasWhiteSpace(oldPassword) || userInfoServices.hasWhiteSpace(newPassword) || userInfoServices.hasWhiteSpace(confirmPassword)) {
-            userInfoServices.showAlert("Lỗi", "Mật khẩu không được chứa khoảng trắng!", Alert.AlertType.ERROR);
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Mật khẩu không được chứa khoảng trắng!");
             return;
         }
 
         // Kiểm tra mật khẩu mới có đủ mạnh không
         if (!userInfoServices.isPasswordValid(newPassword)) {
-            userInfoServices.showAlert("Lỗi", "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!", Alert.AlertType.ERROR);
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
             return;
         }
 //         Gọi phương thức đổi mật khẩu từ services
         boolean isUpdated = userInfoServices.updateUserPassword(userName, oldPassword, newPassword);
 
         if (isUpdated) {
-            String successTitle = "Thành công";
-            String successContent = "Đổi mật khẩu thành công!";
-            userInfoServices.showAlert(successTitle, successContent, Alert.AlertType.INFORMATION);
+            Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đổi mật khẩu thành công!");
             oldPasswordField.clear();
             newPasswordField.clear();
             confirmPasswordField.clear();
         } else {
-            String failedTitle = "Lỗi";
-            String failedContent = "Sai mật khẩu cũ hoặc có lỗi xảy ra!";
-            userInfoServices.showAlert(failedTitle, failedContent, Alert.AlertType.ERROR);
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Sai mật khẩu cũ hoặc có lỗi xảy ra!");
         }
     }
 
