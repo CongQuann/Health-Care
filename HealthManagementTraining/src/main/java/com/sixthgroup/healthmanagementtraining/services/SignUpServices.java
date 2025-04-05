@@ -9,9 +9,11 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SignUpServices {
 
@@ -36,7 +38,6 @@ public class SignUpServices {
         }
         return values;
     }
-
     public boolean saveUserInfo(
             String username,
             String password,
@@ -72,16 +73,15 @@ public class SignUpServices {
             return false;
         }
     }
-    
+
     public boolean isUsernameTaken(String username) {
         String query = "SELECT COUNT(*) FROM userinfo WHERE userName = ?";
-        
-        try (Connection conn = JdbcUtils.getConn();
-             PreparedStatement stmt = conn.prepareStatement(query)) {
-            
+
+        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(query)) {
+
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
-            
+
             if (rs.next()) {
                 return rs.getInt(1) > 0;
             }
