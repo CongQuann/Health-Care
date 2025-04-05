@@ -2,6 +2,7 @@
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.pojo.UserInfo;
 import com.sixthgroup.healthmanagementtraining.services.UserInfoServices;
+import com.sixthgroup.healthmanagementtraining.services.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.AfterAll;
@@ -45,6 +46,7 @@ public class UserInfoTester {
                 + "CREATE TABLE userinfo ("
                 + "userName VARCHAR(255), "
                 + "name NVARCHAR(255), "
+                + "password VARCHAR(255), "
                 + "email VARCHAR(255), "
                 + "height FLOAT, "
                 + "weight FLOAT, "
@@ -56,8 +58,8 @@ public class UserInfoTester {
         stmt.execute(createTableSQL);
 
         // Insert data vào bảng để kiểm thử
-        String insertSQL = "INSERT INTO userinfo (userName, name, email, height, weight, DOB, gender, activityLevel) "
-                + "VALUES ('johndoe', 'John Doe', 'johndoe@ex.com', 172.0, 63.0, '1990-05-20', 'Nam', 'lightlyActive');";
+        String insertSQL = "INSERT INTO userinfo (userName, name,password, email, height, weight, DOB, gender, activityLevel) "
+                + "VALUES ('johndoe', 'John Doe','$2a$10$6csPvAfgsW/8dwlybvRzme5.vpZjaKTbYmGjG7nveM2ScKl/7.cLK', 'johndoe@ex.com', 172.0, 63.0, '1990-05-20', 'Nam', 'lightlyActive');";
         stmt.executeUpdate(insertSQL);
     }
 
@@ -68,7 +70,7 @@ public class UserInfoTester {
     }
 
     @Test
-    void testGetUserInfo() throws SQLException {
+    void testGetUserInfo_Success() throws SQLException {
         // Giả lập JDBCUtils.getConn() để trả về kết nối H2
         try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
             mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
@@ -88,6 +90,117 @@ public class UserInfoTester {
         }
     }
 
+    @Test
+    void testGetUserInfo_UserNotFound() throws SQLException {
+        // Giả lập JDBCUtils.getConn() để trả về kết nối H2
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+
+            // Gọi phương thức với một user không tồn tại
+            UserInfo userInfo = ufs.getUserInfo("non_existing_user");
+
+            // Kết quả phải là null vì không tìm thấy user
+            assertNull(userInfo);
+        }
+    }
+
+    @Test
+    void testUpdateUserInfo_Success() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+
+            // Tạo đối tượng UserInfo với thông tin đã cập nhật
+            UserInfo updatedUser = new UserInfo();
+            updatedUser.setUserName("johndoe");
+            updatedUser.setName("Johnny Updated");
+            updatedUser.setEmail("johnnyupdated@ex.com");
+            updatedUser.setHeight(180.0f);
+            updatedUser.setWeight(70.0f);
+            updatedUser.setDOB(Date.valueOf("1991-01-01"));
+            updatedUser.setGender("Nam");
+            updatedUser.setActivityLevel("moderatelyActive");
+
+            // Kiểm tra trả về true
+            assertTrue(ufs.updateUserInfo(updatedUser));
+        }
+    }
+
+    @Test
+    void testUpdateUserInfo_Failure() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+
+            // Tạo đối tượng UserInfo với thông tin đã cập nhật
+            UserInfo updatedUser = new UserInfo();
+            updatedUser.setUserName("johndoe1");
+            updatedUser.setName("Johnny Updated");
+            updatedUser.setEmail("johnnyupdated@ex.com");
+            updatedUser.setHeight(180.0f);
+            updatedUser.setWeight(70.0f);
+            updatedUser.setDOB(Date.valueOf("1991-01-01"));
+            updatedUser.setGender("Nam");
+            updatedUser.setActivityLevel("moderatelyActive");
+
+            // Kiểm tra trả về true
+            assertFalse(ufs.updateUserInfo(updatedUser));
+        }
+    }
+
+    @Test
+    void testCheckExistEmail_EmailExist() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+            
+            String email = "johndoe@ex.com";
+            assertTrue(ufs.checkExistEmail(email));
+        }
+    }
+    
+    @Test
+    void testCheckExistEmail_EmailNotExist() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+            
+            String email = "johndoe123@ex.com";
+            assertFalse(ufs.checkExistEmail(email));
+        }
+    }
+
+    @Test
+    void testUpdateUserPassword_Success() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+            String oldPassword = "123456";
+            String newPassword = "abc123";
+            String userName = "johndoe";
+            assertTrue(ufs.updateUserPassword(userName, oldPassword, newPassword));
+
+        }
+    }
+
+    @Test
+    void testUpdateUserPassword_WrongOldPass() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+            String oldPassword = "1234567";
+            String newPassword = "abc123";
+            String userName = "johndoe";
+            assertFalse(ufs.updateUserPassword(userName, oldPassword, newPassword));
+
+        }
+    }
+
+    @Test
+    void testUpdateUserPassword_UserNameNotFound() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+            String oldPassword = "1234567";
+            String newPassword = "abc123";
+            String userName = "johndoe1";
+            assertFalse(ufs.updateUserPassword(userName, oldPassword, newPassword));
+
+        }
+    }
 
     @ParameterizedTest
     @ValueSource(strings = {"",}) // Các giá trị kiểm tra trường hợp invalid
@@ -312,4 +425,5 @@ public class UserInfoTester {
     void testIsEmailValid(String email, boolean expectedResult) {
         assertEquals(expectedResult, ufs.isEmailValid(email));
     }
+
 }

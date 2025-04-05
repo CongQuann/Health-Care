@@ -109,10 +109,10 @@ public class UserInfoServices {
     public boolean updateUserPassword(String userName, String oldPassword, String newPassword) {
         try (Connection conn = JdbcUtils.getConn()) {
             // Lấy mật khẩu hiện tại từ cơ sở dữ liệu
-            String sqlSelect = "SELECT password FROM userinfo WHERE userName = ?";
-            PreparedStatement selectStmt = conn.prepareStatement(sqlSelect);
-            selectStmt.setString(1, userName);
-            ResultSet rs = selectStmt.executeQuery();
+            String sql = "SELECT password FROM userinfo WHERE userName = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, userName);
+            ResultSet rs = stm.executeQuery();
 
             if (rs.next()) {
                 String hashedPassword = rs.getString("password");
