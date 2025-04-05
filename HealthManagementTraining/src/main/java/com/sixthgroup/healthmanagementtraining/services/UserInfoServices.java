@@ -71,8 +71,6 @@ public class UserInfoServices {
         return !newPassword.isEmpty() && newPassword.equals(confirmPassword);
     }
 
-   
-
     public boolean updateUserInfo(UserInfo userInfo) {
 
         try (Connection conn = JdbcUtils.getConn()) {
