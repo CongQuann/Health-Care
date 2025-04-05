@@ -54,7 +54,6 @@ public class UserInfoServices {
 
     public boolean checkUserName(String userName) {
         if (userName == null || userName.isEmpty()) {
-            showAlert("Lỗi", "Không tìm thấy người dùng hiện tại.", Alert.AlertType.ERROR);
             return false;
         }
         return true;
@@ -62,26 +61,14 @@ public class UserInfoServices {
 
     public boolean checkPassInput(String oldPassword, String newPassword, String confirmPassword) {
         if (oldPassword.isEmpty() || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            showAlert("Lỗi", "Vui lòng điền đầy đủ thông tin.", Alert.AlertType.ERROR);
             return false;
         }
         return true;
     }
 
     public boolean checkConfirmPass(String newPassword, String confirmPassword) {
-        if (!newPassword.equals(confirmPassword)) {
-            showAlert("Lỗi", "Mật khẩu mới không khớp. Vui lòng nhập lại!", Alert.AlertType.ERROR);
-            return false;
-        }
-        return true;
-    }
-
-    public void showAlert(String title, String content, Alert.AlertType alertType) {
-        Alert alert = new Alert(alertType);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
+        // Kiểm tra xem hai mật khẩu có khớp hay không
+        return !newPassword.isEmpty() && newPassword.equals(confirmPassword);
     }
 
     public boolean updateUserInfo(UserInfo userInfo) {

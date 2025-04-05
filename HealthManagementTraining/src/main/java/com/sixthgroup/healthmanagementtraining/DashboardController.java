@@ -85,7 +85,9 @@ public class DashboardController implements Initializable {
             fiberIntake = dashboardServices.getDailyFiberIntake(userName, localDate);
             proteinIntake = dashboardServices.getDailyProteinIntake(userName, localDate);
             caloriesDailyNeeded = dashboardServices.getCaloNeededByDate(userName, localDate);
+            
 
+            System.out.println(calorieIntake);
             calorieIntakeText.setText(calorieIntake + " cal");
             calorieBurnText.setText(caloriesBurn + " cal");
             lipidIntakeText.setText(df.format(lipidIntake) + " g");
@@ -180,9 +182,9 @@ public class DashboardController implements Initializable {
                 newValue = LocalDate.now();
                 datePicker.setValue(newValue);
             }
-                localDate = newValue;
-                System.out.println("da thay doi");
-                updateDashboard(); // Cập nhật dữ liệu khi DatePicker thay đổi
+            localDate = newValue;
+            System.out.println("da thay doi");
+            updateDashboard(); // Cập nhật dữ liệu khi DatePicker thay đổi
         });
     }
 
