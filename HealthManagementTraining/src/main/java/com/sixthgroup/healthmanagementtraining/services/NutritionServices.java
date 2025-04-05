@@ -22,7 +22,7 @@ import javafx.scene.control.Alert;
  *
  * @author PC
  */
-public class NutritionTrackService {
+public class NutritionServices {
 
     public List<FoodCategory> getCates() throws SQLException {
         List<FoodCategory> cates = new ArrayList<>();
@@ -35,8 +35,13 @@ public class NutritionTrackService {
                 cates.add(fc);
             }
 
-            return cates;
+            
+        } 
+        catch (SQLException e) {
+            e.printStackTrace();
         }
+        
+        return cates;
     }
 
     public List<Food> getFoods(String kw) throws SQLException {
@@ -75,8 +80,11 @@ public class NutritionTrackService {
                 );
                 foods.add(f);
             }
-            return foods;
+            
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return foods;
     }
 
     public List<Food> getFoodsByCate(int cate_id) throws SQLException {
@@ -112,6 +120,8 @@ public class NutritionTrackService {
                 );
                 foods.add(f);
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return foods;
     }
@@ -151,6 +161,8 @@ public class NutritionTrackService {
                     selectedFoods.add(food);
                 }
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return selectedFoods;
     }
@@ -176,14 +188,13 @@ public class NutritionTrackService {
 
             if (insertedCount > 0) {
                 insertStmt.executeBatch(); // Thực hiện thêm tất cả món ăn mới
-                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã thêm " + insertedCount + " món ăn vào nhật ký.");
             } else {
-                Utils.showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Tất cả món ăn đã có trong nhật ký.");
+//                Utils.showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Tất cả món ăn đã có trong nhật ký.");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi lưu dữ liệu!");
+//            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi lưu dữ liệu!");
         }
     }
 
@@ -202,11 +213,12 @@ public class NutritionTrackService {
             } else {
                 Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa món ăn khỏi nhật kí");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
 
     public float getDailyCaloNeeded(String username, LocalDate currentDate) {
-//        String sql1 = "SELECT g.dailyCaloNeeded FROM goal g JOIN userinfo u ON g.userInfo_id = u.id WHERE userName = ? AND startDate <= ? AND endDate >= ?";
         String sql = "SELECT g.dailyCaloNeeded FROM goal g JOIN userinfo u ON g.userInfo_id = u.id WHERE userName = ? AND ? BETWEEN startDate AND endDate LIMIT 1";
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
@@ -221,7 +233,6 @@ public class NutritionTrackService {
         }
         return 0;
     }
-
     public boolean isFoodAlreadyLogged(String userId, LocalDate servingDate, int foodId) {
         String checkSql = "SELECT COUNT(*) FROM nutritionlog WHERE servingDate = ? AND userInfo_id = ? AND food_id = ?";
 

@@ -24,11 +24,13 @@ public class JdbcUtils {
     }
 
     public static Connection getConn() throws SQLException {
+
         // Nếu đang trong môi trường test, dùng connection test
         if (testConnection != null && !testConnection.isClosed()) {
             return testConnection;
         }
-        return DriverManager.getConnection("jdbc:mysql://localhost/healthcaredb", "root", "123456");
+        return DriverManager.getConnection("jdbc:mysql://localhost/healthcaredb", "root", "Admin@123");
+
     }
 
     public static void setCustomConnection(Connection conn) {
