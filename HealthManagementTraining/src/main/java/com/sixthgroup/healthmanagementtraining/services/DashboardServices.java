@@ -39,6 +39,25 @@ public class DashboardServices {
         return totalCalories;
     }
 
+    public float getDailyCalorieIntake2(String userName, LocalDate servingDate) throws SQLException {
+        float totalCaloriesPerunit = 0;
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT SUM(n.numberOfUnit) "
+                    + "FROM nutritionlog n "
+                    + "JOIN userinfo u ON n.userInfo_id = u.id "
+                    + "JOIN food f ON n.food_id = f.id "
+                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, userName);
+            stm.setDate(2, java.sql.Date.valueOf(servingDate));
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                totalCaloriesPerunit = rs.getInt(1);
+            }
+        }
+        return totalCaloriesPerunit;
+    }
+
     public double getDailyLipidIntake(String userName, LocalDate servingDate) throws SQLException {
         double totalLipid = 0;
         try (Connection conn = JdbcUtils.getConn()) {
