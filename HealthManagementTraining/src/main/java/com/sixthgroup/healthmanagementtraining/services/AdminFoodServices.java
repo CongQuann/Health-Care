@@ -210,18 +210,32 @@ public class AdminFoodServices {
                 && Float.parseFloat(proteinText) <= 1000
                 && Float.parseFloat(fiberText) <= 1000;
     }
-    
-    public boolean checkExistFoodName(String foodName) throws SQLException{
-        try(Connection conn = JdbcUtils.getConn()){
+
+    public boolean checkExistFoodName(String foodName) throws SQLException {
+        try (Connection conn = JdbcUtils.getConn()) {
             String sql = "SELECT foodName FROM food WHERE foodName = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
-            stm.setString(1,foodName);
-            
+            stm.setString(1, foodName);
+
             ResultSet rs = stm.executeQuery();
-            if(rs.next()){
+            if (rs.next()) {
                 return true;
             }
         }
         return false;
+    }
+
+    public String getFoodNameById(int id) throws SQLException {
+
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT foodName FROM food WHERE id = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setInt(1, id);
+            ResultSet rs = stm.executeQuery();
+            if (rs.next()) {
+                return rs.getString("foodName");
+            }
+        }
+        return null; // Nếu không tìm thấy, trả về null
     }
 }
