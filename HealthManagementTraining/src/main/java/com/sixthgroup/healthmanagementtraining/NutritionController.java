@@ -7,7 +7,7 @@ package com.sixthgroup.healthmanagementtraining;
 import com.sixthgroup.healthmanagementtraining.pojo.Food;
 import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
-import com.sixthgroup.healthmanagementtraining.services.NutritionTrackService;
+import com.sixthgroup.healthmanagementtraining.services.NutritionServices;
 import com.sixthgroup.healthmanagementtraining.services.Utils;
 import com.sixthgroup.healthmanagementtraining.pojo.NutritionLog;
 import com.sixthgroup.healthmanagementtraining.services.LoginServices;
@@ -89,7 +89,7 @@ public class NutritionController implements Initializable {
     private static float totalLipid;
     private static float totalFiber;
     private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
-    private NutritionTrackService n = new NutritionTrackService();
+    private NutritionServices n = new NutritionServices();
 
     //kich hoat navbar
     private void toggleNavBar() {
@@ -173,7 +173,7 @@ public class NutritionController implements Initializable {
     }
 
     public void loadFoodCate() {
-        NutritionTrackService n = new NutritionTrackService();
+        NutritionServices n = new NutritionServices();
         try {
             this.cbFoodCates.setItems(FXCollections.observableList(n.getCates()));
             FoodCategory allCategory = new FoodCategory(0, "Tất cả"); // ID = 0 để nhận diện
@@ -186,7 +186,7 @@ public class NutritionController implements Initializable {
     }
 
     public void loadTableData(String kw) {
-        NutritionTrackService n = new NutritionTrackService();
+        NutritionServices n = new NutritionServices();
         try {
             List<Food> foodList = n.getFoods(kw);
             ObservableList foodObservableList = FXCollections.observableArrayList(foodList);
@@ -361,7 +361,7 @@ public class NutritionController implements Initializable {
     }
 
     public void choseHandler() throws SQLException {
-        NutritionTrackService n = new NutritionTrackService();
+        NutritionServices n = new NutritionServices();
         int cate_id = this.cbFoodCates.getSelectionModel().getSelectedItem().getId();
         System.out.println("Cate " + cate_id);
         if (cate_id == 0) {
@@ -391,7 +391,7 @@ public class NutritionController implements Initializable {
         String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
         LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
 
-        NutritionTrackService n = new NutritionTrackService();
+        NutritionServices n = new NutritionServices();
         n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
     }
 
@@ -407,7 +407,7 @@ public class NutritionController implements Initializable {
 
         try {
             // Gọi NutritionService để xóa món ăn khỏi DB
-            NutritionTrackService n = new NutritionTrackService();
+            NutritionServices n = new NutritionServices();
             n.deleteFoodFromLog(selectedFood.getId(), userId, servingDate);
 
             // Cập nhật giao diện (Xóa khỏi danh sách đã chọn)

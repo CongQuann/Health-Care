@@ -22,7 +22,7 @@ import javafx.scene.control.Alert;
  *
  * @author PC
  */
-public class NutritionTrackService {
+public class NutritionServices {
 
     public List<FoodCategory> getCates() throws SQLException {
         List<FoodCategory> cates = new ArrayList<>();
