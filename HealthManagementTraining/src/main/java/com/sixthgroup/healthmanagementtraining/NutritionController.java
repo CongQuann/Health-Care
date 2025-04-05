@@ -393,6 +393,7 @@ public class NutritionController implements Initializable {
 
         NutritionServices n = new NutritionServices();
         n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
+
     }
 
     public void deleteHandler() {
