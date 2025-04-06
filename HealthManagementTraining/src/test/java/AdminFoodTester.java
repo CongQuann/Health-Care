@@ -213,6 +213,14 @@ public class AdminFoodTester {
 
             boolean result = afs.addFood(food);
             assertTrue(result);
+            String sql = "select foodName from food where id = 3;";
+            connection = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;", "sa", "");
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            ResultSet rs = stmt.executeQuery();
+            assertTrue(rs.next()); // Đảm bảo có dòng dữ liệu
+            assertEquals(rs.getString("foodName"), food.getFoodName());
+
         }
     }
 

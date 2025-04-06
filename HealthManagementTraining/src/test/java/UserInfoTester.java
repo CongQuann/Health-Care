@@ -37,6 +37,7 @@ public class UserInfoTester {
         // Tạo bảng và thêm dữ liệu giả lập
         String createTableSQL = "DROP TABLE IF EXISTS userinfo;"
                 + "CREATE TABLE userinfo ("
+                + "id INT PRIMARY KEY AUTO_INCREMENT,"
                 + "userName VARCHAR(255), "
                 + "name NVARCHAR(255), "
                 + "password VARCHAR(255), "
@@ -115,6 +116,13 @@ public class UserInfoTester {
 
             // Kiểm tra trả về true
             assertTrue(ufs.updateUserInfo(updatedUser));
+            String sql = "select userName from userinfo where id = 1;";
+            connection = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;", "sa", "");
+            PreparedStatement stmt = connection.prepareStatement(sql);
+
+            ResultSet rs = stmt.executeQuery();
+            assertTrue(rs.next()); // Đảm bảo có dòng dữ liệu
+            assertEquals(updatedUser.getUserName(), rs.getString("userName"));
         }
     }
 
