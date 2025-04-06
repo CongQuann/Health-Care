@@ -97,7 +97,6 @@ public class UserInfoServices {
             String sql = "SELECT email FROM userinfo WHERE email = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, email);
-
             ResultSet rs = stm.executeQuery();
             if (rs.next()) {
                 return true;
