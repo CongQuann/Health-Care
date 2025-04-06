@@ -24,6 +24,12 @@ import javafx.scene.control.Alert;
  */
 public class NutritionServices {
 
+    private boolean bypassExerciseCheck = false; // Cờ kiểm tra
+
+    public void setBypassExerciseCheck(boolean bypass) {
+        this.bypassExerciseCheck = bypass;
+    }
+
     public List<FoodCategory> getCates() throws SQLException {
         List<FoodCategory> cates = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
@@ -35,12 +41,10 @@ public class NutritionServices {
                 cates.add(fc);
             }
 
-            
-        } 
-        catch (SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         return cates;
     }
 
@@ -80,7 +84,7 @@ public class NutritionServices {
                 );
                 foods.add(f);
             }
-            
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -168,7 +172,8 @@ public class NutritionServices {
     }
 
     public void addFoodToLog(List<Food> selectedFoods, String userId, LocalDate servingDate) {
-        String insertSql = "INSERT INTO nutritionlog (numberOfUnit, servingDate, food_id, userInfo_id) VALUES (?, ?, ?, ?)";
+        String insertSql = "INSERT INTO nutritionlog (numberOfUnit, servingDate, food_id, userInfo_id)"
+                + " VALUES (?, ?, ?, ?)";
 
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement insertStmt = conn.prepareStatement(insertSql)) {
 
@@ -176,14 +181,15 @@ public class NutritionServices {
 
             for (Food food : selectedFoods) {
                 // Sử dụng phương thức kiểm tra
-                if (!isFoodAlreadyLogged(userId, servingDate, food.getId())) {
-                    insertStmt.setInt(1, food.getSelectedQuantity());
-                    insertStmt.setDate(2, Date.valueOf(servingDate));
-                    insertStmt.setInt(3, food.getId());
-                    insertStmt.setString(4, userId);
-                    insertStmt.addBatch();
-                    insertedCount++;
+                if (!bypassExerciseCheck && isFoodAlreadyLogged(userId, servingDate, food.getId())) {
+                    continue; // Nếu món ăn đã có, bỏ qua
                 }
+                insertStmt.setInt(1, food.getSelectedQuantity());
+                insertStmt.setDate(2, Date.valueOf(servingDate));
+                insertStmt.setInt(3, food.getId());
+                insertStmt.setString(4, userId);
+                insertStmt.addBatch();
+                insertedCount++;
             }
 
             if (insertedCount > 0) {
@@ -233,6 +239,7 @@ public class NutritionServices {
         }
         return 0;
     }
+
     public boolean isFoodAlreadyLogged(String userId, LocalDate servingDate, int foodId) {
         String checkSql = "SELECT COUNT(*) FROM nutritionlog WHERE servingDate = ? AND userInfo_id = ? AND food_id = ?";
 
