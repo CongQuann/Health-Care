@@ -137,4 +137,5 @@ public class SignUpTest {
         assertEquals("lightlyActive", rs.getString("activityLevel"));
         assertEquals("user", rs.getString("role"));
     }
+    //abc
 }
