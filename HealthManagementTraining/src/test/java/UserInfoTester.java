@@ -2,23 +2,16 @@
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.pojo.UserInfo;
 import com.sixthgroup.healthmanagementtraining.services.UserInfoServices;
-import com.sixthgroup.healthmanagementtraining.services.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import java.sql.*;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-import static org.mockito.Mockito.*; // Import các phương thức mock của Mockito
 import org.mockito.MockedStatic;
 import org.mockito.Mockito; // Thư viện Mockito
 
@@ -40,7 +33,7 @@ public class UserInfoTester {
         // Kết nối đến cơ sở dữ liệu H2 in-memory
         connection = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;", "sa", "");
         ufs = new UserInfoServices();
-
+        Statement stmt = connection.createStatement();
         // Tạo bảng và thêm dữ liệu giả lập
         String createTableSQL = "DROP TABLE IF EXISTS userinfo;"
                 + "CREATE TABLE userinfo ("
@@ -54,7 +47,7 @@ public class UserInfoTester {
                 + "gender VARCHAR(255), "
                 + "activityLevel VARCHAR(255)"
                 + ");";
-        Statement stmt = connection.createStatement();
+
         stmt.execute(createTableSQL);
 
         // Insert data vào bảng để kiểm thử
@@ -150,19 +143,32 @@ public class UserInfoTester {
     void testCheckExistEmail_EmailExist() throws SQLException {
         try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
             mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
-            
+
             String email = "johndoe@ex.com";
             assertTrue(ufs.checkExistEmail(email));
         }
     }
-    
+
     @Test
     void testCheckExistEmail_EmailNotExist() throws SQLException {
         try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
             mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
-            
+
             String email = "johndoe123@ex.com";
             assertFalse(ufs.checkExistEmail(email));
+        }
+    }
+
+    @Test
+    void testCheckExistEmail_SQLException() throws SQLException {
+        // Giả lập JdbcUtils.getConn() ném SQLException
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenThrow(new SQLException("Lỗi kết nối cơ sở dữ liệu"));
+
+            // Kiểm tra xem có ném ngoại lệ SQLException không khi gọi hàm checkExistEmail
+            assertThrows(SQLException.class, () -> {
+                ufs.checkExistEmail("johndoe123@ex.com");
+            });
         }
     }
 

@@ -9,7 +9,6 @@ import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.pojo.UnitType;
 import java.sql.Connection;
-import java.sql.JDBCType;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -98,16 +97,16 @@ public class AdminFoodServices {
     }
 
     //dùng để xóa một thức ăn
-    public void deleteFood(int foodId) throws SQLException {
+    public boolean deleteFood(int foodId) throws SQLException {
         try (Connection conn = JdbcUtils.getConn()) {
             PreparedStatement stm = conn.prepareStatement("DELETE FROM food WHERE id = ?");
 
             stm.setInt(1, foodId);
-            stm.executeUpdate();
+            return stm.executeUpdate() > 0;
         }
     }
 
-    public void updateFood(Food food) throws SQLException {
+    public boolean updateFood(Food food) throws SQLException {
         try (Connection conn = JdbcUtils.getConn()) {
             String sql = "UPDATE food SET foodName = ?, caloriesPerUnit = ?, lipidPerUnit = ?, proteinPerUnit = ?, fiberPerUnit = ? WHERE id = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
@@ -118,7 +117,7 @@ public class AdminFoodServices {
             stm.setFloat(5, food.getFiberPerUnit());
             stm.setInt(6, food.getId());
 
-            stm.executeUpdate();
+            return stm.executeUpdate() > 0;
         }
     }
 
@@ -238,4 +237,6 @@ public class AdminFoodServices {
         }
         return null; // Nếu không tìm thấy, trả về null
     }
+
+    
 }
