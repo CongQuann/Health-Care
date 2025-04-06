@@ -91,20 +91,6 @@
                         </HBox>
                     </children>
                 </HBox>
-            <HBox layoutX="26.0" layoutY="146.0" prefHeight="31.0" prefWidth="469.0">
-               <children>
-                  <HBox prefHeight="31.0" prefWidth="142.0">
-                     <children>
-                        <Label prefHeight="30.0" prefWidth="180.0" styleClass="labelStyle" text="Calo đề nghị:" />
-                     </children>
-                  </HBox>
-                  <HBox prefHeight="31.0" prefWidth="335.0">
-                     <children>
-                        <Text fx:id="txtRecomendedCalo" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="286.13671875" />
-                     </children>
-                  </HBox>
-               </children>
-            </HBox>
                 <HBox layoutX="10.0" layoutY="133.0" prefHeight="31.0" prefWidth="469.0">
                     <children>
                         <HBox prefHeight="33.0" prefWidth="142.0">
