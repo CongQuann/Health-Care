@@ -3,7 +3,6 @@ import com.sixthgroup.healthmanagementtraining.pojo.Food;
 import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.pojo.UnitType;
-import com.sixthgroup.healthmanagementtraining.pojo.UserInfo;
 import com.sixthgroup.healthmanagementtraining.services.AdminFoodServices;
 import com.sixthgroup.healthmanagementtraining.services.UserInfoServices;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,8 +32,6 @@ public class AdminFoodTester {
 
     private AdminFoodServices afs; // đối tượng Service cần test
     private Connection connection;
-    private UserInfoServices ufs;
-
     @BeforeEach
     void setUp() throws SQLException {
         connection = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;", "sa", "");

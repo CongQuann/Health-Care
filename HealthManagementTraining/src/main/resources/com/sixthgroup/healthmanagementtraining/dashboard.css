@@ -205,3 +205,8 @@
 .header-hbox{
     -fx-background-color:#34495e;
 }
+.welcome-label{
+    -fx-font-size: 15px;
+    -fx-font-weight:bold;
+    -fx-text-fill: white;
+}
