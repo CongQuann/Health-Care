@@ -138,6 +138,12 @@ public class DashboardTester {
                 + ");";
         stmt.execute(createTablGoalSQL);
 
+        String insertGoal = "INSERT INTO goal (targetWeight, currentWeight, initialWeight, startDate, endDate, dailyCaloNeeded, targetType, currentProgress, userInfo_id) VALUES "
+                + "(60.0, 63.0, 65.0, '2024-04-01 00:00:00', '2024-04-30 00:00:00', 2000.0, 'weightLoss', 0, '11111111-1111-1111-1111-111111111111'),"
+                + // johndoe
+                "(50.0, 53.0, 55.0, '2024-04-01 00:00:00', '2024-04-30 00:00:00', 1800.0, 'weightLoss', 0, '22222222-2222-2222-2222-222222222222');"; // janedoe
+        stmt.execute(insertGoal);
+
         //tao bang nutrition log
         String createTableNutritionLogSQL = "create table nutritionlog("
                 + "	id int primary key auto_increment,"
@@ -166,8 +172,15 @@ public class DashboardTester {
                 + "	FOREIGN KEY (userInfo_id) REFERENCES userinfo(id) ON DELETE CASCADE ON UPDATE CASCADE,"
                 + "	FOREIGN KEY (exercise_id) REFERENCES exercise(id) ON DELETE CASCADE ON UPDATE CASCADE"
                 + ");";
-
         stmt.execute(createTableWorkoutLogSQL);
+
+        String insertWorkoutLog = "INSERT INTO workoutlog (duration, workoutDate, userInfo_id, exercise_id) VALUES "
+                + "(30, '2024-04-05', '11111111-1111-1111-1111-111111111111', 1),"
+                + // johndoe, 30 phút chạy bộ
+                "(60, '2024-04-05', '22222222-2222-2222-2222-222222222222', 2),"
+                + // janedoe, 60 phút đạp xe
+                "(45, '2024-04-06', '11111111-1111-1111-1111-111111111111', 3);"; // johndoe, 45 phút bơi lội
+        stmt.execute(insertWorkoutLog);
     }
 
     @AfterEach
@@ -441,4 +454,127 @@ public class DashboardTester {
         }
     }
 
+    @Test
+    void testGetDailyCalorieBurn_Success() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+
+            // Test ngày 2024-04-05 cho user johndoe
+            float result = ds.getDailyCalorieBurn("johndoe", LocalDate.of(2024, 4, 5));
+
+            // Dữ liệu đã insert:
+            // - 30 phút chạy bộ (10.5 * 30 = 315)
+            assertEquals(315.0f, result, 0.01f);
+        }
+    }
+
+    @Test
+    void testGetDailyCalorieBurn_NoData() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+
+            // Test ngày khác, không có dữ liệu tập luyện
+            float result = ds.getDailyCalorieBurn("johndoe", LocalDate.of(2024, 4, 7));
+
+            assertEquals(0.0f, result, 0.01f);
+        }
+    }
+
+    @Test
+    void testGetDailyCalorieBurn_UserNotFound() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+
+            // Test với người dùng không tồn tại
+            float result = ds.getDailyCalorieBurn("nonexistentuser", LocalDate.of(2024, 4, 5));
+
+            assertEquals(0.0f, result, 0.01f); // Mong đợi trả về 0 khi không tìm thấy người dùng
+        }
+    }
+
+    @Test
+    void testGetDailyCaloriesBurn_SQLException() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenThrow(new SQLException("Database connection error"));
+
+            // Test với bất kỳ người dùng và ngày nào
+            // Kiểm tra xem SQLException có được ném ra hay không
+            assertThrows(SQLException.class, () -> {
+                ds.getDailyCalorieBurn("johndoe", LocalDate.of(2024, 4, 5));
+            });
+        }
+    }
+
+    @Test
+    void testGetCaloNeededByDate_Success() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+
+            // Test ngày 2024-04-15 cho user johndoe
+            float result = ds.getCaloNeededByDate("johndoe", LocalDate.of(2024, 4, 15));
+
+            // Dữ liệu đã insert: dailyCaloNeeded = 2000.0
+            assertEquals(2000.0f, result, 0.01f);
+        }
+    }
+
+    @Test
+    void testGetCaloNeededByDate_NoGoalForDate() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+
+            // Test ngày 2024-05-01, ngoài khoảng thời gian mục tiêu
+            float result = ds.getCaloNeededByDate("johndoe", LocalDate.of(2024, 5, 1));
+
+            assertEquals(0.0f, result, 0.01f);
+        }
+    }
+
+    @Test
+    void testGetCaloNeededByDate_UserNotFound() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+
+            // Test với người dùng không tồn tại
+            float result = ds.getCaloNeededByDate("nonexistentuser", LocalDate.of(2024, 4, 15));
+
+            assertEquals(0.0f, result, 0.01f); // Mong đợi trả về 0 khi không tìm thấy người dùng
+        }
+    }
+
+    @Test
+    void testGetDailyNeededByDate_SQLException() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenThrow(new SQLException("Database connection error"));
+
+            // Test với bất kỳ người dùng và ngày nào
+            // Kiểm tra xem SQLException có được ném ra hay không
+            assertThrows(SQLException.class, () -> {
+                ds.getCaloNeededByDate("johndoe", LocalDate.of(2024, 4, 15));
+            });
+        }
+    }
+
+    static Stream<Arguments> calculatePercentageArgumentsData() {
+        return Stream.of(
+                Arguments.of(0, 1, 0),
+                Arguments.of(1, 1, 100),
+                Arguments.of(100, 1, 100),
+                Arguments.of(101, 1, 100),
+                Arguments.of(100, 100, 100),
+                Arguments.of(0, 100, 0),
+                Arguments.of(1000, 100, 100),
+                Arguments.of(100, 0, 0),
+                Arguments.of(50, 100, 50),
+                Arguments.of(100, 100, 100),
+                Arguments.of(150, 100, 100)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("calculatePercentageArgumentsData")
+    void testCalculatePercentage(float caloriesIntake, float caloriesDailyNeeded, float expectedPercentage) {
+        float actualPercentage = ds.calculatePercentage(caloriesIntake, caloriesDailyNeeded);
+        assertEquals(expectedPercentage, actualPercentage, 0.01f);
+    }
 }
