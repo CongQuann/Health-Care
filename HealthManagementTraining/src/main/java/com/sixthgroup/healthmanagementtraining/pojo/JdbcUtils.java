@@ -13,6 +13,7 @@ import java.sql.SQLException;
  * @author admin
  */
 public class JdbcUtils {
+
     private static Connection testConnection;
 
     static {
@@ -36,4 +37,5 @@ public class JdbcUtils {
     public static void setCustomConnection(Connection conn) {
         testConnection = conn;
     }
+
 }

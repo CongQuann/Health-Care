@@ -22,6 +22,12 @@ import javafx.scene.control.Alert;
  */
 public class ExercisesService {
 
+    private boolean bypassExerciseCheck = false; // Cờ kiểm tra
+
+    public void setBypassExerciseCheck(boolean bypass) {
+        this.bypassExerciseCheck = bypass;
+    }
+
     public List<Exercise> getExercises(String kw) throws SQLException {
         List<Exercise> exs = new ArrayList<>();
         try (Connection conn = JdbcUtils.getConn()) {
@@ -37,9 +43,10 @@ public class ExercisesService {
                 Exercise e = new Exercise(rs.getInt("id"), rs.getString("exerciseName"), rs.getInt("caloriesPerMinute"));
                 exs.add(e);
             }
-
-            return exs;
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
+        return exs;
     }
 
     public List<Exercise> getWorkoutLogOfUser(String userId, LocalDate servingDate) throws SQLException {
@@ -70,7 +77,11 @@ public class ExercisesService {
 
                     selectedExercises.add(exercise);
                 }
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
         return selectedExercises;
     }
@@ -83,27 +94,29 @@ public class ExercisesService {
             int insertedCount = 0;
 
             for (Exercise exercise : selectedExercise) {
-                // Sử dụng phương thức kiểm tra
-                if (!isExerciseAlreadyLogged(userId, workoutDate, exercise.getId())) {
-                    insertStmt.setInt(1, exercise.getDuration());
-                    insertStmt.setDate(2, Date.valueOf(workoutDate));
-                    insertStmt.setString(3, userId);
-                    insertStmt.setInt(4, exercise.getId());
-                    insertStmt.addBatch();
-                    insertedCount++;
+                // Chỉ kiểm tra nếu không bật cờ bypass
+                if (!bypassExerciseCheck && isExerciseAlreadyLogged(userId, workoutDate, exercise.getId())) {
+                    continue; // Nếu bài tập đã có, bỏ qua
                 }
+                insertStmt.setInt(1, exercise.getDuration());
+                insertStmt.setDate(2, Date.valueOf(workoutDate));
+                insertStmt.setString(3, userId);
+                insertStmt.setInt(4, exercise.getId());
+                insertStmt.addBatch();
+                insertedCount++;
+
             }
 
             if (insertedCount > 0) {
                 insertStmt.executeBatch(); // Chỉ thực thi nếu có dữ liệu mới
-                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã thêm " + insertedCount + " bài tập vào nhật ký.");
+//                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã thêm " + insertedCount + " bài tập vào nhật ký.");
             } else {
-                Utils.showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Tất cả bài tập đã có trong nhật ký.");
+//                Utils.showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Tất cả bài tập đã có trong nhật ký.");
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
-            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi lưu dữ liệu!");
+//            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Có lỗi xảy ra khi lưu dữ liệu!");
         }
     }
 
@@ -120,11 +133,14 @@ public class ExercisesService {
             if (rowsAffected == 0) {
                 System.out.println("Không có dữ liệu nào bị xóa!");
             } else {
-                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa bài tập khỏi nhật kí");
+//                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa bài tập khỏi nhật kí");
             }
+        } catch (SQLException e) {
+            e.printStackTrace();
         }
     }
-     public boolean isExerciseAlreadyLogged(String userId, LocalDate workoutDate, int exerciseId) {
+
+    public boolean isExerciseAlreadyLogged(String userId, LocalDate workoutDate, int exerciseId) {
         String checkSql = "SELECT COUNT(*) FROM workoutlog WHERE workoutDate = ? AND userInfo_id = ? AND exercise_id = ?";
 
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {

@@ -139,10 +139,10 @@ public class NutritionController implements Initializable {
         } else {
             System.out.println("toggleNavButton chưa được khởi tạo!");
         }
-        // Lấy calo cần nạp mỗi ngày:
-        float caloNeed = n.getDailyCaloNeeded(Utils.getUser(), LocalDate.now());
-        System.out.println("caloNeed: " + caloNeed);
-        txtRecomendedCalo.setText(String.valueOf(caloNeed));
+//        // Lấy calo cần nạp mỗi ngày:
+//        float caloNeed = n.getDailyCaloNeeded(Utils.getUser(), LocalDate.now());
+//        System.out.println("caloNeed: " + caloNeed);
+//        txtRecomendedCalo.setText(String.valueOf(caloNeed));
         // Lấy danh sách thức ăn đã chọn từ CSDL
         ObservableList<Food> selectedFood = FXCollections.observableArrayList();
         this.tbSelectedFood.setItems(selectedFood);
@@ -380,20 +380,20 @@ public class NutritionController implements Initializable {
             return;
         }
 
-        float dailyCaloNeeded = n.getDailyCaloNeeded(Utils.getUser(), LocalDate.now());
-        if (Float.parseFloat(txtTotalCalories.getText()) - dailyCaloNeeded < 0) {
-            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Calo từ thức ăn bạn chọn không đáp ứng calo đề nghị mỗi ngày!");
-            return;
-        } else if (Float.parseFloat(txtTotalCalories.getText()) - dailyCaloNeeded >= DIFFERENT_CALO) {
-            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Calo từ thức ăn bạn chọn đã vượt mưc calo đề nghị mỗi ngày!");
-            return;
-        }
+//        float dailyCaloNeeded = n.getDailyCaloNeeded(Utils.getUser(), LocalDate.now());
+//        if (Float.parseFloat(txtTotalCalories.getText()) - dailyCaloNeeded < 0) {
+//            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Calo từ thức ăn bạn chọn không đáp ứng calo đề nghị mỗi ngày!");
+//            return;
+//        } else if (Float.parseFloat(txtTotalCalories.getText()) - dailyCaloNeeded >= DIFFERENT_CALO) {
+//            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Calo từ thức ăn bạn chọn đã vượt mưc calo đề nghị mỗi ngày!");
+//            return;
+//        }
         String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
         LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
 
         NutritionServices n = new NutritionServices();
         n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
-
+        Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
     }
 
     public void deleteHandler() {
