@@ -23,8 +23,9 @@ public class TargetManagementServices {
 
     // Lấy userInfo_id từ username
     public static String getUserInfoId(String username) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String sql = "SELECT id FROM userinfo WHERE username = ?";
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, username);
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
@@ -36,9 +37,10 @@ public class TargetManagementServices {
 
     // Lấy danh sách mục tiêu của user
     public static List<Goal> getGoalsByUser(String userInfoId) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         List<Goal> goals = new ArrayList<>();
         String sql = "SELECT * FROM goal WHERE userInfo_id = ?";
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, userInfoId);
             ResultSet rs = stmt.executeQuery();
             while (rs.next()) {
@@ -58,9 +60,10 @@ public class TargetManagementServices {
 
     // Thêm mục tiêu mới
     public static void addGoal(String userInfoId, float targetWeight, float currentWeight, float caloriesNeeded, LocalDate startDate, LocalDate endDate, String targetType) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String sql = "INSERT INTO goal (targetWeight, currentWeight, startDate, endDate, userInfo_id, currentProgress, targetType, dailyCaloNeeded, initialWeight) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
         //dailyCaloNeeded
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setFloat(1, targetWeight);
             stmt.setFloat(2, currentWeight);
             stmt.setDate(3, Date.valueOf(startDate));
@@ -76,9 +79,10 @@ public class TargetManagementServices {
 
     // Cập nhật mục tiêu (bao gồm tính toán currentProgress)
     public static boolean updateGoal(String userInfoId, int goalId, float targetWeight, float currentWeight, float caloriesNeeded, LocalDate newEndDate) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String checkSql = "SELECT endDate, targetWeight, initialWeight, targetType FROM goal WHERE id = ? AND userInfo_id = ?";
 
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
+        try (PreparedStatement checkStmt = conn.prepareStatement(checkSql)) {
             checkStmt.setInt(1, goalId);
             checkStmt.setString(2, userInfoId);
             ResultSet rs = checkStmt.executeQuery();
@@ -136,8 +140,9 @@ public class TargetManagementServices {
 
     // Xóa mục tiêu
     public static void deleteGoals(String userInfoId, List<Integer> goalIds) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String sql = "DELETE FROM goal WHERE id = ? AND userInfo_id = ?";
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             for (Integer goalId : goalIds) {
                 stmt.setInt(1, goalId);
                 stmt.setString(2, userInfoId);
@@ -147,14 +152,15 @@ public class TargetManagementServices {
         }
     }
 
-    public static boolean isDateOverlap(String userId, LocalDate newStartDate, LocalDate newEndDate) {
+    public static boolean isDateOverlap(String userId, LocalDate newStartDate, LocalDate newEndDate) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String query = "SELECT COUNT(*) FROM goal WHERE userInfo_id = ? AND "
                 + "(? BETWEEN startDate AND endDate OR "
                 + "? BETWEEN startDate AND endDate OR "
                 + "startDate BETWEEN ? AND ? OR "
                 + "endDate BETWEEN ? AND ?)";
 
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(query)) {
+        try ( PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, userId);
             stmt.setDate(2, Date.valueOf(newStartDate));

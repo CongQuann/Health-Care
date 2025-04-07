@@ -279,74 +279,85 @@ public class TargetManagementController implements Initializable {
         }
     }
 
+    public boolean checkGoal(String targetWeightStr, String currentWeightStr, LocalDate startDate, LocalDate endDate) throws SQLException {
+        if (targetWeightStr.isEmpty() || currentWeightStr.isEmpty()) {
+            Utils.getAlert("Vui lòng điền đầy đủ thông tin!").show();
+            return false;
+        }
+
+        float targetWeight, currentWeight;
+        try {
+            targetWeight = Float.parseFloat(targetWeightStr);
+            currentWeight = Float.parseFloat(currentWeightStr);
+        } catch (NumberFormatException e) {
+            Utils.getAlert("Cân nặng hiện tại và mục tiêu phải là số!").show();
+            return false;
+        }
+
+        if (startDate == null || endDate == null) {
+            Utils.getAlert("Ngày Bắt Đầu(Kết thúc) không được để trống và đúng định dạng!").show();
+            return false;
+        }
+
+        if (currentWeight <= 0 || currentWeight > 500) {
+            Utils.getAlert("Cân nặng hiện tại phải > 0 và <=500 !").show();
+            return false;
+        }
+
+        if (targetWeight <= 0 || targetWeight > 500) {
+            Utils.getAlert("Cân nặng mục tiêu phải > 0 và <=500 !").show();
+            return false;
+        }
+
+        if (currentWeight == targetWeight) {
+            Utils.getAlert("Cân Nặng Hiện Tại Và Cân Nặng Mục Tiêu Không Được Bằng Nhau").show();
+            return false;
+        }
+
+        if (endDate.isBefore(startDate)) {
+            Utils.getAlert("Ngày kết thúc không thể trước ngày bắt đầu!").show();
+            return false;
+        }
+
+        if (TargetManagementServices.isDateOverlap(userInfoId, startDate, endDate)) {
+            Utils.getAlert("Khoảng thời gian bị trùng, không thể thêm!").show();
+            return false;
+        }
+
+        return true;
+    }
+
     //add goal
     @FXML
     private void addGoal() {
         try {
-            if (targetWeightField.getText().isEmpty() || currentWeightField.getText().isEmpty()) {
-                Utils.getAlert("Vui lòng điền đầy đủ thông tin!").show();
-                return;
-            }
-            float targetWeight;
-            float currentWeight;
-            try {
-                targetWeight = Float.parseFloat(targetWeightField.getText());
-                currentWeight = Float.parseFloat(currentWeightField.getText());
-            } catch (NumberFormatException e) {
-                Utils.getAlert("Cân nặng hiện tại và mục tiêu phải là số!").show();
-                return;
-            }
-            //kiểm tra ngày bắt đầu mục tiêu và ngày kết thúc mục tiêu
-            if (startDatePicker.getValue() == null || endDatePicker.getValue() == null) {
-                Utils.getAlert("Ngày Bắt Đầu(Kết thúc) không được để trống và đúng định dạng!").show();
-                return;
-            }
+            String targetWeightStr = targetWeightField.getText();
+            String currentWeightStr = currentWeightField.getText();
             LocalDate startDate = startDatePicker.getValue();
             LocalDate endDate = endDatePicker.getValue();
-            //kiem tra can nang hien tai
-            if (currentWeight <= 0 || currentWeight > 500) {
-                Utils.getAlert("Cân nặng hiện tại phải > 0 và <=500 !").show();
+
+            if (!checkGoal(targetWeightStr, currentWeightStr, startDate, endDate)) {
                 return;
             }
 
-            if (targetWeight <= 0 || targetWeight > 500) {
-                Utils.getAlert("Cân nặng mục tiêu phải > 0 và <=500 !").show();
-                return;
-            }
+            float targetWeight = Float.parseFloat(targetWeightStr);
+            float currentWeight = Float.parseFloat(currentWeightStr);
+            String targetType = currentWeight > targetWeight ? "loss" : "gain";
 
-            String targetType = "";
-            if (currentWeight > targetWeight) {
-                targetType = "loss";
-            } else if (currentWeight < targetWeight) {
-                targetType = "gain";
-            } else if (currentWeight == targetWeight) {
-                Utils.getAlert("Cân Nặng Hiện Tại Và Cân Nặng Mục Tiêu Không Được Bằng Nhau").show();
-                return;
-            }
-            if (endDate.isBefore(startDate)) {
-                Utils.getAlert("Ngày kết thúc không thể trước ngày bắt đầu!").show();
-                return;
-            }
-            //kiểm tra ngày bắt đầu và kết thúc không trùng trong data
-            if (TargetManagementServices.isDateOverlap(userInfoId, startDate, endDate)) {
-                Utils.getAlert("Khoảng thời gian bị trùng, không thể thêm!").show();
-                return;
-            }
-            
             CalorieResult caloResult = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, startDate, endDate);
             float caloChange = caloResult.getDailyCalorieChange();
+
             if (caloChange > 1000 || caloChange < -1000) {
-               Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Mục tiêu bạn tạo không phù hợp với lượng calo thay đổi mỗi ngày!");
-               return;
-            }
-            else{
+                Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Mục tiêu bạn tạo không phù hợp với lượng calo thay đổi mỗi ngày!");
+                return;
+            } else {
                 float caloNeeded = caloResult.getDailyCalorieIntake();
-                    TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, caloNeeded, startDate, endDate, targetType);
-                    System.out.println("Userid :" + userInfoId);
-                    System.out.println("Đã thêm mục tiêu");
-                    startDatePicker.setValue(null);
-                    endDatePicker.setValue(null);
-                    loadGoals();
+                TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, caloNeeded, startDate, endDate, targetType);
+                System.out.println("Userid :" + userInfoId);
+                System.out.println("Đã thêm mục tiêu");
+                startDatePicker.setValue(null);
+                endDatePicker.setValue(null);
+                loadGoals();
             }
 
         } catch (Exception e) {
