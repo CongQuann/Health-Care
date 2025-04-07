@@ -197,4 +197,6 @@ public class AdminExerciseTest {
             assertFalse(controller.checkExerciseInput("Đi bộ", "6"));
         }
     }
+    
+    //abcddddd
 }
