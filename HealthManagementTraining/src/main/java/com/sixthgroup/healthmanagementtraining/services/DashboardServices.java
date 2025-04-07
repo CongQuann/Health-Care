@@ -27,7 +27,7 @@ public class DashboardServices {
                     + "FROM nutritionlog n "
                     + "JOIN userinfo u ON n.userInfo_id = u.id "
                     + "JOIN food f ON n.food_id = f.id "
-                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+                    + "WHERE u.userName = ? AND CAST(n.servingDate AS DATE) = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, userName);
             stm.setDate(2, java.sql.Date.valueOf(servingDate));
@@ -36,7 +36,6 @@ public class DashboardServices {
                 totalCalories = rs.getFloat(1);
             }
 
-            
         }
         return totalCalories;
     }
@@ -48,7 +47,7 @@ public class DashboardServices {
                     + "FROM nutritionlog n "
                     + "JOIN userinfo u ON n.userInfo_id = u.id "
                     + "JOIN food f ON n.food_id = f.id "
-                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+                    + "WHERE u.userName = ? AND CAST(n.servingDate AS DATE) = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, userName);
             stm.setDate(2, java.sql.Date.valueOf(servingDate));
@@ -67,7 +66,7 @@ public class DashboardServices {
                     + "FROM nutritionlog n "
                     + "JOIN userinfo u ON n.userInfo_id = u.id "
                     + "JOIN food f ON n.food_id = f.id "
-                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+                    + "WHERE u.userName = ? AND CAST(n.servingDate AS DATE) = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, userName);
             stm.setDate(2, java.sql.Date.valueOf(servingDate));
@@ -86,7 +85,7 @@ public class DashboardServices {
                     + "FROM nutritionlog n "
                     + "JOIN userinfo u ON n.userInfo_id = u.id "
                     + "JOIN food f ON n.food_id = f.id "
-                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+                    + "WHERE u.userName = ? AND CAST(n.servingDate AS DATE) = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, userName);
             stm.setDate(2, java.sql.Date.valueOf(servingDate));
@@ -105,7 +104,7 @@ public class DashboardServices {
                     + "FROM nutritionlog n "
                     + "JOIN userinfo u ON n.userInfo_id = u.id "
                     + "JOIN food f ON n.food_id = f.id "
-                    + "WHERE u.userName = ? AND DATE(n.servingDate) = ?";
+                    + "WHERE u.userName = ? AND CAST(n.servingDate AS DATE) = ?";
             PreparedStatement stm = conn.prepareStatement(sql);
             stm.setString(1, userName);
             stm.setDate(2, java.sql.Date.valueOf(servingDate));

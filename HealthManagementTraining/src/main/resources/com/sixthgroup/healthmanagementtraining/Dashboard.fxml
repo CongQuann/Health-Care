@@ -14,7 +14,7 @@
 <?import javafx.scene.shape.SVGPath?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="dashboardPane" prefHeight="735.0" prefWidth="936.0" styleClass="mainFxmlClass" stylesheets="@dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.DashboardController">
+<AnchorPane id="AnchorPane" fx:id="dashboardPane" prefHeight="735.0" prefWidth="935.0" styleClass="mainFxmlClass" stylesheets="@dashboard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.DashboardController">
     <children>
         <HBox styleClass="header-hbox">
             <Button fx:id="toggleNavButton" layoutX="10.0" layoutY="10.0" mnemonicParsing="false" styleClass="nav-toggle-btn">
@@ -31,7 +31,7 @@
             <Label styleClass="date-label" text="Chọn ngày:" />
             <DatePicker fx:id="datePicker" layoutX="55.0" layoutY="100.0" onAction="#datePickHandler" styleClass="date-picker" />
         </HBox>
-        <HBox layoutX="118.0" layoutY="129.0" prefHeight="286.0" prefWidth="704.0">
+        <HBox layoutX="116.0" layoutY="129.0" prefHeight="250.0" prefWidth="704.0">
             <GridPane prefHeight="288.0" prefWidth="737.0" styleClass="main-content">
                 <!-- Widget 1: Daily Calorie Intake -->
                 <VBox styleClass="widget" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -76,19 +76,19 @@
                 </rowConstraints>
             </GridPane>
         </HBox>
-        <HBox alignment="CENTER" layoutX="215.0" layoutY="678.0" prefHeight="42.0" prefWidth="510.0" spacing="20">
+        <HBox alignment="CENTER" layoutX="210.0" layoutY="666.0" prefHeight="42.0" prefWidth="515.0" spacing="20">
             <Button fx:id="viewFoodButton" layoutX="50.0" layoutY="500.0" mnemonicParsing="false" onAction="#switchToNutrition" styleClass="view-button" text="Xem danh sách món ăn" />
             <!-- Thêm nút xem danh sách bài tập -->
             <Button fx:id="viewExerciseButton" layoutX="250.0" layoutY="500.0" mnemonicParsing="false" onAction="#switchToExercises" styleClass="view-button" text="Xem danh sách bài tập" />
             <!-- Navbar (ban đầu ẩn bên trái) -->
         </HBox>
         <Label layoutX="362.0" layoutY="50.0" styleClass="dashboard-label" text="TỔNG QUAN" />
-        <Pane layoutX="132.0" layoutY="387.0" prefHeight="274.0" prefWidth="328.0" styleClass="pie-chart-pane">
+        <Pane layoutX="130.0" layoutY="368.0" prefHeight="274.0" prefWidth="328.0" styleClass="pie-chart-pane">
             <children>
                 <PieChart fx:id="nutritionPieChart" layoutX="15.0" layoutY="12.0" prefHeight="250.0" prefWidth="299.0" startAngle="90.0" title="Tỷ lệ dinh dưỡng" />
             </children>
         </Pane>
-        <Pane layoutX="480.0" layoutY="387.0" prefHeight="274.0" prefWidth="328.0" styleClass="pie-chart-pane">
+        <Pane layoutX="478.0" layoutY="368.0" prefHeight="274.0" prefWidth="328.0" styleClass="pie-chart-pane">
             <children>
                 <PieChart fx:id="caloPieChart" layoutX="15.0" layoutY="12.0" prefHeight="250.0" prefWidth="299.0" startAngle="90.0" title="Tỷ lệ calo" />
             </children>
@@ -98,6 +98,7 @@
                 <HBox alignment="CENTER_RIGHT" spacing="26">
                     <Button fx:id="closeNavButton" mnemonicParsing="false" styleClass="close-btn" text="✖" />
                 </HBox>
+               <Label fx:id="labelWelcome" alignment="CENTER" contentDisplay="CENTER" prefHeight="42.0" prefWidth="262.0" styleClass="welcome-label" text="Label" />
                 <Button alignment="CENTER_LEFT" maxWidth="Infinity" mnemonicParsing="false" onAction="#switchToUserInfo" styleClass="nav-btn" text="Tài khoản">
                     <graphic>
                         <SVGPath content="M21.7,13.35L20.7,14.35L18.65,12.3L19.65,11.3C19.86,11.09 20.21,11.09 20.42,11.3L21.7,12.58C21.91,12.79 21.91,13.14 21.7,13.35M12,18.94L18.06,12.88L20.11,14.93L14.06,21H12V18.94M12,14C7.58,14 4,15.79 4,18V20H10V18.11L14,14.11C13.34,14.03 12.67,14 12,14M12,4A4,4 0 0,0 8,8A4,4 0 0,0 12,12A4,4 0 0,0 16,8A4,4 0 0,0 12,4Z" styleClass="nav-icon" />                    

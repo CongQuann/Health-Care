@@ -24,6 +24,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.Label;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -63,6 +64,8 @@ public class DashboardController implements Initializable {
     private Text calorieBurnText;
     @FXML
     private Text requiredCaloriesText;
+    @FXML
+    private Label labelWelcome;
 
     private String userName;
     private LocalDate localDate; //ngay dang chon trong datePicker
@@ -74,9 +77,9 @@ public class DashboardController implements Initializable {
     private float caloriesDailyNeeded;
 
     private void updateDashboard() {
+        labelWelcome.setText("Welcome, " + Utils.getUser());
         try {
             System.out.println("updateDashboard() được gọi.");
-
             DecimalFormat df = new DecimalFormat("#.##"); // Định dạng số với 2 chữ số thập phân    
             DashboardServices dashboardServices = new DashboardServices();
             calorieIntake = dashboardServices.getDailyCalorieIntake(userName, localDate);
@@ -85,7 +88,6 @@ public class DashboardController implements Initializable {
             fiberIntake = dashboardServices.getDailyFiberIntake(userName, localDate);
             proteinIntake = dashboardServices.getDailyProteinIntake(userName, localDate);
             caloriesDailyNeeded = dashboardServices.getCaloNeededByDate(userName, localDate);
-            
 
             System.out.println(calorieIntake);
             calorieIntakeText.setText(calorieIntake + " cal");
