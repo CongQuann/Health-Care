@@ -12,7 +12,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="712.0" prefWidth="1057.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="769.0" prefWidth="1057.0" stylesheets="@nutrition_excers.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.sixthgroup.healthmanagementtraining.NutritionController">
     <children>
         <!-- Nút kích hoạt navbar ========================================================-->
         <HBox prefHeight="42.0" prefWidth="1057.0" styleClass="header-hbox">
@@ -152,6 +152,52 @@
             </children>
         </VBox>
       <Label fx:id="dateLabel" layoutX="481.0" layoutY="69.0" styleClass="lb-SubTitle" text="Label" />
+      <HBox layoutX="14.0" layoutY="662.0" prefHeight="58.0" prefWidth="598.0">
+         <children>
+            <HBox prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <HBox prefHeight="58.0" prefWidth="95.0">
+                     <children>
+                        <Label styleClass="labelStyle" text="Chất béo" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="58.0" prefWidth="105.0">
+                     <children>
+                        <Text fx:id="txtRecomendedLipid" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <HBox prefHeight="58.0" prefWidth="95.0">
+                     <children>
+                        <Label styleClass="labelStyle" text="Chất đạm" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="58.0" prefWidth="105.0">
+                     <children>
+                        <Text fx:id="txtRecomendedProtein" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+            <HBox layoutX="210.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+               <children>
+                  <HBox prefHeight="58.0" prefWidth="95.0">
+                     <children>
+                        <Label styleClass="labelStyle" text="Chất xơ" />
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="58.0" prefWidth="105.0">
+                     <children>
+                        <Text fx:id="txtRecomendedFiber" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
         <!--========================================================================-->
     </children>
 </Pane>

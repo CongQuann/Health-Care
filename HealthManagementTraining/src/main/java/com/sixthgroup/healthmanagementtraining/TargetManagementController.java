@@ -111,6 +111,13 @@ public class TargetManagementController implements Initializable {
 
     private final int caloriesPerWeight = 7700;
 
+    private final double baseFiber = 25;
+    private final double baseProteinGainWeight = 0.2;
+    private final double baseLipidGainWeight = 0.25;
+
+    private final double baseProteinLossWeight = 0.25;
+    private final double baseLipidLossWeight = 0.2;
+
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -485,7 +492,18 @@ public class TargetManagementController implements Initializable {
 //        System.out.println("Daily Calorie Change: " + dailyCalorieChange);
 //        System.out.println("Daily Calorie Intake: " + dailyCalorieIntake);
 //        
-        return new CalorieResult(dailyCalorieIntake, dailyCalorieChange);
+        String targetType = currentWeight > targetWeight ? "loss" : "gain";
+        float dailyProteinIntake;
+        float dailyLipidIntake;
+        if (targetType.equalsIgnoreCase("loss")) {
+            dailyProteinIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseProteinLossWeight), 1);
+            dailyLipidIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseLipidLossWeight), 1);
+        } else {
+            dailyProteinIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseProteinGainWeight), 1);
+            dailyLipidIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseLipidGainWeight), 1);
+        }
+
+        return new CalorieResult(dailyCalorieIntake, dailyCalorieChange,dailyProteinIntake,dailyLipidIntake,Utils.convertToFloat(baseFiber));
 
     }
 

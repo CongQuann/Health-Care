@@ -140,6 +140,46 @@ public class ExercisesService {
         }
     }
 
+    public boolean isValidInput(String inputDuration) {
+        int minDuration = 10;
+        int maxDuration = 45;
+        try {
+            int inDuration = Integer.parseInt(inputDuration);
+            if (inDuration >= minDuration && inDuration <= maxDuration) {
+                return true;
+            } else {
+                Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Thời gian tập phải từ 10 đến 45 phút!");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập một số nguyên hợp lệ!");
+            return false;
+        }
+    }
+    
+    public boolean isExistExercise(List<Exercise> selectedExercises, Exercise currentExercise) {
+
+        for (Exercise e : selectedExercises) {
+//            System.out.println("current: " + currentExercise.getExerciseName());
+//            System.out.println("list: " + e.getExerciseName());
+            if (currentExercise.getExerciseName().equals(e.getExerciseName())) {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+    
+    public boolean checkTotalTime(List<Exercise> selectedExercises){
+        int totalMinutesPerDay = 1440;
+        int total = 0;
+        for(Exercise e : selectedExercises){
+            total += e.getDuration();
+        }
+       
+        return  total > totalMinutesPerDay; // true là vi vi phạm 
+    }
     public boolean isExerciseAlreadyLogged(String userId, LocalDate workoutDate, int exerciseId) {
         String checkSql = "SELECT COUNT(*) FROM workoutlog WHERE workoutDate = ? AND userInfo_id = ? AND exercise_id = ?";
 
@@ -159,4 +199,5 @@ public class ExercisesService {
 
         return false; // Trả về false nếu có lỗi xảy ra
     }
+    
 }

@@ -13,11 +13,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -299,11 +302,6 @@ public class ExercisesTest {
             stmt.setInt(4, ex.getId());
             stmt.executeUpdate();
         }
-//        String count1 = "SELECT COUNT(*) FROM workoutlog";
-//        PreparedStatement stmt1 = connection.prepareStatement(count1);
-//        ResultSet rs1 = stmt1.executeQuery();
-//        int count2 = rs1.getInt(1);
-//        System.out.println("Count sau khi thêm :" + count2);
         // Thực thi phương thức cần test
         es.deleteExerciseFromLog(ex.getId(), userId, workoutDate);
         // Đảm bảo kết nối vẫn còn
@@ -311,6 +309,7 @@ public class ExercisesTest {
             connection = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;", "sa", "");
             JdbcUtils.setCustomConnection(connection);
         }
+
         // Kiểm tra bản ghi đã bị xóa chưa
         String checkSql = "SELECT COUNT(*) FROM workoutlog WHERE exercise_id = ? AND userInfo_id = ? AND workoutDate = ?";
         try (PreparedStatement stmt = connection.prepareStatement(checkSql)) {
@@ -320,8 +319,7 @@ public class ExercisesTest {
             ResultSet rs = stmt.executeQuery();
             rs.next();
             int count = rs.getInt(1);
-            System.out.println("Count:" + count);
-            Assertions.assertEquals(1, count, "Bài tập phải được xóa khỏi workoutlog");
+            Assertions.assertEquals(0, count, "Bài tập phải được xóa khỏi workoutlog");
         }
     }
 
@@ -329,8 +327,6 @@ public class ExercisesTest {
     void testDeleteExerciseFromLog_NoMatchingRecord() throws SQLException {
         int nonExistentExerciseId = 9999; // ID không tồn tại trong workoutlog
         LocalDate workoutDate = LocalDate.now();
-
-        
 
         // Đảm bảo không có bản ghi nào trùng với thông tin cần xóa
         String checkSql = "SELECT COUNT(*) FROM workoutlog WHERE exercise_id = ? AND userInfo_id = ? AND workoutDate = ?";
@@ -361,5 +357,46 @@ public class ExercisesTest {
             int countAfter = rs.getInt(1);
             Assertions.assertEquals(0, countAfter, "Không có bài tập nào bị xóa vì ID không tồn tại");
         }
+    }
+     // Test dùng dữ liệu từ method cung cấp danh sách bài tập
+    @ParameterizedTest
+    @MethodSource("exerciseListsProvider")
+    public void testCheckTotalTime_WithVariousExerciseLists(List<Exercise> exercises, boolean expectedResult) {
+        boolean result = es.checkTotalTime(exercises);
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    private static Stream<Arguments> exerciseListsProvider() {
+        return Stream.of(
+                // Case 1: Tổng 1439 phút < 1440 → ko vi phạm -> false
+                Arguments.of(List.of(
+                        new Exercise(1000),
+                        new Exercise(200),
+                        new Exercise(239)
+                ), false),
+                // Case 2: Tổng 1441 phút > 1440  → vi phạm → true
+                Arguments.of(List.of(
+                        new Exercise(1000),
+                        new Exercise(200),
+                        new Exercise(241)
+                ), true),
+                // Case 3: Tổng 1440 phút = 1440  → ko vi phạm → false
+                Arguments.of(List.of(
+                        new Exercise(1000),
+                        new Exercise(200),
+                        new Exercise(240)
+                ), false),
+                // Case 4: Tổng 0 phút < 1440 → ko vi phạm -> false
+                Arguments.of(List.of(), false),
+                // Case 5: Tổng 2000 phút > 1440  →  vi phạm → true
+                Arguments.of(List.of(
+                        new Exercise(800),
+                        new Exercise(200),
+                        new Exercise(1000)
+                ), true)
+                
+                
+        );
+
     }
 }

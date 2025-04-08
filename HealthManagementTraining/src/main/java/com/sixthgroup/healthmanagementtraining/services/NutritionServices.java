@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -217,7 +218,7 @@ public class NutritionServices {
             if (rowsAffected == 0) {
                 System.out.println("Không có dữ liệu nào bị xóa!");
             } else {
-                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa món ăn khỏi nhật kí");
+//                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa món ăn khỏi nhật kí");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -238,6 +239,60 @@ public class NutritionServices {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public boolean isValidInput(String inputQuantity, String unitType) {
+        int minQuantity = 0;
+        int maxQuantity = 0;
+        try {
+            if (unitType.equals("gram")) {
+                minQuantity = 50;
+                maxQuantity = 300;
+                int input = Integer.parseInt(inputQuantity);
+                if (input >= minQuantity && input <= maxQuantity) {
+                    return true;
+                } else {
+                    Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", " Khối lượng món ăn phải từ 50 đến 300 gram !");
+                    return false;
+                }
+            } else if (unitType.endsWith("ml")) {
+                minQuantity = 200;
+                maxQuantity = 500;
+                int input = Integer.parseInt(inputQuantity);
+                if (input >= minQuantity && input <= maxQuantity) {
+                    return true;
+                } else {
+                    Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", " Khối lượng món ăn phải từ 200 đến 500 ml !");
+                    return false;
+                }
+            } else {
+                minQuantity = 10;
+                maxQuantity = 20;
+                int input = Integer.parseInt(inputQuantity);
+                if (input >= minQuantity && input <= maxQuantity) {
+                    return true;
+                } else {
+                    Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", " Khối lượng món ăn phải từ 10 đến 20 miếng !");
+                    return false;
+                }
+            }
+        } catch (NumberFormatException e) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập một số nguyên hợp lệ!");
+            return false;
+        }
+    }
+    public boolean isExistFood(List<Food> selectedFoods, Food currentFood) {
+
+        for (Food f : selectedFoods) {
+//            System.out.println("current: " + currentExercise.getExerciseName());
+//            System.out.println("list: " + e.getExerciseName());
+            if (currentFood.getFoodName().equals(f.getFoodName())) {
+                return true;
+            }
+        }
+
+        return false;
+
     }
 
     public boolean isFoodAlreadyLogged(String userId, LocalDate servingDate, int foodId) {

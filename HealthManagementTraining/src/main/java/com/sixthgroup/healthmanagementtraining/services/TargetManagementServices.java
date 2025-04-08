@@ -58,6 +58,8 @@ public class TargetManagementServices {
         return goals;
     }
 
+    // Lấy một mục tiêu của user
+    
     //lấy mục tiêu hiện tại
     public static Goal getCurrentGoal(String userInfoId) throws SQLException {
         Connection conn = JdbcUtils.getConn();
@@ -83,6 +85,7 @@ public class TargetManagementServices {
             }
         }
         return null; // Không có goal nào đang hoạt động
+
     }
 
     // Thêm mục tiêu mới
