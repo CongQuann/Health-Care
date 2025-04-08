@@ -255,7 +255,10 @@ public class TargetManagementController implements Initializable {
                 goal.setCurrentWeight(currentWeight);
                 goal.setEndDate(endDate);
                 loadGoals();
-                checkProgressWarning(goal); // kiem tra tien do
+                boolean check = checkProgressWarning(goal); // kiem tra tien do
+                if(check){
+                    Utils.getAlert("CẢNH BÁO!!!!!.....Bạn đang chậm tiến độ! Hãy cố gắng hơn.").show();
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -264,7 +267,7 @@ public class TargetManagementController implements Initializable {
     }
 
     //ham tinh tien do hoan thanh bai tap
-    private void checkProgressWarning(Goal goal) {
+    public boolean checkProgressWarning(Goal goal) {
         LocalDate currentDate = LocalDate.now();
         LocalDate startDate = goal.getStartDate();
         LocalDate endDate = goal.getEndDate();
@@ -273,9 +276,17 @@ public class TargetManagementController implements Initializable {
             double progressTime = ((double) ChronoUnit.DAYS.between(startDate, currentDate)
                     / ChronoUnit.DAYS.between(startDate, endDate)) * 100;
 
-            if (progressTime > 50 && goal.getCurrentProgress() < 50) {
-                Utils.getAlert("CẢNH BÁO!!!!!.....Bạn đang chậm tiến độ! Hãy cố gắng hơn.").show();
+            if (progressTime >= 50 && goal.getCurrentProgress() < 50) {
+                return true;
             }
+            else{
+                return false;
+            }
+            
+        }
+        else{
+            Utils.getAlert("CẢNH BÁO!! ngày bắt đầu(kết thúc) không hợp lệ").show();
+            return false;
         }
     }
 
