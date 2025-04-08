@@ -501,7 +501,7 @@ public class NutritionController implements Initializable {
 
     private void loadRecommendedNutrition() throws SQLException {
         System.out.println("now: " + String.valueOf(LocalDate.now()));
-        Goal currentGoal = TargetManagementServices.getGoalByUser(Utils.getUUIdByName(Utils.getUser()), LocalDate.now());
+        Goal currentGoal = TargetManagementServices.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()));
         if (currentGoal.getId() != 0) {
 
             System.out.println("not null");

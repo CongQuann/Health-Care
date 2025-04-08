@@ -22,7 +22,6 @@ import org.mockito.Mockito;
 public class AdminExerciseTest {
 
     private static Connection conn;
-    private static MockedStatic<Utils> mockedUtils;
     private static AdminExerciseController controller;
 
     @BeforeEach

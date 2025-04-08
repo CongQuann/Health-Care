@@ -59,29 +59,33 @@ public class TargetManagementServices {
     }
 
     // Lấy một mục tiêu của user
-    public static Goal getGoalByUser(String userInfoId, LocalDate currenDate) throws SQLException {
+    
+    //lấy mục tiêu hiện tại
+    public static Goal getCurrentGoal(String userInfoId) throws SQLException {
         Connection conn = JdbcUtils.getConn();
-        Goal goal = new Goal();
         String sql = "SELECT * FROM goal WHERE userInfo_id = ? AND ? BETWEEN startDate AND endDate";
+
         try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, userInfoId);
-            stmt.setDate(2, Date.valueOf(currenDate));
+            stmt.setDate(2, Date.valueOf(LocalDate.now()));
             ResultSet rs = stmt.executeQuery();
+
             if (rs.next()) {
-                System.out.println("Co du lieu");
-                while (rs.next()) {
-                    goal.setId(rs.getInt("id"));
-                    goal.setTargetWeight(rs.getFloat("targetWeight"));
-                    goal.setCurrentWeight(rs.getFloat("currentWeight"));
-                    goal.setStartDate(rs.getDate("startDate").toLocalDate());
-                    goal.setEndDate(rs.getDate("endDate").toLocalDate());
-                    goal.setDailyCaloNeeded(rs.getFloat("dailyCaloNeeded"));
-                    goal.setCurrentProgress(rs.getInt("currentProgress"));
-                }
+                Goal goal = new Goal(
+                        rs.getInt("id"),
+                        rs.getFloat("targetWeight"),
+                        rs.getFloat("currentWeight"),
+                        rs.getDate("startDate").toLocalDate(),
+                        rs.getDate("endDate").toLocalDate(),
+                        rs.getFloat("dailyCaloNeeded"),
+                        rs.getInt("currentProgress")
+                );
+                goal.setUserInfoId(userInfoId);
+                return goal;
             }
-            return goal;
         }
-        
+        return null; // Không có goal nào đang hoạt động
+
     }
 
     // Thêm mục tiêu mới

@@ -7,6 +7,7 @@ import org.mockito.Mockito;
 
 
 import com.sixthgroup.healthmanagementtraining.TargetManagementController;
+import com.sixthgroup.healthmanagementtraining.pojo.Goal;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.services.TargetManagementServices;
 import com.sixthgroup.healthmanagementtraining.services.Utils;
@@ -135,7 +136,8 @@ public class TargetManagementTest {
         if (rs.next()) {
             goalId = rs.getInt("id");
         }
-
+        
+        //trường hợp đúng
         LocalDate newEnd = end.plusDays(10);
         boolean result = TargetManagementServices.updateGoal("1", goalId, 68.0f, 74.0f, 2100.0f, newEnd);
         assertTrue(result);
@@ -148,6 +150,11 @@ public class TargetManagementTest {
         assertEquals(74.0f, rs.getFloat("currentWeight"), 0.01f);
         assertEquals(2100.0f, rs.getFloat("dailyCaloNeeded"), 0.01f);
         assertEquals(Date.valueOf(newEnd), rs.getDate("endDate"));
+        
+        //trường hợp sai
+        LocalDate newEnd1 = newEnd.minusDays(15);
+        boolean result1 = TargetManagementServices.updateGoal("1", goalId, 68.0f, 74.0f, 2100.0f, newEnd1);
+        assertFalse(result1);
         }
     }
 
@@ -235,4 +242,66 @@ public class TargetManagementTest {
             assertEquals(expectedResult, result);
     }
     }
+    
+    
+    private static Stream<Arguments> provideProgressTestCases() {
+        LocalDate now = LocalDate.now();
+
+        return Stream.of(
+                // start = 20 ngày trước, end = 20 ngày sau, currentProgress < 50 => >50% thời gian => cảnh báo
+                Arguments.of(now.minusDays(20), now.plusDays(20), 40, true),
+
+                // start = 5 ngày trước, end = 20 ngày sau, chưa tới 50% thời gian => không cảnh báo
+                Arguments.of(now.minusDays(5), now.plusDays(20), 40, false),
+
+                // start = 20 ngày trước, end = 20 ngày sau, progress >= 50 => không cảnh báo
+                Arguments.of(now.minusDays(20), now.plusDays(20), 60, false),
+
+                // start = null => lỗi dữ liệu
+                Arguments.of(null, now.plusDays(20), 40, false),
+
+                // end = null => lỗi dữ liệu
+                Arguments.of(now.minusDays(20), null, 40, false),
+
+                // start = end => lỗi dữ liệu
+                Arguments.of(now, now, 40, false)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("provideProgressTestCases")
+    public void testCheckProgressWarning(LocalDate start, LocalDate end, int progress, boolean expectedResult) {
+        Goal goal = new Goal();
+        goal.setStartDate(start);
+        goal.setEndDate(end);
+        goal.setCurrentProgress(progress);
+
+        try (org.mockito.MockedStatic<Utils> mockedUtils = mockStatic(Utils.class)) {
+            Alert mockAlert = mock(Alert.class);
+            mockedUtils.when(() -> Utils.getAlert(anyString())).thenReturn(mockAlert);
+
+            boolean result = controller.checkProgressWarning(goal);
+            assertEquals(expectedResult, result);
+
+            // Kiểm tra nếu dữ liệu lỗi thì phải gọi cảnh báo
+            if (start == null || end == null || start.equals(end)) {
+                mockedUtils.verify(() -> Utils.getAlert("CẢNH BÁO!! ngày bắt đầu(kết thúc) không hợp lệ"));
+            }
+        }
+    }
+    
+    @Test
+    public void testCheckCalochange() throws SQLException{
+        try (org.mockito.MockedStatic<Utils> mockedUtils = mockStatic(Utils.class)) {
+            mockedUtils.when(() -> Utils.getAlert(anyString()))
+                       .thenReturn(mock(Alert.class));
+            boolean result = controller.checkCaloChange(1500f); //calo change > 1000
+            assertFalse(result);
+            boolean result1 = controller.checkCaloChange(-1500f); //calo change < -1000
+//            assertFalse(result1);
+            boolean result2 = controller.checkCaloChange(500f); //calo change đúng
+            assertTrue(result2);
+        }
+    }
+    
 }

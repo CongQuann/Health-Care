@@ -143,8 +143,11 @@ public class Goal {
         this.currentProgress = currentProgress;
         
     }
+
     public Goal(){
         
     }
+
+
 
 }
