@@ -15,6 +15,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +24,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -70,6 +73,7 @@ public class AdminExerciseController implements Initializable {
 
     @FXML
     private Button btnDeleteExercise;
+
 
     @FXML
     @Override
@@ -129,10 +133,14 @@ public class AdminExerciseController implements Initializable {
                 loadExerciseData();
                 return;
             }
-            if (AdminExerciseServices.isExerciseNameTakenUp(exercise.getExerciseName(), exercise.getId())) {
-                Utils.getAlert("Tên bài tập đã tồn tại!").show();
-                loadExerciseData();
-                return;
+            try {
+                if (AdminExerciseServices.isExerciseNameTakenUp(exercise.getExerciseName(), exercise.getId())) {
+                    Utils.getAlert("Tên bài tập đã tồn tại!").show();
+                    loadExerciseData();
+                    return;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(AdminExerciseController.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             updateExercise(exercise);
@@ -175,34 +183,42 @@ public class AdminExerciseController implements Initializable {
             e.printStackTrace();
         }
     }
-
-    @FXML
-    private void handleAddExercise() throws SQLException {
-        String name = txtExerciseName.getText().trim();
-        String caloriesStr = txtCaloriesPerMinute.getText().trim();
-
+    
+    public boolean checkExerciseInput(String name, String caloriesStr) throws SQLException {
         if (name.isEmpty() || caloriesStr.isEmpty()) {
             Utils.getAlert("Vui lòng nhập đầy đủ thông tin.").show();
-            return;
+            return false;
         }
         // Kiểm tra tên bài tập
         if (!Pattern.matches("^[a-zA-ZÀ-ỹ\\s]+$", name)) {
             Utils.getAlert("Tên bài tập không được chứa số hoặc ký tự đặc biệt!").show();
-            return;
+            return false;
         }
         if (AdminExerciseServices.isExerciseNameTaken(name)) {
             Utils.getAlert("Tên bài tập đã tồn tại!").show();
-            return;
+            return false;
         }
         try {
             float calories = Float.parseFloat(caloriesStr);
             if (calories <= 0 || calories > 100) {
                 Utils.getAlert("Lượng calo/phút phải > 0 và <=100 !").show();
-                return;
+                return false;
             }
-
+        } catch (NumberFormatException ex) {
+            Utils.getAlert("Lượng calo phải là số!").show();
+            return false;
+        }
+        return true;
+    }
+    
+    @FXML
+    private void handleAddExercise() throws SQLException {
+        String name = txtExerciseName.getText().trim();
+        String caloriesStr = txtCaloriesPerMinute.getText().trim();
+        boolean check = checkExerciseInput(name, caloriesStr);
+        if (check) {
+            float calories = Float.parseFloat(caloriesStr);
             Exercise e = new Exercise(0, name, calories); // id sẽ tự động tăng
-
             boolean success = AdminExerciseServices.addExercise(e);
             if (success) {
                 Utils.getAlert("Thêm bài tập thành công!").show();
@@ -212,8 +228,6 @@ public class AdminExerciseController implements Initializable {
             } else {
                 Utils.getAlert("Thêm thất bại!").show();
             }
-        } catch (NumberFormatException ex) {
-            Utils.getAlert("Lượng calo phải là số!").show();
         }
     }
 

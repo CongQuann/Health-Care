@@ -30,8 +30,10 @@ public class JdbcUtils {
         if (testConnection != null && !testConnection.isClosed()) {
             return testConnection;
         }
+
         return DriverManager.getConnection("jdbc:mysql://localhost/healthcaredb", "root", "Admin@123");
         
+
     }
 
     public static void setCustomConnection(Connection conn) {

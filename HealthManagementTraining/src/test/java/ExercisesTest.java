@@ -13,11 +13,14 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -354,5 +357,46 @@ public class ExercisesTest {
             int countAfter = rs.getInt(1);
             Assertions.assertEquals(0, countAfter, "Không có bài tập nào bị xóa vì ID không tồn tại");
         }
+    }
+     // Test dùng dữ liệu từ method cung cấp danh sách bài tập
+    @ParameterizedTest
+    @MethodSource("exerciseListsProvider")
+    public void testCheckTotalTime_WithVariousExerciseLists(List<Exercise> exercises, boolean expectedResult) {
+        boolean result = es.checkTotalTime(exercises);
+        Assertions.assertEquals(expectedResult, result);
+    }
+
+    private static Stream<Arguments> exerciseListsProvider() {
+        return Stream.of(
+                // Case 1: Tổng 1439 phút < 1440 → ko vi phạm -> false
+                Arguments.of(List.of(
+                        new Exercise(1000),
+                        new Exercise(200),
+                        new Exercise(239)
+                ), false),
+                // Case 2: Tổng 1441 phút > 1440  → vi phạm → true
+                Arguments.of(List.of(
+                        new Exercise(1000),
+                        new Exercise(200),
+                        new Exercise(241)
+                ), true),
+                // Case 3: Tổng 1440 phút = 1440  → ko vi phạm → false
+                Arguments.of(List.of(
+                        new Exercise(1000),
+                        new Exercise(200),
+                        new Exercise(240)
+                ), false),
+                // Case 4: Tổng 0 phút < 1440 → ko vi phạm -> false
+                Arguments.of(List.of(), false),
+                // Case 5: Tổng 2000 phút > 1440  →  vi phạm → true
+                Arguments.of(List.of(
+                        new Exercise(800),
+                        new Exercise(200),
+                        new Exercise(1000)
+                ), true)
+                
+                
+        );
+
     }
 }

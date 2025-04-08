@@ -19,12 +19,13 @@ import java.util.List;
  * @author quanp
  */
 public class AdminExerciseServices {
-
+    
     public static List<Exercise> getAllExercises() throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         List<Exercise> list = new ArrayList<>();
         String sql = "SELECT * FROM exercise";
 
-        try (Connection conn = JdbcUtils.getConn(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        try (Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
 
             while (rs.next()) {
                 Exercise e = new Exercise(
@@ -40,8 +41,9 @@ public class AdminExerciseServices {
     }
 
     public static boolean addExercise(Exercise e) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String sql = "INSERT INTO exercise(exerciseName, caloriesPerMinute) VALUES (?, ?)";
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, e.getExerciseName());
             stmt.setFloat(2, e.getCaloriesPerMinute());
 
@@ -51,10 +53,11 @@ public class AdminExerciseServices {
     }
 
     public static List<Exercise> searchExercisesByName(String keyword) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         List<Exercise> list = new ArrayList<>();
         String sql = "SELECT * FROM exercise WHERE exerciseName LIKE ?";
 
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
             stmt.setString(1, "%" + keyword + "%");
             ResultSet rs = stmt.executeQuery();
 
@@ -72,9 +75,10 @@ public class AdminExerciseServices {
     }
 
     public static void deleteExercises(List<Integer> ids) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String sql = "DELETE FROM exercise WHERE id = ?";
 
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
 
             for (Integer id : ids) {
                 stmt.setInt(1, id);
@@ -85,23 +89,25 @@ public class AdminExerciseServices {
         }
     }
     
-    public static void updateExercise(Exercise exercise) throws SQLException {  
-    String sql = "UPDATE exercise SET exerciseName = ?, caloriesPerMinute = ? WHERE id = ?";
-    try (Connection conn = JdbcUtils.getConn();
-         PreparedStatement stmt = conn.prepareStatement(sql)) {
+    public static void updateExercise(Exercise exercise) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
+        String sql = "UPDATE exercise SET exerciseName = ?, caloriesPerMinute = ? WHERE id = ?";
+        try (
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-        stmt.setString(1, exercise.getExerciseName());
-        stmt.setFloat(2, exercise.getCaloriesPerMinute());
-        stmt.setInt(3, exercise.getId());
+            stmt.setString(1, exercise.getExerciseName());
+            stmt.setFloat(2, exercise.getCaloriesPerMinute());
+            stmt.setInt(3, exercise.getId());
 
-        stmt.executeUpdate();
-        }
+            stmt.executeUpdate();
+            }
     }
     
-    public static boolean isExerciseNameTaken(String exercisename) {
+    public static boolean isExerciseNameTaken(String exercisename) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String query = "SELECT COUNT(*) FROM exercise WHERE exerciseName = ?";
         
-        try (Connection conn = JdbcUtils.getConn();
+        try (
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
             stmt.setString(1, exercisename);
@@ -116,10 +122,11 @@ public class AdminExerciseServices {
         return false;
     }
     
-    public static boolean isExerciseNameTakenUp(String exercisename, int id) {
+    public static boolean isExerciseNameTakenUp(String exercisename, int id) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String query = "SELECT COUNT(*) FROM exercise WHERE exerciseName = ? and id != ?";
         
-        try (Connection conn = JdbcUtils.getConn();
+        try (
              PreparedStatement stmt = conn.prepareStatement(query)) {
             
             stmt.setString(1, exercisename);
