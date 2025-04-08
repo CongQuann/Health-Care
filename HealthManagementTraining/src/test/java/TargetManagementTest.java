@@ -284,4 +284,18 @@ public class TargetManagementTest {
         }
     }
     
+    @Test
+    public void testCheckCalochange() throws SQLException{
+        try (org.mockito.MockedStatic<Utils> mockedUtils = mockStatic(Utils.class)) {
+            mockedUtils.when(() -> Utils.getAlert(anyString()))
+                       .thenReturn(mock(Alert.class));
+            boolean result = controller.checkCaloChange(1500f); //calo change > 1000
+            assertFalse(result);
+            boolean result1 = controller.checkCaloChange(-1500f); //calo change < -1000
+            assertFalse(result1);
+            boolean result2 = controller.checkCaloChange(500f); //calo change đúng
+            assertTrue(result2);
+        }
+    }
+    
 }
