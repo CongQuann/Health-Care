@@ -1,6 +1,7 @@
 import com.sixthgroup.healthmanagementtraining.SignUpController;
 import com.sixthgroup.healthmanagementtraining.services.SignUpServices;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
+import com.sixthgroup.healthmanagementtraining.services.Utils;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -8,10 +9,13 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.stream.Stream;
+import javafx.scene.control.Alert;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.mockStatic;
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -61,17 +65,19 @@ public class SignUpTest {
         connection.close();
     }
 
-    // Truyền dữ liệu sai để kiểm thử lỗi
+    // Truyền dữ liệu 
     static Stream<Arguments> invalidInputProvider() {
         return Stream.of(
-                Arguments.of("", "Password123!", "Password123!", "John Doe", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", "Có Thông Tin Chưa Điền!!!!!"),
-                Arguments.of("user1", "pass", "pass", "John Doe", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", "Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!"),
-                Arguments.of("user@name", "Password123!", "Password123!", "John Doe", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", "Tên đăng nhập phải bắt đầu bằng chữ cái, không chứa ký tự đặc biệt hoặc khoảng trắng, tối thiểu 5 ký tự!"),
-                Arguments.of("validUser", "Password123!", "Passw0rd!", "John Doe", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", "Mật khẩu nhập lại không khớp!"),
-                Arguments.of("validUser", "Password123!", "Password123!", "John 123", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", "Họ tên không được chứa số hoặc ký tự đặc biệt!"),
-                Arguments.of("validUser", "Password123!", "Password123!", "John Doe", "invalid-email", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", "Email không hợp lệ!"),
-                Arguments.of("validUser", "Password123!", "Password123!", "John Doe", "email@example.com", "-10", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", "Chiều cao phải là số dương và không vượt quá 300cm!"),
-                Arguments.of("validUser", "Password123!", "Password123!", "John Doe", "email@example.com", "180", "-5", "Nam", LocalDate.of(2000, 1, 1), "sedentary", "Cân nặng phải là số dương và không vượt quá 500kg!")
+                Arguments.of("", "Password123!", "Password123!", "John Doe", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),                //có trường bị rỗng
+                Arguments.of("user1", "pass", "pass", "John Doe", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),                           //mật khẩu không đúng ràng buộc
+                Arguments.of("user@name", "Password123!", "Password123!", "John Doe", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),       //username có ký tự đặc biệt
+                Arguments.of("validUser", "Password123!", "Passw0rd!", "John Doe", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),          //xác nhận lại mật khẩu bị sai
+                Arguments.of("validUser", "Password123!", "Password123!", "John 123", "email@example.com", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),       //tên chứa ký tự số
+                Arguments.of("validUser", "Password123!", "Password123!", "John Doe", "invalid-email", "180", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),           //email sai format
+                Arguments.of("validUser", "Password123!", "Password123!", "John Doe", "email@example.com", "-10", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),       // giá trị height <0
+                Arguments.of("validUser", "Password123!", "Password123!", "John Doe", "email@example.com", "180", "-5", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),       //giá trị weight < 0
+                Arguments.of("quan", "Password123!", "Password123!", "Nguyễn Văn A", "test@example.com", "170", "60", "Nam", LocalDate.of(2000, 1, 1), "lightlyActive", false), // tên đăng nhập tồn tại
+                Arguments.of("newuser", "Password123!", "Password123!", "Nguyễn Văn B", "newuser@example.com", "175", "65", "Nam", LocalDate.of(2000, 1, 1), "lightlyActive", true) // thêm đúng thông tin
         );
     }
 
@@ -81,41 +87,22 @@ public class SignUpTest {
     void testValidateSignUpData_InvalidInputs(
             String username, String password, String confirmPassword, String fullname,
             String email, String height, String weight, String gender, LocalDate dob,
-            String activityLevel, String expectedErrorMsg
+            String activityLevel, boolean expectedResult
     ) {
-        IllegalArgumentException thrown = assertThrows(
-                IllegalArgumentException.class,
-                () -> controller.validateSignUpData(username, password, confirmPassword, fullname, email, height, weight, gender, dob, activityLevel)
-        );
-        assertTrue(thrown.getMessage().contains(expectedErrorMsg));
-    }
-
-    //kiểm tra tên đăng nhập tồn tại
-    @Test
-    void testValidateSignUpData_UsernameAlreadyExists() {
-        IllegalArgumentException thrown = assertThrows(
-                IllegalArgumentException.class,
-                () -> controller.validateSignUpData(
-                        "quan", "Password123!", "Password123!", "Nguyễn Văn A",
-                        "test@example.com", "170", "60", "Nam", LocalDate.of(2000, 1, 1),
-                        "lightlyActive")
-        );
-        assertTrue(thrown.getMessage().contains("Tên đăng nhập đã tồn tại!"));
-    }
-
-    //khi thêm đúng thông tin
-    @Test
-    void testValidateSignUpData_ValidInput() {
-        assertDoesNotThrow(() -> controller.validateSignUpData(
-                "newuser", "Password123!", "Password123!", "Nguyễn Văn B",
-                "newuser@example.com", "175", "65", "Nam", LocalDate.of(2000, 1, 1),
-                "lightlyActive"));
+        try (org.mockito.MockedStatic<Utils> mockedUtils = mockStatic(Utils.class)) {
+            mockedUtils.when(() -> Utils.getAlert(anyString()))
+                       .thenReturn(mock(Alert.class));
+            boolean result = controller.validateSignUpData(username, password, confirmPassword, fullname, email, height,
+                    weight, gender, dob, activityLevel
+            );
+            assertEquals(expectedResult, result);
+        }
+             
     }
 
     //kiểm thử hàm SignUpServices.saveUserInfo()
     @Test
-    void testSaveUserInfo_SuccessfulInsert() throws SQLException {
-        // 1. Gọi phương thức lưu
+    void testSaveUserInfo() throws SQLException {
         boolean result = controller.signUpServices.saveUserInfo(
                 "uniqueuser", "Password123!", "Trần Văn C", "tranvanc@example.com",
                 170.0, 70.0, "Nam", LocalDate.of(2000, 1, 1), "lightlyActive"
@@ -123,7 +110,6 @@ public class SignUpTest {
 
         assertTrue(result);
 
-        // 3. Kiểm tra dữ liệu đã thực sự tồn tại trong DB
         Connection conn = JdbcUtils.getConn();
         PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM userinfo WHERE userName = ?");
         pstmt.setString(1, "uniqueuser");
@@ -137,5 +123,4 @@ public class SignUpTest {
         assertEquals("lightlyActive", rs.getString("activityLevel"));
         assertEquals("user", rs.getString("role"));
     }
-    //abc
 }
