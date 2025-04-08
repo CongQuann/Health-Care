@@ -13,6 +13,7 @@ import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -206,7 +207,7 @@ public class NutritionServices {
 
     public void deleteFoodFromLog(int foodId, String userId, LocalDate servingDate) throws SQLException {
         String sql = "DELETE FROM nutritionlog WHERE food_id = ? AND userInfo_id = ? AND servingDate = ?";
-
+       
         try (Connection conn = JdbcUtils.getConn(); PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setInt(1, foodId);
@@ -217,7 +218,7 @@ public class NutritionServices {
             if (rowsAffected == 0) {
                 System.out.println("Không có dữ liệu nào bị xóa!");
             } else {
-                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa món ăn khỏi nhật kí");
+//                Utils.showAlert(Alert.AlertType.INFORMATION, "Thành công", "Đã xóa món ăn khỏi nhật kí");
             }
         } catch (SQLException e) {
             e.printStackTrace();

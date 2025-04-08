@@ -100,7 +100,7 @@ public class NutritionTest {
                     + "userInfo_id VARCHAR(36),"
                     + "FOREIGN KEY (userInfo_id) REFERENCES userinfo(id) ON DELETE CASCADE ON UPDATE CASCADE "
                     + ");";
-            
+
             stmt.execute(createTableSQL);
             // Insert data vào bảng để kiểm thử
             String insertCategorySQL = "INSERT INTO foodcategory (id, categoryName) "
@@ -354,13 +354,14 @@ public class NutritionTest {
     public void testDeleteFoodFromLog_Success() throws SQLException {
         // Giả lập dữ liệu ban đầu trong DB
         Food food = new Food();
-        food.setId(2);
-        food.setSelectedQuantity(200);
+        food.setId(2); // vì bạn insert food_id = 1 trong setUp()
+        food.setSelectedQuantity(300);
         LocalDate servingDate = LocalDate.now();
 
         String insertSql = "INSERT INTO nutritionlog (food_id, userInfo_id, servingDate, numberOfUnit) VALUES (?, ?, ?, ?)";
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(insertSql)) {
-            stmt.setInt(1, food.getId());
+        // Thêm bản ghi vào nutritionlog trước để xóa
+        try (PreparedStatement stmt = connection.prepareStatement(insertSql)) {
+            stmt.setInt(1, food.getId()); // food.getId() == 2
             stmt.setString(2, userId);
             stmt.setDate(3, Date.valueOf(servingDate));
             stmt.setInt(4, food.getSelectedQuantity());
@@ -369,12 +370,12 @@ public class NutritionTest {
 
         // Thực thi phương thức cần test
         ns.deleteFoodFromLog(food.getId(), userId, servingDate);
+
         // Đảm bảo kết nối vẫn còn
         if (connection == null || connection.isClosed()) {
             connection = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;", "sa", "");
             JdbcUtils.setCustomConnection(connection);
         }
-
         // Kiểm tra bản ghi đã bị xóa chưa
         String checkSql = "SELECT COUNT(*) FROM nutritionlog WHERE food_id = ? AND userInfo_id = ? AND servingDate = ?";
         try (PreparedStatement stmt = connection.prepareStatement(checkSql)) {
@@ -384,8 +385,7 @@ public class NutritionTest {
             ResultSet rs = stmt.executeQuery();
             rs.next();
             int count = rs.getInt(1);
-            System.out.println("Count:" + count);
-            Assertions.assertEquals(1, count, "Bài tập phải được xóa khỏi nutritionlog");
+            Assertions.assertEquals(0, count, "Món ăn phải được xóa khỏi nutritionlog");
         }
     }
 
@@ -393,8 +393,6 @@ public class NutritionTest {
     public void testDeleteFoodFromLog_NoMatchingRecord() throws SQLException {
         int nonExistentFoodId = 9999; // ID không tồn tại trong workoutlog
         LocalDate servingDate = LocalDate.now();
-
-        
 
         // Đảm bảo không có bản ghi nào trùng với thông tin cần xóa
         String checkSql = "SELECT COUNT(*) FROM nutritionlog WHERE food_id = ? AND userInfo_id = ? AND servingDate = ?";
@@ -426,7 +424,6 @@ public class NutritionTest {
             Assertions.assertEquals(0, countAfter, "Không có bài tập nào bị xóa vì ID không tồn tại");
         }
     }
-
 
     @Test
     public void testIsFoodAlreadyLogged_ReturnsFalse_WhenNoLogExists() throws SQLException {

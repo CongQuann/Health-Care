@@ -299,11 +299,6 @@ public class ExercisesTest {
             stmt.setInt(4, ex.getId());
             stmt.executeUpdate();
         }
-//        String count1 = "SELECT COUNT(*) FROM workoutlog";
-//        PreparedStatement stmt1 = connection.prepareStatement(count1);
-//        ResultSet rs1 = stmt1.executeQuery();
-//        int count2 = rs1.getInt(1);
-//        System.out.println("Count sau khi thêm :" + count2);
         // Thực thi phương thức cần test
         es.deleteExerciseFromLog(ex.getId(), userId, workoutDate);
         // Đảm bảo kết nối vẫn còn
@@ -311,6 +306,7 @@ public class ExercisesTest {
             connection = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;", "sa", "");
             JdbcUtils.setCustomConnection(connection);
         }
+
         // Kiểm tra bản ghi đã bị xóa chưa
         String checkSql = "SELECT COUNT(*) FROM workoutlog WHERE exercise_id = ? AND userInfo_id = ? AND workoutDate = ?";
         try (PreparedStatement stmt = connection.prepareStatement(checkSql)) {
@@ -320,8 +316,7 @@ public class ExercisesTest {
             ResultSet rs = stmt.executeQuery();
             rs.next();
             int count = rs.getInt(1);
-            System.out.println("Count:" + count);
-            Assertions.assertEquals(1, count, "Bài tập phải được xóa khỏi workoutlog");
+            Assertions.assertEquals(0, count, "Bài tập phải được xóa khỏi workoutlog");
         }
     }
 
@@ -329,8 +324,6 @@ public class ExercisesTest {
     void testDeleteExerciseFromLog_NoMatchingRecord() throws SQLException {
         int nonExistentExerciseId = 9999; // ID không tồn tại trong workoutlog
         LocalDate workoutDate = LocalDate.now();
-
-        
 
         // Đảm bảo không có bản ghi nào trùng với thông tin cần xóa
         String checkSql = "SELECT COUNT(*) FROM workoutlog WHERE exercise_id = ? AND userInfo_id = ? AND workoutDate = ?";
