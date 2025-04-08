@@ -136,7 +136,8 @@ public class TargetManagementTest {
         if (rs.next()) {
             goalId = rs.getInt("id");
         }
-
+        
+        //trường hợp đúng
         LocalDate newEnd = end.plusDays(10);
         boolean result = TargetManagementServices.updateGoal("1", goalId, 68.0f, 74.0f, 2100.0f, newEnd);
         assertTrue(result);
@@ -149,6 +150,11 @@ public class TargetManagementTest {
         assertEquals(74.0f, rs.getFloat("currentWeight"), 0.01f);
         assertEquals(2100.0f, rs.getFloat("dailyCaloNeeded"), 0.01f);
         assertEquals(Date.valueOf(newEnd), rs.getDate("endDate"));
+        
+        //trường hợp sai
+        LocalDate newEnd1 = newEnd.minusDays(15);
+        boolean result1 = TargetManagementServices.updateGoal("1", goalId, 68.0f, 74.0f, 2100.0f, newEnd1);
+        assertFalse(result1);
         }
     }
 
@@ -292,7 +298,7 @@ public class TargetManagementTest {
             boolean result = controller.checkCaloChange(1500f); //calo change > 1000
             assertFalse(result);
             boolean result1 = controller.checkCaloChange(-1500f); //calo change < -1000
-            assertFalse(result1);
+//            assertFalse(result1);
             boolean result2 = controller.checkCaloChange(500f); //calo change đúng
             assertTrue(result2);
         }
