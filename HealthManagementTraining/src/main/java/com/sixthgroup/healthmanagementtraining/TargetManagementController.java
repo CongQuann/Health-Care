@@ -23,6 +23,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -238,6 +240,19 @@ public class TargetManagementController implements Initializable {
         List<Goal> goals = TargetManagementServices.getGoalsByUser(userInfoId);
         ObservableList<Goal> goalList = FXCollections.observableArrayList(goals);
         goalTableView.setItems(goalList);
+        if (!goalList.isEmpty()) {
+            Goal CurrentGoal = new Goal();
+            try {
+                CurrentGoal = TargetManagementServices.getCurrentGoal(userInfoId);
+            } catch (SQLException ex) {
+                Logger.getLogger(TargetManagementController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            boolean check = checkProgressWarning(CurrentGoal); // kiem tra tien do
+            if (check) {
+                Utils.getAlert("CẢNH BÁO!!!!!.....Bạn đang chậm tiến độ! Hãy cố gắng hơn.").show();
+            }
+        }
     }
 
     // update Goal
@@ -255,7 +270,6 @@ public class TargetManagementController implements Initializable {
                 goal.setCurrentWeight(currentWeight);
                 goal.setEndDate(endDate);
                 loadGoals();
-                checkProgressWarning(goal); // kiem tra tien do
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -264,7 +278,7 @@ public class TargetManagementController implements Initializable {
     }
 
     //ham tinh tien do hoan thanh bai tap
-    private void checkProgressWarning(Goal goal) {
+    public boolean checkProgressWarning(Goal goal) {
         LocalDate currentDate = LocalDate.now();
         LocalDate startDate = goal.getStartDate();
         LocalDate endDate = goal.getEndDate();
@@ -273,9 +287,15 @@ public class TargetManagementController implements Initializable {
             double progressTime = ((double) ChronoUnit.DAYS.between(startDate, currentDate)
                     / ChronoUnit.DAYS.between(startDate, endDate)) * 100;
 
-            if (progressTime > 50 && goal.getCurrentProgress() < 50) {
-                Utils.getAlert("CẢNH BÁO!!!!!.....Bạn đang chậm tiến độ! Hãy cố gắng hơn.").show();
+            if (progressTime >= 50 && goal.getCurrentProgress() < 50) {
+                return true;
+            } else {
+                return false;
             }
+
+        } else {
+            Utils.getAlert("CẢNH BÁO!! ngày bắt đầu(kết thúc) không hợp lệ").show();
+            return false;
         }
     }
 
@@ -323,10 +343,19 @@ public class TargetManagementController implements Initializable {
             Utils.getAlert("Khoảng thời gian bị trùng, không thể thêm!").show();
             return false;
         }
+        
 
         return true;
     }
-
+    
+    public boolean checkCaloChange(float caloChange) throws SQLException {
+        if (caloChange > 1000 || caloChange < -1000) {
+                Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Mục tiêu bạn tạo không phù hợp với lượng calo thay đổi mỗi ngày!");
+                return false;
+        }
+        return true;
+    }
+    
     //add goal
     @FXML
     private void addGoal() {
@@ -346,11 +375,8 @@ public class TargetManagementController implements Initializable {
 
             CalorieResult caloResult = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, startDate, endDate);
             float caloChange = caloResult.getDailyCalorieChange();
-
-            if (caloChange > 1000 || caloChange < -1000) {
-                Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Mục tiêu bạn tạo không phù hợp với lượng calo thay đổi mỗi ngày!");
-                return;
-            } else {
+            if(checkCaloChange(caloChange))
+            {
                 float caloNeeded = caloResult.getDailyCalorieIntake();
                 TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, caloNeeded, startDate, endDate, targetType);
                 System.out.println("Userid :" + userInfoId);

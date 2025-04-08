@@ -28,7 +28,7 @@ public class SecondaryTest {
         return Stream.of(
                 Arguments.of("", "password", false),                            // thiếu username
                 Arguments.of("username", "", false),                            // thiếu password
-                Arguments.of("", "", false),         // thiếu username và passsword
+                Arguments.of("", "", false),                                    // thiếu username và passsword
                 Arguments.of("username", "password", true)                      // đầy đủ
 
         );

@@ -58,6 +58,33 @@ public class TargetManagementServices {
         return goals;
     }
 
+    //lấy mục tiêu hiện tại
+    public static Goal getCurrentGoal(String userInfoId) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
+        String sql = "SELECT * FROM goal WHERE userInfo_id = ? AND ? BETWEEN startDate AND endDate";
+
+        try (PreparedStatement stmt = conn.prepareStatement(sql)) {
+            stmt.setString(1, userInfoId);
+            stmt.setDate(2, Date.valueOf(LocalDate.now()));
+            ResultSet rs = stmt.executeQuery();
+
+            if (rs.next()) {
+                Goal goal = new Goal(
+                        rs.getInt("id"),
+                        rs.getFloat("targetWeight"),
+                        rs.getFloat("currentWeight"),
+                        rs.getDate("startDate").toLocalDate(),
+                        rs.getDate("endDate").toLocalDate(),
+                        rs.getFloat("dailyCaloNeeded"),
+                        rs.getInt("currentProgress")
+                );
+                goal.setUserInfoId(userInfoId);
+                return goal;
+            }
+        }
+        return null; // Không có goal nào đang hoạt động
+    }
+
     // Thêm mục tiêu mới
     public static void addGoal(String userInfoId, float targetWeight, float currentWeight, float caloriesNeeded, LocalDate startDate, LocalDate endDate, String targetType) throws SQLException {
         Connection conn = JdbcUtils.getConn();
@@ -160,7 +187,7 @@ public class TargetManagementServices {
                 + "startDate BETWEEN ? AND ? OR "
                 + "endDate BETWEEN ? AND ?)";
 
-        try ( PreparedStatement stmt = conn.prepareStatement(query)) {
+        try (PreparedStatement stmt = conn.prepareStatement(query)) {
 
             stmt.setString(1, userId);
             stmt.setDate(2, Date.valueOf(newStartDate));
