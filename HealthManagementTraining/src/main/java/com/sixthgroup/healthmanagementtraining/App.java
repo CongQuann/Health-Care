@@ -20,7 +20,7 @@ public class App extends Application {
         stage = primaryStage;
 
 
-        Parent root = loadFXML("TargetManagement");
+        Parent root = loadFXML("secondary");
 
 
         // Không đặt kích thước cố định, JavaFX sẽ tự động lấy từ FXML
