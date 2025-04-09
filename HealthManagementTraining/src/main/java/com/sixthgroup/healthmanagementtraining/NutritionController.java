@@ -502,15 +502,18 @@ public class NutritionController implements Initializable {
     private void loadRecommendedNutrition() throws SQLException {
         System.out.println("now: " + String.valueOf(LocalDate.now()));
         Goal currentGoal = TargetManagementServices.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()));
-        if (currentGoal.getId() != 0) {
+        if (currentGoal != null) {
+            if (currentGoal.getId() != 0) {
 
-            System.out.println("not null");
-            TargetManagementController t = new TargetManagementController();
-            CalorieResult cr = t.calCaloriesNeeded(Utils.getUser(), currentGoal.getTargetWeight(), currentGoal.getCurrentWeight(), currentGoal.getStartDate(), currentGoal.getEndDate());
-            txtRecomendedProtein.setText(String.valueOf(cr.getDailyProteinIntake()));
-            txtRecomendedLipid.setText(String.valueOf(cr.getDailyLipidIntake()));
-            txtRecomendedFiber.setText(String.valueOf(cr.getDailyFiberIntake()));
-        } else if (currentGoal == null) {
+                System.out.println("not null");
+                TargetManagementController t = new TargetManagementController();
+                CalorieResult cr = t.calCaloriesNeeded(Utils.getUser(), currentGoal.getTargetWeight(), currentGoal.getCurrentWeight(), currentGoal.getStartDate(), currentGoal.getEndDate());
+                txtRecomendedProtein.setText(String.valueOf(cr.getDailyProteinIntake()));
+                txtRecomendedLipid.setText(String.valueOf(cr.getDailyLipidIntake()));
+                txtRecomendedFiber.setText(String.valueOf(cr.getDailyFiberIntake()));
+            }
+
+        } else {
 
             txtRecomendedProtein.setText(String.valueOf(0));
             txtRecomendedLipid.setText(String.valueOf(0));
@@ -519,5 +522,4 @@ public class NutritionController implements Initializable {
         }
 
     }
-
 }
