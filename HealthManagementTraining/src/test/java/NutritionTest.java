@@ -4,6 +4,7 @@ import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.pojo.UnitType;
 import com.sixthgroup.healthmanagementtraining.services.NutritionServices;
+import com.sixthgroup.healthmanagementtraining.services.Utils;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -563,8 +564,18 @@ public class NutritionTest {
     @ParameterizedTest(name = "inputQuantity: {0}, unitType: {1} => expected: {2}")
     @MethodSource("inputProvider")
     void testIsValidInput(String inputQuantity, String unitType, boolean expected) {
-        boolean result = ns.isValidInput(inputQuantity, unitType);
-        Assertions.assertEquals(expected, result);
+//        boolean result = ns.isValidInput(inputQuantity, unitType);
+//        Assertions.assertEquals(expected, result);
+        try (MockedStatic<Utils> mockedUtils = mockStatic(Utils.class)) {
+            boolean result = ns.isValidInput(inputQuantity, unitType);
+            Assertions.assertEquals(expected, result);
+
+            if (!expected) {
+                mockedUtils.verify(() -> Utils.showAlert(any(), anyString(), anyString()), times(1));
+            } else {
+                mockedUtils.verifyNoInteractions();
+            }
+        }
     }
     private static Stream<Arguments> inputProvider() {
         return Stream.of(
@@ -586,10 +597,10 @@ public class NutritionTest {
                 Arguments.of("501", "ml", false), // trên max
 
                 // ==== Các đơn vị khác (miếng) ==== 10 <=x <=20
-                Arguments.of("9", "ml", false), // dưới min
-                Arguments.of("10", "ml", true), // min    
-                Arguments.of("20", "ml", true), // max
-                Arguments.of("21", "ml", false) // trên max
+                Arguments.of("9", "piece", false), // dưới min
+                Arguments.of("10", "piece", true), // min    
+                Arguments.of("20", "piece", true), // max
+                Arguments.of("21", "piece", false) // trên max
                 
     );
     }

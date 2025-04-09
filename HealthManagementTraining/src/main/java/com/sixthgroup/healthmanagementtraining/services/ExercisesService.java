@@ -98,6 +98,7 @@ public class ExercisesService {
                 if (!bypassExerciseCheck && isExerciseAlreadyLogged(userId, workoutDate, exercise.getId())) {
                     continue; // Nếu bài tập đã có, bỏ qua
                 }
+                
                 insertStmt.setInt(1, exercise.getDuration());
                 insertStmt.setDate(2, Date.valueOf(workoutDate));
                 insertStmt.setString(3, userId);
@@ -156,12 +157,12 @@ public class ExercisesService {
             return false;
         }
     }
-    
+    public boolean isPositiveDuration(int duration){
+        return duration > 0;
+    }
     public boolean isExistExercise(List<Exercise> selectedExercises, Exercise currentExercise) {
 
         for (Exercise e : selectedExercises) {
-//            System.out.println("current: " + currentExercise.getExerciseName());
-//            System.out.println("list: " + e.getExerciseName());
             if (currentExercise.getExerciseName().equals(e.getExerciseName())) {
                 return true;
             }

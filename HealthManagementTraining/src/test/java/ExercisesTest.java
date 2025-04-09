@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -358,7 +359,8 @@ public class ExercisesTest {
             Assertions.assertEquals(0, countAfter, "Không có bài tập nào bị xóa vì ID không tồn tại");
         }
     }
-     // Test dùng dữ liệu từ method cung cấp danh sách bài tập
+    // Test dùng dữ liệu từ method cung cấp danh sách bài tập
+
     @ParameterizedTest
     @MethodSource("exerciseListsProvider")
     public void testCheckTotalTime_WithVariousExerciseLists(List<Exercise> exercises, boolean expectedResult) {
@@ -394,8 +396,45 @@ public class ExercisesTest {
                         new Exercise(200),
                         new Exercise(1000)
                 ), true)
-                
-                
+        );
+
+    }
+
+    @ParameterizedTest(name = "Test isExistFood - expected: {2}")
+    @MethodSource("exerciseListsProvider2")
+
+    void testIsExistExercise(List<Exercise> selectedExercises, Exercise currentExercise, boolean expected) {
+        boolean result = es.isExistExercise(selectedExercises, currentExercise);
+        Assertions.assertEquals(expected, result);
+    }
+
+    private static Stream<Arguments> exerciseListsProvider2() {
+        return Stream.of(
+                // danh sách rỗng → ko vi phạm -> false
+                Arguments.of(List.of(), new Exercise(1, "Running", 10), false),
+                // Case 2: Không trùng tên  → ko vi phạm → false
+                Arguments.of(List.of(
+                        new Exercise(1, "Running", 10),
+                        new Exercise(2, "Cycling", 15)
+                ), new Exercise(3, "Swimming", 16), false),
+                // Case 3: Trùng đầu danh sách  → vi phạm → true
+                Arguments.of(List.of(
+                        new Exercise(1, "Running", 10),
+                        new Exercise(2, "Cycling", 15)
+                ), new Exercise(3, "Running", 10), true),
+                // Case 4: Trùng cuối danh sách → vi phạm -> true
+                Arguments.of(List.of(
+                        new Exercise(1, "Running", 10),
+                        new Exercise(2, "Cycling", 15)
+                ),  new Exercise(3, "Cycling", 15), true),
+                // Case 5: 1 phần tử trùng  →  vi phạm → true
+                Arguments.of(List.of(
+                       new Exercise(1, "Running", 10)
+                ), new Exercise(2, "Running", 10), true),
+                // Case 6: 1 phần tử khác  →  ko vi phạm → false
+                Arguments.of(List.of(
+                         new Exercise(1, "Running", 10)
+                ), new Exercise(2,"Swimming",16), false)
         );
 
     }

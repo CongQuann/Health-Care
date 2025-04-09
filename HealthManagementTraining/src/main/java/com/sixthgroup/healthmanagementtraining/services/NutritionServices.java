@@ -278,6 +278,7 @@ public class NutritionServices {
             }
         } catch (NumberFormatException e) {
             Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập một số nguyên hợp lệ!");
+//            e.printStackTrace();
             return false;
         }
     }
