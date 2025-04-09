@@ -284,15 +284,11 @@ public class NutritionServices {
     public boolean isExistFood(List<Food> selectedFoods, Food currentFood) {
 
         for (Food f : selectedFoods) {
-//            System.out.println("current: " + currentExercise.getExerciseName());
-//            System.out.println("list: " + e.getExerciseName());
             if (currentFood.getFoodName().equals(f.getFoodName())) {
                 return true;
             }
         }
-
-        return false;
-
+        return false; // Trả về false nếu không bị trùng
     }
 
     public boolean isFoodAlreadyLogged(String userId, LocalDate servingDate, int foodId) {

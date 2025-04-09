@@ -15,13 +15,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-
+import org.junit.jupiter.params.provider.Arguments;
 import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -61,7 +64,7 @@ public class NutritionTest {
                     + "fiberPerUnit FLOAT, "
                     + "foodCategory_id INT, "
                     + "unitType ENUM('gram', 'ml', 'piece'), "
-                    + "FOREIGN KEY (foodCategory_id) REFERENCES foodcategory(id)"
+                    + "FOREIGN KEY (foodCategory_id) REFERENCES foodcategory(id) ON DELETE CASCADE ON UPDATE CASCADE"
                     + ");"
                     + "CREATE TABLE userinfo ("
                     + "id VARCHAR(50) , "
@@ -84,8 +87,8 @@ public class NutritionTest {
                     + "userInfo_id VARCHAR(255), "
                     + "servingDate DATE, "
                     + "numberOfUnit INT, "
-                    + "FOREIGN KEY (food_id) REFERENCES food(id), "
-                    + "FOREIGN KEY (userInfo_id) REFERENCES userinfo(id)"
+                    + "FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE ON UPDATE CASCADE, "
+                    + "FOREIGN KEY (userInfo_id) REFERENCES userinfo(id) ON DELETE CASCADE ON UPDATE CASCADE "
                     + ");"
                     + "CREATE TABLE goal ("
                     + "id INT PRIMARY KEY AUTO_INCREMENT, "
@@ -517,5 +520,77 @@ public class NutritionTest {
         Assertions.assertDoesNotThrow(() -> {
             float dailyCaloNeeded = ns.getDailyCaloNeeded(username, currentDate);
         }, "The SQL query should not throw an exception.");
+    }
+
+    @ParameterizedTest(name = "Test isExistFood - expected: {2}")
+    @MethodSource("foodListsProvider")
+    void testIsExistFood(List<Food> selectedFoods, Food currentFood, boolean expected) {
+        boolean result = ns.isExistFood(selectedFoods, currentFood);
+        Assertions.assertEquals(expected, result);
+    }
+
+    private static Stream<Arguments> foodListsProvider() {
+        return Stream.of(
+                // danh sách rỗng → ko vi phạm -> false
+                Arguments.of(List.of(), new Food("Apple"), false),
+                // Case 2: Không trùng tên  → ko vi phạm → false
+                Arguments.of(List.of(
+                        new Food("Banana"),
+                        new Food("Orange")
+                ), new Food("Apple"), false),
+                // Case 3: Trùng đầu danh sách  → vi phạm → true
+                Arguments.of(List.of(
+                        new Food("Apple"),
+                        new Food("Banana")
+                ), new Food("Apple"), true),
+                // Case 4: Trùng cuối danh sách → vi phạm -> true
+                Arguments.of(List.of(
+                        new Food("Banana"),
+                        new Food("Apple")
+                ), new Food("Apple"), true),
+                // Case 5: 1 phần tử trùng  →  vi phạm → true
+                Arguments.of(List.of(
+                        new Food("Apple")
+                ), new Food("Apple"), true),
+                // Case 6: 1 phần tử khác  →  ko vi phạm → false
+                Arguments.of(List.of(
+                        new Food("Apple")
+                ), new Food("Banana"), false)
+        );
+
+    }
+    
+    @ParameterizedTest(name = "inputQuantity: {0}, unitType: {1} => expected: {2}")
+    @MethodSource("inputProvider")
+    void testIsValidInput(String inputQuantity, String unitType, boolean expected) {
+        boolean result = ns.isValidInput(inputQuantity, unitType);
+        Assertions.assertEquals(expected, result);
+    }
+    private static Stream<Arguments> inputProvider() {
+        return Stream.of(
+                // ==== input không hợp lệ ====
+                Arguments.of("abc", "", false), // nhập kí tự sai định dạng
+                Arguments.of("", "ml", false),  // không nhập
+                Arguments.of("10.5", "gram", false), // nhập không phải số nguyên
+                
+                // ==== GRAM ==== 50 <=x <= 300
+                Arguments.of("49", "gram", false), // dưới min
+                Arguments.of("50", "gram", true), // min
+                Arguments.of("300", "gram", true), // max
+                Arguments.of("301", "gram", false), // trên max
+
+                // ==== ML ==== 200 <=x <=500
+                Arguments.of("199", "ml", false), // dưới min
+                Arguments.of("200", "ml", true), // min    
+                Arguments.of("500", "ml", true), // max
+                Arguments.of("501", "ml", false), // trên max
+
+                // ==== Các đơn vị khác (miếng) ==== 10 <=x <=20
+                Arguments.of("9", "ml", false), // dưới min
+                Arguments.of("10", "ml", true), // min    
+                Arguments.of("20", "ml", true), // max
+                Arguments.of("21", "ml", false) // trên max
+                
+    );
     }
 }

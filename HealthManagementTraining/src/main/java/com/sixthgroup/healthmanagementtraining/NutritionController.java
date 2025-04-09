@@ -500,12 +500,10 @@ public class NutritionController implements Initializable {
     }
 
     private void loadRecommendedNutrition() throws SQLException {
-        System.out.println("now: " + String.valueOf(LocalDate.now()));
         Goal currentGoal = TargetManagementServices.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()));
         if (currentGoal != null) {
             if (currentGoal.getId() != 0) {
 
-                System.out.println("not null");
                 TargetManagementController t = new TargetManagementController();
                 CalorieResult cr = t.calCaloriesNeeded(Utils.getUser(), currentGoal.getTargetWeight(), currentGoal.getCurrentWeight(), currentGoal.getStartDate(), currentGoal.getEndDate());
                 txtRecomendedProtein.setText(String.valueOf(cr.getDailyProteinIntake()));

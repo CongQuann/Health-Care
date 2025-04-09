@@ -72,8 +72,8 @@ public class ExercisesTest {
                     + "userInfo_id VARCHAR(255), "
                     + "workoutDate DATE, "
                     + "duration INT, "
-                    + "FOREIGN KEY (exercise_id) REFERENCES exercise(id), "
-                    + "FOREIGN KEY (userInfo_id) REFERENCES userinfo(id)"
+                    + "FOREIGN KEY (exercise_id) REFERENCES exercise(id) ON DELETE CASCADE ON UPDATE CASCADE, "
+                    + "FOREIGN KEY (userInfo_id) REFERENCES userinfo(id) ON DELETE CASCADE ON UPDATE CASCADE"
                     + ");";
 
             stmt.execute(createTableSQL);

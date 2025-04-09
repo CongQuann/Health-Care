@@ -36,7 +36,9 @@ public class Food {
     public Food(){
         
     }
-
+    public Food(String foodName){
+        this.foodName = foodName;
+    }
     /**
      * @return the id
      */
