@@ -286,10 +286,12 @@ public class TargetManagementController implements Initializable {
 
     //ham tinh tien do hoan thanh bai tap
     public boolean checkProgressWarning(Goal goal) {
+        if (goal == null) {
+            return false;
+        }
         LocalDate currentDate = LocalDate.now();
         LocalDate startDate = goal.getStartDate();
         LocalDate endDate = goal.getEndDate();
-
         if (startDate != null && endDate != null && !startDate.equals(endDate)) {
             double progressTime = ((double) ChronoUnit.DAYS.between(startDate, currentDate)
                     / ChronoUnit.DAYS.between(startDate, endDate)) * 100;
@@ -350,19 +352,18 @@ public class TargetManagementController implements Initializable {
             Utils.getAlert("Khoảng thời gian bị trùng, không thể thêm!").show();
             return false;
         }
-        
 
         return true;
     }
-    
+
     public boolean checkCaloChange(float caloChange) throws SQLException {
         if (caloChange > 1000 || caloChange < -1000) {
-                Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Mục tiêu bạn tạo không phù hợp với lượng calo thay đổi mỗi ngày!");
-                return false;
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Mục tiêu bạn tạo không phù hợp với lượng calo thay đổi mỗi ngày!");
+            return false;
         }
         return true;
     }
-    
+
     //add goal
     @FXML
     private void addGoal() {
@@ -382,8 +383,7 @@ public class TargetManagementController implements Initializable {
 
             CalorieResult caloResult = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, startDate, endDate);
             float caloChange = caloResult.getDailyCalorieChange();
-            if(checkCaloChange(caloChange))
-            {
+            if (checkCaloChange(caloChange)) {
                 float caloNeeded = caloResult.getDailyCalorieIntake();
                 TargetManagementServices.addGoal(userInfoId, targetWeight, currentWeight, caloNeeded, startDate, endDate, targetType);
                 System.out.println("Userid :" + userInfoId);
@@ -503,7 +503,7 @@ public class TargetManagementController implements Initializable {
             dailyLipidIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseLipidGainWeight), 1);
         }
 
-        return new CalorieResult(dailyCalorieIntake, dailyCalorieChange,dailyProteinIntake,dailyLipidIntake,Utils.convertToFloat(baseFiber));
+        return new CalorieResult(dailyCalorieIntake, dailyCalorieChange, dailyProteinIntake, dailyLipidIntake, Utils.convertToFloat(baseFiber));
 
     }
 
