@@ -48,10 +48,11 @@ public class SignUpServices {
             String gender,
             LocalDate dob,
             String activityLevel
-    ) {
+    ) throws SQLException {
+        Connection conn = JdbcUtils.getConn();
         String sql = "INSERT INTO userinfo (userName, password, name, email, height, weight, gender, DOB, activityLevel, createDate, role) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        try (Connection conn = JdbcUtils.getConn(); PreparedStatement stmt = conn.prepareStatement(sql)) {
+        try ( PreparedStatement stmt = conn.prepareStatement(sql)) {
             String hashedPassword = Utils.hashPassword(password);
             stmt.setString(1, username);
             stmt.setString(2, hashedPassword);

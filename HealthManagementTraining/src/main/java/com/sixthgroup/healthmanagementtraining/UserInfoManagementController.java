@@ -77,7 +77,9 @@ public class UserInfoManagementController implements Initializable {
         UserInfoServices userInfoServices = new UserInfoServices();
         UserInfo userInfo = userInfoServices.getUserInfo(Utils.getUser());
         System.out.println("Đang lấy thông tin cho userName: " + Utils.getUser());
-
+        //nạp combobox cho giới tính
+        ObservableList<String> genderOptions = FXCollections.observableArrayList("Nam", "Nữ");
+        genderComboBox.setItems(genderOptions);
         if (userInfo != null) {
 //            userNameField.setText(userInfo.getUserName());
             nameField.setText(userInfo.getName());
@@ -184,7 +186,7 @@ public class UserInfoManagementController implements Initializable {
         }
 
         if (userInfoServices.checkPassInput(oldPassword, newPassword, confirmPassword) == false) {
-            Utils.showAlert(Alert.AlertType.ERROR,"Lỗi", "Vui lòng điền đầy đủ thông tin!");
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng điền đầy đủ thông tin!");
             return;
         }
         if (userInfoServices.checkConfirmPass(newPassword, confirmPassword) == false) {
@@ -222,11 +224,6 @@ public class UserInfoManagementController implements Initializable {
         loadUserInfo();
         currentEmail = emailField.getText();
         setupDatePickerValidation();
-
-        //nạp combobox cho giới tính
-        ObservableList<String> genderOptions = FXCollections.observableArrayList("Nam", "Nữ");
-        genderComboBox.setItems(genderOptions);
-        genderComboBox.setValue("Nam"); // Đặt giá trị mặc định là "Nam"
 
         if (toggleNavButton != null) {
             toggleNavButton.setOnMouseClicked(event -> navbarServices.toggleNavBar(navBar));
