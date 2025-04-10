@@ -33,10 +33,18 @@ public class Food {
         this.categoryName = foodCategoryName; // Lưu tên danh mục
         this.unitType = unitType;
     }
+    public Food(int id, String foodName, float caloriesPerUnit,int selectedQuantity){
+        this.id = id;
+        this.foodName = foodName;
+        this.caloriesPerUnit = caloriesPerUnit;
+        this.selectedQuantity = selectedQuantity;
+    }
+    public Food(String foodName){
+        this.foodName = foodName;
+    }
     public Food(){
         
     }
-
     /**
      * @return the id
      */

@@ -2,6 +2,9 @@
 import com.sixthgroup.healthmanagementtraining.pojo.Exercise;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.services.ExercisesService;
+
+import com.sixthgroup.healthmanagementtraining.services.Utils;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -21,6 +24,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
+import static org.mockito.Mockito.*;
+import org.mockito.MockedStatic;
+
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
@@ -72,8 +79,8 @@ public class ExercisesTest {
                     + "userInfo_id VARCHAR(255), "
                     + "workoutDate DATE, "
                     + "duration INT, "
-                    + "FOREIGN KEY (exercise_id) REFERENCES exercise(id), "
-                    + "FOREIGN KEY (userInfo_id) REFERENCES userinfo(id)"
+                    + "FOREIGN KEY (exercise_id) REFERENCES exercise(id) ON DELETE CASCADE ON UPDATE CASCADE, "
+                    + "FOREIGN KEY (userInfo_id) REFERENCES userinfo(id) ON DELETE CASCADE ON UPDATE CASCADE"
                     + ");";
 
             stmt.execute(createTableSQL);
@@ -358,7 +365,8 @@ public class ExercisesTest {
             Assertions.assertEquals(0, countAfter, "Không có bài tập nào bị xóa vì ID không tồn tại");
         }
     }
-     // Test dùng dữ liệu từ method cung cấp danh sách bài tập
+
+    // Test dùng dữ liệu từ method cung cấp danh sách bài tập
     @ParameterizedTest
     @MethodSource("exerciseListsProvider")
     public void testCheckTotalTime_WithVariousExerciseLists(List<Exercise> exercises, boolean expectedResult) {
@@ -394,9 +402,97 @@ public class ExercisesTest {
                         new Exercise(200),
                         new Exercise(1000)
                 ), true)
-                
-                
         );
 
     }
+
+    @ParameterizedTest(name = "Test isExistFood - expected: {2}")
+    @MethodSource("exerciseListsProvider2")
+
+    void testIsExistExercise(List<Exercise> selectedExercises, Exercise currentExercise, boolean expected) {
+        boolean result = es.isExistExercise(selectedExercises, currentExercise);
+        Assertions.assertEquals(expected, result);
+    }
+
+    private static Stream<Arguments> exerciseListsProvider2() {
+        return Stream.of(
+                // danh sách rỗng → ko vi phạm -> false
+                Arguments.of(List.of(), new Exercise(1, "Running", 10), false),
+                // Case 2: Không trùng tên  → ko vi phạm → false
+                Arguments.of(List.of(
+                        new Exercise(1, "Running", 10),
+                        new Exercise(2, "Cycling", 15)
+                ), new Exercise(3, "Swimming", 16), false),
+                // Case 3: Trùng đầu danh sách  → vi phạm → true
+                Arguments.of(List.of(
+                        new Exercise(1, "Running", 10),
+                        new Exercise(2, "Cycling", 15)
+                ), new Exercise(3, "Running", 10), true),
+                // Case 4: Trùng cuối danh sách → vi phạm -> true
+                Arguments.of(List.of(
+                        new Exercise(1, "Running", 10),
+                        new Exercise(2, "Cycling", 15)
+                ), new Exercise(3, "Cycling", 15), true),
+                // Case 5: 1 phần tử trùng  →  vi phạm → true
+                Arguments.of(List.of(
+                        new Exercise(1, "Running", 10)
+                ), new Exercise(2, "Running", 10), true),
+                // Case 6: 1 phần tử khác  →  ko vi phạm → false
+                Arguments.of(List.of(
+                        new Exercise(1, "Running", 10)
+                ), new Exercise(2, "Swimming", 16), false)
+        );
+
+    }
+
+    @ParameterizedTest(name = "duration: {0} => expected: {1}")
+    @MethodSource("provideDurations")
+    void testIsPositiveDuration(int duration, boolean expected) {
+        boolean result = es.isPositiveDuration(duration);
+        Assertions.assertEquals(expected, result);
+    }
+
+    private static Stream<Arguments> provideDurations() {
+        return Stream.of(
+                Arguments.of(-10, false),
+                Arguments.of(-1, false),
+                Arguments.of(0, false),
+                Arguments.of(1, true),
+                Arguments.of(5, true),
+                Arguments.of(100, true)
+        );
+    }
+
+    @ParameterizedTest(name = "inputDuration: \"{0}\" => expected: {1}")
+    @MethodSource("provideInputDurations")
+    void testIsValidInput(String inputDuration, boolean expected) {
+        try (MockedStatic<Utils> mockedUtils = mockStatic(Utils.class)) {
+            boolean result = es.isValidInput(inputDuration);
+            Assertions.assertEquals(expected, result);
+
+            if (!expected) {
+                mockedUtils.verify(() -> Utils.showAlert(any(), anyString(), anyString()), times(1));
+            } else {
+                mockedUtils.verifyNoInteractions();
+            }
+        }
+    }
+
+    private static Stream<Arguments> provideInputDurations() {
+        return Stream.of(
+                // Phân vùng tương đương: Nhập không phải số nguyên
+                Arguments.of("abc", false),
+                Arguments.of("", false),
+                Arguments.of("10.5", false),
+                // Phân tích biên: Âm, dưới min, trong khoảng, trên max
+                Arguments.of("-5", false),
+                Arguments.of("9", false),
+                Arguments.of("10", true),
+                Arguments.of("30", true),
+                Arguments.of("45", true),
+                Arguments.of("46", false),
+                Arguments.of("100", false)
+        );
+    }
+
 }

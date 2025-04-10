@@ -4,6 +4,9 @@ import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.pojo.UnitType;
 import com.sixthgroup.healthmanagementtraining.services.NutritionServices;
+
+import com.sixthgroup.healthmanagementtraining.services.Utils;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -15,11 +18,17 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
-
+import org.junit.jupiter.params.provider.Arguments;
+import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 import static org.mockito.Mockito.*;
 import org.junit.jupiter.api.Assertions;
 
@@ -61,7 +70,7 @@ public class NutritionTest {
                     + "fiberPerUnit FLOAT, "
                     + "foodCategory_id INT, "
                     + "unitType ENUM('gram', 'ml', 'piece'), "
-                    + "FOREIGN KEY (foodCategory_id) REFERENCES foodcategory(id)"
+                    + "FOREIGN KEY (foodCategory_id) REFERENCES foodcategory(id) ON DELETE CASCADE ON UPDATE CASCADE"
                     + ");"
                     + "CREATE TABLE userinfo ("
                     + "id VARCHAR(50) , "
@@ -84,8 +93,8 @@ public class NutritionTest {
                     + "userInfo_id VARCHAR(255), "
                     + "servingDate DATE, "
                     + "numberOfUnit INT, "
-                    + "FOREIGN KEY (food_id) REFERENCES food(id), "
-                    + "FOREIGN KEY (userInfo_id) REFERENCES userinfo(id)"
+                    + "FOREIGN KEY (food_id) REFERENCES food(id) ON DELETE CASCADE ON UPDATE CASCADE, "
+                    + "FOREIGN KEY (userInfo_id) REFERENCES userinfo(id) ON DELETE CASCADE ON UPDATE CASCADE "
                     + ");"
                     + "CREATE TABLE goal ("
                     + "id INT PRIMARY KEY AUTO_INCREMENT, "
@@ -518,4 +527,181 @@ public class NutritionTest {
             float dailyCaloNeeded = ns.getDailyCaloNeeded(username, currentDate);
         }, "The SQL query should not throw an exception.");
     }
+
+    @ParameterizedTest(name = "Test isExistFood - expected: {2}")
+    @MethodSource("foodListsProvider")
+    void testIsExistFood(List<Food> selectedFoods, Food currentFood, boolean expected) {
+        boolean result = ns.isExistFood(selectedFoods, currentFood);
+        Assertions.assertEquals(expected, result);
+    }
+
+    private static Stream<Arguments> foodListsProvider() {
+        return Stream.of(
+                // danh sách rỗng → ko vi phạm -> false
+                Arguments.of(List.of(), new Food("Apple"), false),
+                // Case 2: Không trùng tên  → ko vi phạm → false
+                Arguments.of(List.of(
+                        new Food("Banana"),
+                        new Food("Orange")
+                ), new Food("Apple"), false),
+                // Case 3: Trùng đầu danh sách  → vi phạm → true
+                Arguments.of(List.of(
+                        new Food("Apple"),
+                        new Food("Banana")
+                ), new Food("Apple"), true),
+                // Case 4: Trùng cuối danh sách → vi phạm -> true
+                Arguments.of(List.of(
+                        new Food("Banana"),
+                        new Food("Apple")
+                ), new Food("Apple"), true),
+                // Case 5: 1 phần tử trùng  →  vi phạm → true
+                Arguments.of(List.of(
+                        new Food("Apple")
+                ), new Food("Apple"), true),
+                // Case 6: 1 phần tử khác  →  ko vi phạm → false
+                Arguments.of(List.of(
+                        new Food("Apple")
+                ), new Food("Banana"), false)
+        );
+
+    }
+
+    @ParameterizedTest(name = "inputQuantity: {0}, unitType: {1} => expected: {2}")
+    @MethodSource("inputProvider")
+    void testIsValidInput(String inputQuantity, String unitType, boolean expected) {
+//        boolean result = ns.isValidInput(inputQuantity, unitType);
+//        Assertions.assertEquals(expected, result);
+        try (MockedStatic<Utils> mockedUtils = mockStatic(Utils.class)) {
+            boolean result = ns.isValidInput(inputQuantity, unitType);
+            Assertions.assertEquals(expected, result);
+
+            if (!expected) {
+                mockedUtils.verify(() -> Utils.showAlert(any(), anyString(), anyString()), times(1));
+            } else {
+                mockedUtils.verifyNoInteractions();
+            }
+        }
+    }
+
+    private static Stream<Arguments> inputProvider() {
+        return Stream.of(
+                // ==== input không hợp lệ ====
+                Arguments.of("abc", "", false), // nhập kí tự sai định dạng
+                Arguments.of("", "ml", false), // không nhập
+                Arguments.of("10.5", "gram", false), // nhập không phải số nguyên
+
+                // ==== GRAM ==== 50 <=x <= 300
+                Arguments.of("49", "gram", false), // dưới min
+                Arguments.of("50", "gram", true), // min
+                Arguments.of("300", "gram", true), // max
+                Arguments.of("301", "gram", false), // trên max
+
+                // ==== ML ==== 200 <=x <=500
+                Arguments.of("199", "ml", false), // dưới min
+                Arguments.of("200", "ml", true), // min    
+                Arguments.of("500", "ml", true), // max
+                Arguments.of("501", "ml", false), // trên max
+
+                // ==== Các đơn vị khác (miếng) ==== 10 <=x <=20
+                Arguments.of("9", "piece", false), // dưới min
+                Arguments.of("10", "piece", true), // min    
+                Arguments.of("20", "piece", true), // max
+                Arguments.of("21", "piece", false), // trên max
+
+                // ==== SỐ ÂM ====
+                Arguments.of("-1", "gram", false),
+                Arguments.of("-100", "ml", false),
+                Arguments.of("-5", "piece", false)
+        );
+    }
+
+    @ParameterizedTest(name = "calories: {0} => expected: {1}")
+    @MethodSource("provideCalories")
+    void testIsPositiveCalories(float calories, boolean expected) {
+        boolean result = ns.isPositiveCalories(calories);
+        Assertions.assertEquals(expected, result);
+    }
+
+    private static Stream<Arguments> provideCalories() {
+        return Stream.of(
+                Arguments.of(-100.0f, false),
+                Arguments.of(-0.1f, false),
+                Arguments.of(0.0f, false),
+                Arguments.of(0.1f, true),
+                Arguments.of(50.5f, true),
+                Arguments.of(9999.9f, true)
+        );
+    }
+
+    @ParameterizedTest(name = "{index} => expected total calories: {1}")
+    @MethodSource("provideFoodLists")
+    void testCalTotalCalories(List<Food> listFood, float expected) {
+        float result = ns.calTotalCalories(listFood);
+        float roundedResult = Math.round(result * 10f) / 10f; // Làm tròn 1 chữ số thập phân
+        Assertions.assertEquals(expected, roundedResult, 0.0001f);
+    }
+
+    private static Stream<Arguments> provideFoodLists() {
+        return Stream.of(
+                // EP: Danh sách rỗng
+                Arguments.of(List.of(), 0.0f),
+                // EP: Một phần tử bình thường
+                Arguments.of(List.of(new Food(1, "Apple", 100.0f, 2)), 200.0f),
+                // EP: Nhiều phần tử bình thường
+                Arguments.of(List.of(
+                        new Food(2, "Chicken Breast", 50.0f, 1),
+                        new Food(3, "Mango", 30.0f, 2)
+                ), 110.0f),
+                // BVA: Calo = 0
+                Arguments.of(List.of(new Food(4, "Pork", 0.0f, 5)), 0.0f),
+                // BVA: Số lượng = 0
+                Arguments.of(List.of(new Food(5, "Milk", 100.0f, 0)), 0.0f),
+                // BVA: Calo nhỏ
+                Arguments.of(List.of(new Food(6, "Bread", 0.1f, 1)), 0.1f),
+                // BVA: Calo lớn
+                Arguments.of(List.of(new Food(7, "Pizza", 9999.9f, 3)), 29999.7f),
+                // EP: Calo hoặc số lượng âm (nếu được chấp nhận)
+                Arguments.of(List.of(
+                        new Food(8, "Pizza", -50.0f, 2),
+                        new Food(9, "Bread", 30.0f, -1)
+                ), -130.0f)
+        );
+    }
+
+    @ParameterizedTest(name = "activityLevel: \"{0}\" => expected: {1}")
+    @MethodSource("activityLevelProvider")
+    void testGetActivityCoefficient(String activityLevel, Double expected, boolean shouldThrow) {
+        if (shouldThrow) {
+            Assertions.assertThrows(IllegalArgumentException.class, () -> {
+                ns.getActivityCoefficient(activityLevel);
+            });
+        } else {
+            double result = ns.getActivityCoefficient(activityLevel);
+            Assertions.assertEquals(expected, result, 0.0001);
+        }
+    }
+
+    private static Stream<Arguments> activityLevelProvider() {
+        return Stream.of(
+                // ==== Phân vùng tương đương: Hợp lệ ====
+                Arguments.of("sedentary", 1.2, false), // EP: hợp lệ, thường
+                Arguments.of("lightlyactive", 1.375, false), // EP: hợp lệ, thường
+                Arguments.of("moderatelyactive", 1.55, false), // EP: hợp lệ, thường
+                Arguments.of("veryactive", 1.725, false), // EP: hợp lệ, thường
+                Arguments.of("extremelyactive", 1.9, false), // EP: hợp lệ, thường
+
+                // ==== Phân tích biên: Viết hoa, viết lẫn ====
+                Arguments.of("Sedentary", 1.2, false), // BVA: chữ in đầu
+                Arguments.of("LiGhTlYaCtIvE", 1.375, false), // BVA: chữ thường + in lẫn lộn
+
+                // ==== Phân vùng tương đương: Không hợp lệ ====
+                Arguments.of("none", null, true), // EP: không hợp lệ
+                Arguments.of("superactive", null, true), // EP: không hợp lệ
+
+                // ==== Phân tích biên: Chuỗi rỗng, null ====
+                Arguments.of("", null, true), // BVA: chuỗi rỗng
+                Arguments.of(null, null, true) // BVA: null
+        );
+    }
+
 }

@@ -4,10 +4,12 @@
  */
 package com.sixthgroup.healthmanagementtraining.services;
 
+import com.sixthgroup.healthmanagementtraining.pojo.CalorieResult;
 import com.sixthgroup.healthmanagementtraining.pojo.Food;
 import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.pojo.UnitType;
+import com.sixthgroup.healthmanagementtraining.pojo.UserInfo;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -15,6 +17,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.scene.control.Alert;
@@ -25,6 +30,32 @@ import javafx.scene.control.Alert;
  */
 public class NutritionServices {
 
+    private static final double sedentaryCoefficient = 1.2;
+    private static final double lightlyActiveCoefficient = 1.375;
+    private static final double moderatelyActiveCoefficient = 1.55;
+    private static final double veryActiveCoefficient = 1.725;
+    private static final double extremelyActiveCoefficient = 1.9;
+
+    private static final double maleWeightCoefficient = 13.7;
+    private static final double femaleWeightCoefficient = 9.6;
+
+    private static final double maleHeightCoefficient = 5;
+    private static final double femaleHeightCoefficient = 1.8;
+
+    private static final double maleAgeCoefficient = 6.8;
+    private static final double femaleAgeCoefficient = 4.7;
+
+    private static final double baseMaleBMR = 66;
+    private static final double baseFemaleBMR = 655;
+
+    private static final int caloriesPerWeight = 7700;
+
+    private static final double baseFiber = 25;
+    private static final double baseProteinGainWeight = 0.2;
+    private static final double baseLipidGainWeight = 0.25;
+
+    private static final double baseProteinLossWeight = 0.25;
+    private static final double baseLipidLossWeight = 0.2;
     private boolean bypassExerciseCheck = false; // Cờ kiểm tra
 
     public void setBypassExerciseCheck(boolean bypass) {
@@ -241,14 +272,156 @@ public class NutritionServices {
         return 0;
     }
 
+    public CalorieResult calCaloriesNeeded(String username, float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate) {
+
+        UserInfoServices s = new UserInfoServices();
+        UserInfo u = s.getUserInfo(username);
+        double BMR;
+        int age = calculateAge((Date) u.getDOB());
+        System.out.println("age " + age);
+        if (u.getGender().equalsIgnoreCase("Nam")) {
+            BMR = baseMaleBMR + (maleWeightCoefficient * u.getWeight())
+                    + (maleHeightCoefficient * u.getHeight()) - (maleAgeCoefficient * calculateAge((Date) u.getDOB()));
+
+        } else {
+            BMR = baseFemaleBMR + (femaleWeightCoefficient * currentWeight)
+                    + (femaleHeightCoefficient * u.getHeight()) - (femaleAgeCoefficient * calculateAge((Date) u.getDOB()));
+        }
+        System.out.println("BMR: " + BMR);
+        float activityLevel = Utils.parseDoubleToFloat(getActivityCoefficient(u.getActivityLevel()), 3);
+        float TDEE = Utils.roundFloat(Utils.parseDoubleToFloat(BMR, 2) * activityLevel, 3);
+//        System.out.println("TDEE: " + TDEE);
+        float weightChange = targetWeight - currentWeight;
+//        System.out.println("weightChange: " + weightChange);
+        float totalCaloriesNeeded = weightChange * caloriesPerWeight;
+        System.out.println("totalCaloriesNeeded: " + totalCaloriesNeeded);
+        long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
+        System.out.println("totalDays : " + totalDays);
+        if (totalDays <= 0) {
+            throw new IllegalArgumentException("End date must be after start date.");
+        }
+
+        float dailyCalorieChange = totalCaloriesNeeded / totalDays;
+//        System.out.println("dailyCalorieChange: " + dailyCalorieChange);
+        float dailyCalorieIntake = Utils.roundFloat(TDEE + dailyCalorieChange, 1);
+//        System.out.println("dailyCalorieIntake: " + dailyCalorieIntake);
+
+//        System.out.println("TDEE: " + TDEE);
+//        System.out.println("Daily Calorie Change: " + dailyCalorieChange);
+//        System.out.println("Daily Calorie Intake: " + dailyCalorieIntake);
+//        
+        String targetType = currentWeight > targetWeight ? "loss" : "gain";
+        float dailyProteinIntake;
+        float dailyLipidIntake;
+        if (targetType.equalsIgnoreCase("loss")) {
+            dailyProteinIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseProteinLossWeight), 1);
+            dailyLipidIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseLipidLossWeight), 1);
+        } else {
+            dailyProteinIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseProteinGainWeight), 1);
+            dailyLipidIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseLipidGainWeight), 1);
+        }
+
+        return new CalorieResult(dailyCalorieIntake, dailyCalorieChange, dailyProteinIntake, dailyLipidIntake, Utils.convertToFloat(baseFiber));
+
+    }
+
+    public double getActivityCoefficient(String activityLevel) {
+        if (activityLevel == null) {
+            throw new IllegalArgumentException("Activity level must not be null");
+        }
+        switch (activityLevel.toLowerCase()) {
+            case "sedentary":
+                return sedentaryCoefficient;
+            case "lightlyactive":
+                return lightlyActiveCoefficient;
+            case "moderatelyactive":
+                return moderatelyActiveCoefficient;
+            case "veryactive":
+                return veryActiveCoefficient;
+            case "extremelyactive":
+                return extremelyActiveCoefficient;
+            default:
+                throw new IllegalArgumentException("Invalid activity level");
+        }
+    }
+
+    public static int calculateAge(Date dob) {
+        int age = 0;
+
+        if (dob == null) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Ngày sinh không được để trống");
+            return age;
+        }
+
+        if (isDobInFuture(dob)) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Ngày sinh không hợp lệ (trong tương lai)");
+            return age;
+        }
+
+        try {
+            age = calculateAgeRaw(dob); // ✅ gọi hàm mới, tránh vòng lặp
+        } catch (IllegalArgumentException e) {
+            Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", e.getMessage());
+            return age;
+        }
+
+        if (!isAgeEligible(age)) {
+            Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Chỉ cho phép người dùng từ 16 đến 59 tuổi");
+            return 0;
+        }
+
+        return age;
+    }
+
+    // HÀM TÍNH TUỔI THỰC SỰ, KHÔNG GỒM RÀNG BUỘC
+    private static int calculateAgeRaw(Date dob) {
+        LocalDate birthDate;
+        if (dob instanceof java.sql.Date) {
+            birthDate = ((java.sql.Date) dob).toLocalDate();
+        } else {
+            birthDate = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
+
+        LocalDate currentDate = LocalDate.now();
+        return Period.between(birthDate, currentDate).getYears();
+    }
+
+    public static boolean isAgeEligible(int age) {
+        return age >= 16 && age <= 59;
+    }
+
+    public static boolean isDobInFuture(Date dob) {
+        LocalDate birthDate;
+        if (dob instanceof java.sql.Date) {
+            birthDate = ((java.sql.Date) dob).toLocalDate();
+        } else {
+            birthDate = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        }
+
+        return birthDate.isAfter(LocalDate.now());
+    }
+
+    public float calTotalCalories(List<Food> listFood) {
+        float total = 0;
+        for (Food food : listFood) {
+            total += food.getCaloriesPerUnit() * food.getSelectedQuantity();
+        }
+        return total;
+    }
+
     public boolean isValidInput(String inputQuantity, String unitType) {
         int minQuantity = 0;
         int maxQuantity = 0;
         try {
+            int input = Integer.parseInt(inputQuantity);
+            if (input < 0) {
+                Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Vui lòng nhập số nguyên dương");
+                return false;
+            }
             if (unitType.equals("gram")) {
                 minQuantity = 50;
                 maxQuantity = 300;
-                int input = Integer.parseInt(inputQuantity);
+
                 if (input >= minQuantity && input <= maxQuantity) {
                     return true;
                 } else {
@@ -258,7 +431,7 @@ public class NutritionServices {
             } else if (unitType.endsWith("ml")) {
                 minQuantity = 200;
                 maxQuantity = 500;
-                int input = Integer.parseInt(inputQuantity);
+
                 if (input >= minQuantity && input <= maxQuantity) {
                     return true;
                 } else {
@@ -268,7 +441,6 @@ public class NutritionServices {
             } else {
                 minQuantity = 10;
                 maxQuantity = 20;
-                int input = Integer.parseInt(inputQuantity);
                 if (input >= minQuantity && input <= maxQuantity) {
                     return true;
                 } else {
@@ -278,21 +450,23 @@ public class NutritionServices {
             }
         } catch (NumberFormatException e) {
             Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Vui lòng nhập một số nguyên hợp lệ!");
+//            e.printStackTrace();
             return false;
         }
     }
+
     public boolean isExistFood(List<Food> selectedFoods, Food currentFood) {
 
         for (Food f : selectedFoods) {
-//            System.out.println("current: " + currentExercise.getExerciseName());
-//            System.out.println("list: " + e.getExerciseName());
             if (currentFood.getFoodName().equals(f.getFoodName())) {
                 return true;
             }
         }
+        return false; // Trả về false nếu không bị trùng
+    }
 
-        return false;
-
+    public boolean isPositiveCalories(float calories) {
+        return calories > 0;
     }
 
     public boolean isFoodAlreadyLogged(String userId, LocalDate servingDate, int foodId) {

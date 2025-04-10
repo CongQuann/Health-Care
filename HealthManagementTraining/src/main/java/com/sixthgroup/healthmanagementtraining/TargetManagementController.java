@@ -8,6 +8,7 @@ import com.sixthgroup.healthmanagementtraining.pojo.CalorieResult;
 import com.sixthgroup.healthmanagementtraining.pojo.Goal;
 import com.sixthgroup.healthmanagementtraining.pojo.UserInfo;
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
+import com.sixthgroup.healthmanagementtraining.services.NutritionServices;
 import com.sixthgroup.healthmanagementtraining.services.TargetManagementServices;
 import com.sixthgroup.healthmanagementtraining.services.UserInfoServices;
 import com.sixthgroup.healthmanagementtraining.services.Utils;
@@ -89,34 +90,8 @@ public class TargetManagementController implements Initializable {
     @FXML
     private Text txtCalo;
     private NavbarServices navbarServices = new NavbarServices(); // Khởi tạo NavbarServices
+    private NutritionServices ns = new NutritionServices();
     //kich hoat navbar
-
-    private final double sedentaryCoefficient = 1.2;
-    private final double lightlyActiveCoefficient = 1.375;
-    private final double moderatelyActiveCoefficient = 1.55;
-    private final double veryActiveCoefficient = 1.725;
-    private final double extremelyActiveCoefficient = 1.9;
-
-    private final double maleWeightCoefficient = 13.7;
-    private final double femaleWeightCoefficient = 9.6;
-
-    private final double maleHeightCoefficient = 5;
-    private final double femaleHeightCoefficient = 1.8;
-
-    private final double maleAgeCoefficient = 6.8;
-    private final double femaleAgeCoefficient = 4.7;
-
-    private final double baseMaleBMR = 66;
-    private final double baseFemaleBMR = 655;
-
-    private final int caloriesPerWeight = 7700;
-
-    private final double baseFiber = 25;
-    private final double baseProteinGainWeight = 0.2;
-    private final double baseLipidGainWeight = 0.25;
-
-    private final double baseProteinLossWeight = 0.25;
-    private final double baseLipidLossWeight = 0.2;
 
     @FXML
     @Override
@@ -265,7 +240,7 @@ public class TargetManagementController implements Initializable {
     // update Goal
     private void updateGoal(Goal goal, float targetWeight, float currentWeight, LocalDate endDate) {
         try {
-            CalorieResult result = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, goal.getStartDate(), endDate);
+            CalorieResult result = ns.calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, goal.getStartDate(), endDate);
             float updateCaloNeeded = result.getDailyCalorieIntake();
 
             boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
@@ -381,7 +356,7 @@ public class TargetManagementController implements Initializable {
             float currentWeight = Float.parseFloat(currentWeightStr);
             String targetType = currentWeight > targetWeight ? "loss" : "gain";
 
-            CalorieResult caloResult = calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, startDate, endDate);
+            CalorieResult caloResult = ns.calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, startDate, endDate);
             float caloChange = caloResult.getDailyCalorieChange();
             if (checkCaloChange(caloChange)) {
                 float caloNeeded = caloResult.getDailyCalorieIntake();
@@ -455,94 +430,5 @@ public class TargetManagementController implements Initializable {
         s.switchScene(event, "UserInfoManagement.fxml");
     }
 
-    public CalorieResult calCaloriesNeeded(String username, float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate) {
-
-        UserInfoServices s = new UserInfoServices();
-        UserInfo u = s.getUserInfo(username);
-        double BMR;
-        int age = calculateAge(u.getDOB());
-        if (u.getGender().equalsIgnoreCase("Nam")) {
-            BMR = baseMaleBMR + (maleWeightCoefficient * u.getWeight())
-                    + (maleHeightCoefficient * u.getHeight()) - (maleAgeCoefficient * calculateAge(u.getDOB()));
-
-        } else {
-            BMR = baseFemaleBMR + (femaleWeightCoefficient * currentWeight)
-                    + (femaleHeightCoefficient * u.getHeight()) - (femaleAgeCoefficient * calculateAge(u.getDOB()));
-        }
-        System.out.println("BMR: " + BMR);
-        float activityLevel = Utils.parseDoubleToFloat(getActivityCoefficient(u.getActivityLevel()), 3);
-        float TDEE = Utils.roundFloat(Utils.parseDoubleToFloat(BMR, 2) * activityLevel, 3);
-        System.out.println("TDEE: " + TDEE);
-        float weightChange = targetWeight - currentWeight;
-        System.out.println("weightChange: " + weightChange);
-        float totalCaloriesNeeded = weightChange * caloriesPerWeight;
-        System.out.println("totalCaloriesNeeded: " + totalCaloriesNeeded);
-        long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
-        System.out.println("totalDays : " + totalDays);
-        if (totalDays <= 0) {
-            throw new IllegalArgumentException("End date must be after start date.");
-        }
-
-        float dailyCalorieChange = totalCaloriesNeeded / totalDays;
-        System.out.println("dailyCalorieChange: " + dailyCalorieChange);
-        float dailyCalorieIntake = Utils.roundFloat(TDEE + dailyCalorieChange, 1);
-        System.out.println("dailyCalorieIntake: " + dailyCalorieIntake);
-
-//        System.out.println("TDEE: " + TDEE);
-//        System.out.println("Daily Calorie Change: " + dailyCalorieChange);
-//        System.out.println("Daily Calorie Intake: " + dailyCalorieIntake);
-//        
-        String targetType = currentWeight > targetWeight ? "loss" : "gain";
-        float dailyProteinIntake;
-        float dailyLipidIntake;
-        if (targetType.equalsIgnoreCase("loss")) {
-            dailyProteinIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseProteinLossWeight), 1);
-            dailyLipidIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseLipidLossWeight), 1);
-        } else {
-            dailyProteinIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseProteinGainWeight), 1);
-            dailyLipidIntake = Utils.roundFloat(TDEE * Utils.convertToFloat(baseLipidGainWeight), 1);
-        }
-
-        return new CalorieResult(dailyCalorieIntake, dailyCalorieChange, dailyProteinIntake, dailyLipidIntake, Utils.convertToFloat(baseFiber));
-
-    }
-
-    private double getActivityCoefficient(String activityLevel) {
-        switch (activityLevel.toLowerCase()) {
-            case "sedentary":
-                return sedentaryCoefficient;
-            case "lightlyactive":
-                return lightlyActiveCoefficient;
-            case "moderatelyactive":
-                return moderatelyActiveCoefficient;
-            case "veryactive":
-                return veryActiveCoefficient;
-            case "extremelyactive":
-                return extremelyActiveCoefficient;
-            default:
-                throw new IllegalArgumentException("Invalid activity level");
-        }
-    }
-
-    public static int calculateAge(Date dob) {
-        if (dob == null) {
-            throw new IllegalArgumentException("Ngày sinh không được null");
-        }
-
-        // Chuyển đổi từ Date -> LocalDate
-        LocalDate birthDate;
-        if (dob instanceof java.sql.Date) {
-            birthDate = ((java.sql.Date) dob).toLocalDate(); // Dành cho java.sql.Date
-        } else {
-            birthDate = dob.toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Dành cho java.util.Date
-        }
-
-        // Lấy ngày hiện tại
-        LocalDate currentDate = LocalDate.now();
-
-        // Tính tuổi bằng Period.between()
-        int age = Period.between(birthDate, currentDate).getYears();
-        return age;
-    }
 }
 //============================================================================
