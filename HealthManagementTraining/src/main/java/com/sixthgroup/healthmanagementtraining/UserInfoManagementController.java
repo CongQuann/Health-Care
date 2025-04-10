@@ -143,7 +143,7 @@ public class UserInfoManagementController implements Initializable {
         //thuc hien cap nhat neu khong trung
         if (userInfoServices.updateUserInfo(userInfo)) {
             Utils.showAlert(Alert.AlertType.INFORMATION, "Lỗi", "Cập nhật thành công!");
-
+            
         } else {
             Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Cập nhật thất bại!");
             // Hiển thị thông báo thất bại cho người dùng

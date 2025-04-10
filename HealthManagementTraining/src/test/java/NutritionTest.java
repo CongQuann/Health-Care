@@ -1,4 +1,5 @@
 
+import com.sixthgroup.healthmanagementtraining.pojo.CalorieResult;
 import com.sixthgroup.healthmanagementtraining.pojo.Food;
 import com.sixthgroup.healthmanagementtraining.pojo.FoodCategory;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
@@ -124,7 +125,7 @@ public class NutritionTest {
             String insertUserInfoSQL = "INSERT INTO userinfo (id,userName, password, name, email, "
                     + "height, weight, gender, DOB, activityLevel, createDate, role) "
                     + "VALUES (?, 'hanvl', 'Hantran@789', N'Trần Trọng Hân', 'hantran@examplevl.com'"
-                    + ", 170.0, 80.0, 'Nam', '1990-01-01', 'lightlyActive', '2025-04-05', 'user');";
+                    + ", 170.0, 80.0, 'Nam', '2004-06-05', 'lightlyActive', '2025-04-05', 'user');";
             try (PreparedStatement insertUserStmt = connection.prepareStatement(insertUserInfoSQL)) {
                 insertUserStmt.setString(1, userId); // Sử dụng UUID làm userId
                 insertUserStmt.executeUpdate();
@@ -702,6 +703,21 @@ public class NutritionTest {
                 Arguments.of("", null, true), // BVA: chuỗi rỗng
                 Arguments.of(null, null, true) // BVA: null
         );
+    }
+    @Test
+    void test_CaloriesCalculation_Success() throws SQLException {
+        LocalDate start = LocalDate.of(2025, 4, 10);
+        LocalDate end = LocalDate.of(2025, 5, 8); // 28 ngày
+
+        CalorieResult result = ns.calCaloriesNeeded("hanvl", 77, 80, start, end);
+
+        Assertions.assertNotNull(result);
+
+        // So sánh với giá trị tính tay ở trên
+        Assertions.assertEquals(1754.5f, result.getDailyCalorieIntake());   // gần đúng
+        Assertions.assertEquals(-825f, result.getDailyCalorieChange());
+        Assertions.assertEquals(644.9f, result.getDailyProteinIntake());
+        Assertions.assertEquals(515.9f, result.getDailyLipidIntake());
     }
 
 }
