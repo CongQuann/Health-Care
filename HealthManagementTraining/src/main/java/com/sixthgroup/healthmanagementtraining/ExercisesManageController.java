@@ -295,7 +295,7 @@ public class ExercisesManageController implements Initializable {
         LocalDate workoutDate = Utils.getSelectedDate(); // Lấy ngày tập
 
         // Kiểm tra xem tổng thời gian có vượt quá 24 giờ không
-        if (e.checkTotalTime(selectedExs) == false) {
+        if (e.checkTotalTime(selectedExs) == true) {
             Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Tổng thời gian tập không được vượt quá 24 giờ (1440 phút)!");
             return;
         }
