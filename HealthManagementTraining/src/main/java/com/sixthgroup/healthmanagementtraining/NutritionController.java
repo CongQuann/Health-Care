@@ -321,7 +321,7 @@ public class NutritionController implements Initializable {
                                 tbSelectedFood.getItems().add(selectedFood); // Thêm vào bảng danh sách đã chọn
 
                                 totalCalo += (selectedQuantity * food.getCaloriesPerUnit()) / DEFAULT_QUANTITY;
-                                txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalo, 0)));
+                                txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalo, 1)));
                                 totalProtein += (selectedQuantity * food.getProteinPerUnit()) / DEFAULT_QUANTITY;
                                 txtTotalProtein.setText(String.valueOf(Utils.roundFloat(totalProtein, 1)));
                                 totalLipid += (selectedQuantity * food.getLipidPerUnit()) / DEFAULT_QUANTITY;
@@ -374,7 +374,12 @@ public class NutritionController implements Initializable {
             alert.showAndWait();
             return;
         }
-
+        for (Food food : selectedFs) {
+            if (!n.isPositiveCalories(food.getCaloriesPerUnit())) {
+                Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Lượng calo tiêu thụ không được âm!");
+                break;
+            }
+        }
         if (Float.parseFloat(txtTotalProtein.getText()) - Float.parseFloat(txtRecomendedProtein.getText()) > DIFFERENT_PROTEIN
                 || Float.parseFloat(txtTotalLipid.getText()) - Float.parseFloat(txtRecomendedLipid.getText()) > DIFFERENT_LIPID
                 || Float.parseFloat(txtTotalFiber.getText()) > 0) {
@@ -391,8 +396,12 @@ public class NutritionController implements Initializable {
                 String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
                 LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
                 NutritionServices n = new NutritionServices();
-                n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
-                Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
+                float totalCalo = n.calTotalCalories(selectedFs);
+                if (totalCalo == Float.parseFloat(txtTotalCalories.getText())) {
+                    n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
+                    Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
+                }
+
             } else {
                 return;
             }
@@ -503,9 +512,7 @@ public class NutritionController implements Initializable {
         Goal currentGoal = TargetManagementServices.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()));
         if (currentGoal != null) {
             if (currentGoal.getId() != 0) {
-
-                TargetManagementController t = new TargetManagementController();
-                CalorieResult cr = t.calCaloriesNeeded(Utils.getUser(), currentGoal.getTargetWeight(), currentGoal.getCurrentWeight(), currentGoal.getStartDate(), currentGoal.getEndDate());
+                CalorieResult cr = n.calCaloriesNeeded(Utils.getUser(), currentGoal.getTargetWeight(), currentGoal.getCurrentWeight(), currentGoal.getStartDate(), currentGoal.getEndDate());
                 txtRecomendedProtein.setText(String.valueOf(cr.getDailyProteinIntake()));
                 txtRecomendedLipid.setText(String.valueOf(cr.getDailyLipidIntake()));
                 txtRecomendedFiber.setText(String.valueOf(cr.getDailyFiberIntake()));

@@ -98,14 +98,14 @@ public class ExercisesService {
                 if (!bypassExerciseCheck && isExerciseAlreadyLogged(userId, workoutDate, exercise.getId())) {
                     continue; // Nếu bài tập đã có, bỏ qua
                 }
-                
-                insertStmt.setInt(1, exercise.getDuration());
-                insertStmt.setDate(2, Date.valueOf(workoutDate));
-                insertStmt.setString(3, userId);
-                insertStmt.setInt(4, exercise.getId());
-                insertStmt.addBatch();
-                insertedCount++;
-
+                if (isPositiveDuration(exercise.getDuration())) {
+                    insertStmt.setInt(1, exercise.getDuration());
+                    insertStmt.setDate(2, Date.valueOf(workoutDate));
+                    insertStmt.setString(3, userId);
+                    insertStmt.setInt(4, exercise.getId());
+                    insertStmt.addBatch();
+                    insertedCount++;
+                }
             }
 
             if (insertedCount > 0) {
@@ -145,8 +145,13 @@ public class ExercisesService {
         int minDuration = 10;
         int maxDuration = 45;
         try {
-            int inDuration = Integer.parseInt(inputDuration);
-            if (inDuration >= minDuration && inDuration <= maxDuration) {
+
+            int input = Integer.parseInt(inputDuration);
+            if (input < 0) {
+                Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Vui lòng nhập số nguyên dương");
+                return false;
+            }
+            if (input >= minDuration && input <= maxDuration) {
                 return true;
             } else {
                 Utils.showAlert(Alert.AlertType.WARNING, "Lỗi", "Thời gian tập phải từ 10 đến 45 phút!");
@@ -157,9 +162,11 @@ public class ExercisesService {
             return false;
         }
     }
-    public boolean isPositiveDuration(int duration){
+
+    public boolean isPositiveDuration(int duration) {
         return duration > 0;
     }
+
     public boolean isExistExercise(List<Exercise> selectedExercises, Exercise currentExercise) {
 
         for (Exercise e : selectedExercises) {
@@ -171,16 +178,17 @@ public class ExercisesService {
         return false;
 
     }
-    
-    public boolean checkTotalTime(List<Exercise> selectedExercises){
+
+    public boolean checkTotalTime(List<Exercise> selectedExercises) {
         int totalMinutesPerDay = 1440;
         int total = 0;
-        for(Exercise e : selectedExercises){
+        for (Exercise e : selectedExercises) {
             total += e.getDuration();
         }
-       
-        return  total > totalMinutesPerDay; // true là vi vi phạm 
+
+        return total > totalMinutesPerDay; // true là vi  phạm 
     }
+
     public boolean isExerciseAlreadyLogged(String userId, LocalDate workoutDate, int exerciseId) {
         String checkSql = "SELECT COUNT(*) FROM workoutlog WHERE workoutDate = ? AND userInfo_id = ? AND exercise_id = ?";
 
@@ -200,5 +208,5 @@ public class ExercisesService {
 
         return false; // Trả về false nếu có lỗi xảy ra
     }
-    
+
 }

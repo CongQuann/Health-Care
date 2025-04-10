@@ -8,6 +8,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 
 import java.net.URL;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -62,7 +63,7 @@ public class SignUpController implements Initializable {
     }
 
     @FXML
-    private void handleSignUp(ActionEvent event) throws IOException {
+    private void handleSignUp(ActionEvent event) throws IOException, SQLException {
             if(validateSignUpData(usernameField.getText().trim(), passwordField.getText().trim(), confirmPasswordField.getText().trim(),
                     fullnameField.getText().trim(), emailField.getText().trim(), heightField.getText().trim(),
                     weightField.getText().trim(), genderComboBox.getValue(), dobPicker.getValue(),

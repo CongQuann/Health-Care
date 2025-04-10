@@ -293,9 +293,14 @@ public class ExercisesManageController implements Initializable {
         }
         String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
         LocalDate workoutDate = Utils.getSelectedDate(); // Lấy ngày tập
-
+        for(Exercise exe : selectedExs){
+            if (!e.isPositiveDuration(exe.getDuration())){
+                Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Thời gian tập không được âm!");
+                break;
+            }
+        }
         // Kiểm tra xem tổng thời gian có vượt quá 24 giờ không
-        if (e.checkTotalTime(selectedExs) == false) {
+        if (e.checkTotalTime(selectedExs) == true) {
             Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Tổng thời gian tập không được vượt quá 24 giờ (1440 phút)!");
             return;
         }

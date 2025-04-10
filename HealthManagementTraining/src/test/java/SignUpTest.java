@@ -110,8 +110,7 @@ public class SignUpTest {
 
         assertTrue(result);
 
-        Connection conn = JdbcUtils.getConn();
-        PreparedStatement pstmt = conn.prepareStatement("SELECT * FROM userinfo WHERE userName = ?");
+        PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM userinfo WHERE userName = ?");
         pstmt.setString(1, "uniqueuser");
         ResultSet rs = pstmt.executeQuery();
 
