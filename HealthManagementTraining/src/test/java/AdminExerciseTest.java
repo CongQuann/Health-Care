@@ -147,7 +147,10 @@ public class AdminExerciseTest {
         stmt1.executeUpdate();
 
         int id = AdminExerciseServices.getAllExercises().get(0).getId();
+        
+        //khi ID giống nhau thì update chính nó
         assertFalse(AdminExerciseServices.isExerciseNameTakenUp("Boxing", id));
+        
         // Tạo thêm bản ghi thứ 2 "Boxing"
         PreparedStatement stmt2 = conn.prepareStatement("INSERT INTO exercise (exerciseName, caloriesPerMinute) VALUES (?, ?)");
         stmt2.setString(1, "Boxing");
@@ -158,7 +161,11 @@ public class AdminExerciseTest {
         assertEquals(2, exercises.size());
 
         int otherId = exercises.get(1).getId();
+        
+        // ID khác, tên giống
         assertTrue(AdminExerciseServices.isExerciseNameTakenUp("Boxing", otherId));
+        
+        
         }
     }
 //
