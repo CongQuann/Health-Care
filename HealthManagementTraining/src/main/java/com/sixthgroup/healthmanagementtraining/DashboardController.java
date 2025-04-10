@@ -50,7 +50,7 @@ public class DashboardController implements Initializable {
     @FXML
     private PieChart caloPieChart;
     @FXML
-    private DatePicker datePicker;
+    public DatePicker datePicker;
 
     @FXML
     private Text calorieIntakeText;
@@ -156,7 +156,7 @@ public class DashboardController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         // Khi FXML được load, lấy ngày từ Utils và đặt vào DatePicker
         datePicker.setValue(Utils.getSelectedDate());
-        datePickHandler();
+        
         userName = Utils.getUser();
         localDate = datePicker.getValue();
         nutritionPieChart.setPrefWidth(300); // Điều chỉnh chiều rộng
