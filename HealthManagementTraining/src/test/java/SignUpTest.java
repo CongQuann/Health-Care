@@ -77,7 +77,11 @@ public class SignUpTest {
                 Arguments.of("validUser", "Password123!", "Password123!", "John Doe", "email@example.com", "-10", "75", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),       // giá trị height <0
                 Arguments.of("validUser", "Password123!", "Password123!", "John Doe", "email@example.com", "180", "-5", "Nam", LocalDate.of(2000, 1, 1), "sedentary", false),       //giá trị weight < 0
                 Arguments.of("quan", "Password123!", "Password123!", "Nguyễn Văn A", "test@example.com", "170", "60", "Nam", LocalDate.of(2000, 1, 1), "lightlyActive", false), // tên đăng nhập tồn tại
-                Arguments.of("newuser", "Password123!", "Password123!", "Nguyễn Văn B", "newuser@example.com", "175", "65", "Nam", LocalDate.of(2000, 1, 1), "lightlyActive", true) // thêm đúng thông tin
+                Arguments.of("newuser", "Password123!", "Password123!", "Nguyễn Văn B", "newuser@example.com", "175", "65", "Nam", LocalDate.of(2000, 1, 1), "lightlyActive", true), // thêm đúng thông tin
+                Arguments.of("newuser", "Password123!", "Password123!", "Nguyễn Văn B", "newuser@example.com", "175", "65", "Nam", LocalDate.now().plusDays(1), "lightlyActive", false), // tuổi chưa đủ 16 tuổi
+                Arguments.of("newuser", "Password123!", "Password123!", "Nguyễn Văn B", "newuser@example.com", "175", "65", "Nam", LocalDate.now().minusYears(60), "lightlyActive", false), //tuổi đủ 60
+                Arguments.of("newuser", "Password123!", "Password123!", "Nguyễn Văn B", "newuser@example.com", "175", "65", "Nam", LocalDate.now().plusYears(1), "lightlyActive", false)  //năm sau năm hiện tại
+                
         );
     }
 

@@ -44,7 +44,6 @@ public class SignUpController implements Initializable {
 
     public SignUpServices signUpServices = new SignUpServices();
 
-
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         genderComboBox.setItems(FXCollections.observableArrayList("Nam", "Nữ"));
@@ -64,27 +63,26 @@ public class SignUpController implements Initializable {
 
     @FXML
     private void handleSignUp(ActionEvent event) throws IOException, SQLException {
-            if(validateSignUpData(usernameField.getText().trim(), passwordField.getText().trim(), confirmPasswordField.getText().trim(),
-                    fullnameField.getText().trim(), emailField.getText().trim(), heightField.getText().trim(),
-                    weightField.getText().trim(), genderComboBox.getValue(), dobPicker.getValue(),
-                    activityLevelComboBox.getValue())){
-                boolean success = signUpServices.saveUserInfo(usernameField.getText().trim(), passwordField.getText().trim(),
+        if (validateSignUpData(usernameField.getText().trim(), passwordField.getText().trim(), confirmPasswordField.getText().trim(),
+                fullnameField.getText().trim(), emailField.getText().trim(), heightField.getText().trim(),
+                weightField.getText().trim(), genderComboBox.getValue(), dobPicker.getValue(),
+                activityLevelComboBox.getValue())) {
+            boolean success = signUpServices.saveUserInfo(usernameField.getText().trim(), passwordField.getText().trim(),
                     fullnameField.getText().trim(), emailField.getText().trim(),
                     Double.parseDouble(heightField.getText().trim()),
                     Double.parseDouble(weightField.getText().trim()),
                     genderComboBox.getValue(), dobPicker.getValue(),
                     activityLevelComboBox.getValue());
 
-                if (success) {
-                    Utils.getAlert("Success!!!").show();
-                    App.setRoot("secondary");
-                } else {
-                    Utils.getAlert("Failed!!! Double Check Your Info").show();
-                }
+            if (success) {
+                Utils.getAlert("Success!!!").show();
+                App.setRoot("secondary");
+            } else {
+                Utils.getAlert("Failed!!! Double Check Your Info").show();
             }
-            
-            
         }
+
+    }
 
     public boolean validateSignUpData(String username, String password, String confirmPassword, String fullname, String email, String heightText, String weightText, String gender, LocalDate dob, String activityLevel) {
         if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty() || fullname.isEmpty()
@@ -124,6 +122,16 @@ public class SignUpController implements Initializable {
             return false;
         }
 
+        // Kiểm tra độ tuổi từ ngày sinh
+        int age = LocalDate.now().getYear() - dob.getYear();
+        if (dob.isAfter(LocalDate.now().minusYears(age))) {
+            age--; // điều chỉnh nếu chưa đến sinh nhật
+        }
+        if (age < 16 || age >= 60) {
+            Utils.getAlert("Chỉ chấp nhận người dùng từ 16 đến dưới 60 tuổi!").show();
+            return false;
+        }
+
         double height;
         try {
             height = Double.parseDouble(heightText);
@@ -144,8 +152,8 @@ public class SignUpController implements Initializable {
                 return false;
             }
         } catch (NumberFormatException e) {
-             Utils.getAlert("Cân nặng phải là một số hợp lệ!").show();
-                return false;
+            Utils.getAlert("Cân nặng phải là một số hợp lệ!").show();
+            return false;
         }
         return true;
     }

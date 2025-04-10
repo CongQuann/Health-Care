@@ -128,4 +128,10 @@ public class Utils {
         alert.showAndWait();
     }
 
+    public static void createAdmin() {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        String rawPassword = "Admin123@!";
+        String hashedPassword = encoder.encode(rawPassword);
+        System.out.println("Hashed password: " + hashedPassword);
+    }
 }

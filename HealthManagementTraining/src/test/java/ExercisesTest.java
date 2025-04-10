@@ -2,7 +2,9 @@
 import com.sixthgroup.healthmanagementtraining.pojo.Exercise;
 import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.services.ExercisesService;
+
 import com.sixthgroup.healthmanagementtraining.services.Utils;
+
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.DriverManager;
@@ -22,6 +24,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+
 import static org.mockito.Mockito.*;
 import org.mockito.MockedStatic;
 
@@ -362,8 +365,8 @@ public class ExercisesTest {
             Assertions.assertEquals(0, countAfter, "Không có bài tập nào bị xóa vì ID không tồn tại");
         }
     }
-    // Test dùng dữ liệu từ method cung cấp danh sách bài tập
 
+    // Test dùng dữ liệu từ method cung cấp danh sách bài tập
     @ParameterizedTest
     @MethodSource("exerciseListsProvider")
     public void testCheckTotalTime_WithVariousExerciseLists(List<Exercise> exercises, boolean expectedResult) {
@@ -459,8 +462,7 @@ public class ExercisesTest {
                 Arguments.of(100, true)
         );
     }
-    
-    
+
     @ParameterizedTest(name = "inputDuration: \"{0}\" => expected: {1}")
     @MethodSource("provideInputDurations")
     void testIsValidInput(String inputDuration, boolean expected) {
@@ -478,19 +480,19 @@ public class ExercisesTest {
 
     private static Stream<Arguments> provideInputDurations() {
         return Stream.of(
-            // Phân vùng tương đương: Nhập không phải số nguyên
-            Arguments.of("abc", false),
-            Arguments.of("", false),
-            Arguments.of("10.5", false),
-
-            // Phân tích biên: Âm, dưới min, trong khoảng, trên max
-            Arguments.of("-5", false),
-            Arguments.of("9", false),
-            Arguments.of("10", true),
-            Arguments.of("30", true),
-            Arguments.of("45", true),
-            Arguments.of("46", false),
-            Arguments.of("100", false)
+                // Phân vùng tương đương: Nhập không phải số nguyên
+                Arguments.of("abc", false),
+                Arguments.of("", false),
+                Arguments.of("10.5", false),
+                // Phân tích biên: Âm, dưới min, trong khoảng, trên max
+                Arguments.of("-5", false),
+                Arguments.of("9", false),
+                Arguments.of("10", true),
+                Arguments.of("30", true),
+                Arguments.of("45", true),
+                Arguments.of("46", false),
+                Arguments.of("100", false)
         );
     }
+
 }

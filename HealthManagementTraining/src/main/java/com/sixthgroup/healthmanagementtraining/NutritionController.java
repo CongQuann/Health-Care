@@ -517,7 +517,9 @@ public class NutritionController implements Initializable {
                 txtRecomendedLipid.setText(String.valueOf(cr.getDailyLipidIntake()));
                 txtRecomendedFiber.setText(String.valueOf(cr.getDailyFiberIntake()));
             }
+
         } else {
+
             txtRecomendedProtein.setText(String.valueOf(0));
             txtRecomendedLipid.setText(String.valueOf(0));
             txtRecomendedFiber.setText(String.valueOf(0));
@@ -525,5 +527,4 @@ public class NutritionController implements Initializable {
         }
 
     }
-
 }
