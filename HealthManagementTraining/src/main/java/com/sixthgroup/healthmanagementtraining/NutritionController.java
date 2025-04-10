@@ -509,7 +509,8 @@ public class NutritionController implements Initializable {
     }
 
     private void loadRecommendedNutrition() throws SQLException {
-        Goal currentGoal = TargetManagementServices.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()));
+        System.out.println("getSelectedDate: "+Utils.getSelectedDate());
+        Goal currentGoal = n.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()),Utils.getSelectedDate());
         if (currentGoal != null) {
             if (currentGoal.getId() != 0) {
                 CalorieResult cr = n.calCaloriesNeeded(Utils.getUser(), currentGoal.getTargetWeight(), currentGoal.getCurrentWeight(), currentGoal.getStartDate(), currentGoal.getEndDate());
@@ -517,9 +518,7 @@ public class NutritionController implements Initializable {
                 txtRecomendedLipid.setText(String.valueOf(cr.getDailyLipidIntake()));
                 txtRecomendedFiber.setText(String.valueOf(cr.getDailyFiberIntake()));
             }
-
         } else {
-
             txtRecomendedProtein.setText(String.valueOf(0));
             txtRecomendedLipid.setText(String.valueOf(0));
             txtRecomendedFiber.setText(String.valueOf(0));
