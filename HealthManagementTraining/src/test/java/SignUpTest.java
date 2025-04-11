@@ -56,8 +56,8 @@ public class SignUpTest {
         // Gán JdbcUtils để trả về connection test
         JdbcUtils.setCustomConnection(connection);
 
-//        controller = new SignUpController();
-//        controller.signUpServices = new SignUpServices();
+        controller = new SignUpController();
+        controller.signUpServices = new SignUpServices();
     }
 
     @AfterEach
