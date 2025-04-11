@@ -242,7 +242,8 @@ public class TargetManagementController implements Initializable {
         try {
             CalorieResult result = ns.calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, goal.getStartDate(), endDate);
             float updateCaloNeeded = result.getDailyCalorieIntake();
-
+            System.out.println("dailyProteinNeed: "+ result.getDailyProteinIntake());
+            System.out.println("dailyLipidNeed: "+ result.getDailyLipidIntake());
             boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
             if (!success) {
                 Utils.getAlert("Ngày kết thúc không thể giảm!").show();
@@ -355,7 +356,6 @@ public class TargetManagementController implements Initializable {
             float targetWeight = Float.parseFloat(targetWeightStr);
             float currentWeight = Float.parseFloat(currentWeightStr);
             String targetType = currentWeight > targetWeight ? "loss" : "gain";
-
             CalorieResult caloResult = ns.calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, startDate, endDate);
             float caloChange = caloResult.getDailyCalorieChange();
             if (checkCaloChange(caloChange)) {
