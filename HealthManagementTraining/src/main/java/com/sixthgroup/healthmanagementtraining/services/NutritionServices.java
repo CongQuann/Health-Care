@@ -59,7 +59,9 @@ public class NutritionServices {
     private static final float baseProteinLossWeight = 0.25f;
     private static final float baseLipidLossWeight = 0.2f;
     private boolean bypassExerciseCheck = false; // Cờ kiểm tra
-
+    
+    private String userInfoId;
+    
     public void setBypassExerciseCheck(boolean bypass) {
         this.bypassExerciseCheck = bypass;
     }
@@ -301,9 +303,61 @@ public class NutritionServices {
         return null; // Không có goal nào đang hoạt động
 
     }
+    
+    public boolean checkGoal(String targetWeightStr, String currentWeightStr, LocalDate startDate, LocalDate endDate) throws SQLException {
+        if (targetWeightStr.isEmpty() || currentWeightStr.isEmpty()) {
+            Utils.getAlert("Vui lòng điền đầy đủ thông tin!").show();
+            return false;
+        }
+
+        float targetWeight, currentWeight;
+        try {
+            targetWeight = Float.parseFloat(targetWeightStr);
+            currentWeight = Float.parseFloat(currentWeightStr);
+        } catch (NumberFormatException e) {
+            Utils.getAlert("Cân nặng hiện tại và mục tiêu phải là số!").show();
+            return false;
+        }
+
+        if (startDate == null || endDate == null) {
+            Utils.getAlert("Ngày Bắt Đầu(Kết thúc) không được để trống và đúng định dạng!").show();
+            return false;
+        }
+
+        if (currentWeight <= 0 || currentWeight > 500) {
+            Utils.getAlert("Cân nặng hiện tại phải > 0 và <=500 !").show();
+            return false;
+        }
+
+        if (targetWeight <= 0 || targetWeight > 500) {
+            Utils.getAlert("Cân nặng mục tiêu phải > 0 và <=500 !").show();
+            return false;
+        }
+
+
+        if (endDate.isBefore(startDate)) {
+            Utils.getAlert("Ngày kết thúc không thể trước ngày bắt đầu!").show();
+            return false;
+        }
+        //check login and set current user value
+        try {
+            String username = Utils.getUser();
+            if (username == null) {
+                Utils.getAlert("Bạn chưa đăng nhập!").show();
+                return false;
+            }
+
+            userInfoId = TargetManagementServices.getUserInfoId(username);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return true;
+    }
+    
+    
     public CalorieResult calCaloriesNeeded(String username, float targetWeight, float currentWeight, LocalDate startDate, LocalDate endDate) throws SQLException {
-        TargetManagementController tc = new TargetManagementController();
-        if (tc.checkGoal(String.valueOf(targetWeight), String.valueOf(currentWeight), startDate, endDate)) {
+        if (checkGoal(String.valueOf(targetWeight), String.valueOf(currentWeight), startDate, endDate)) {
             UserInfoServices s = new UserInfoServices();
             UserInfo u = s.getUserInfo(username);
             double BMR;
