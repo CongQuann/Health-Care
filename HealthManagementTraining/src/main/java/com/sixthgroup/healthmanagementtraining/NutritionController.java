@@ -137,6 +137,11 @@ public class NutritionController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        selectedFs.clear();
+        totalCalo = 0;
+        totalLipid = 0;
+        totalFiber = 0;
+        totalProtein = 0;
         // Lấy ngày từ biến tĩnh và hiển thị
         LocalDate date = Utils.getSelectedDate();
         if (date != null) {
@@ -309,7 +314,8 @@ public class NutritionController implements Initializable {
                             int quantity = Integer.parseInt(tf.getText());
                             food.setSelectedQuantity(quantity);
                             // Kiểm tra food tồn tại chưa
-                            if (n.isExistFood(selectedFs, food) == false) {
+                            if (n.isExistFood(selectedFs, food) == false
+                                    && n.isFoodAlreadyLogged(Utils.getUUIdByName(Utils.getUser()), Utils.getSelectedDate(), food.getId()) == false) {
                                 selectedFs.add(food); // Thêm vào biến tĩnh để kiểm tra nếu có thêm lại
                                 int selectedQuantity = food.getSelectedQuantity(); // Lấy giá trị từ object
                                 // Cập nhật selectedQuantity vào đối tượng trước khi thêm vào danh sách
@@ -319,7 +325,6 @@ public class NutritionController implements Initializable {
                                 selectedFood.setSelectedQuantity(selectedQuantity); // Lưu khối lượng đã chọn
 
                                 tbSelectedFood.getItems().add(selectedFood); // Thêm vào bảng danh sách đã chọn
-
                                 totalCalo += (selectedQuantity * food.getCaloriesPerUnit()) / DEFAULT_QUANTITY;
                                 txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalo, 1)));
                                 totalProtein += (selectedQuantity * food.getProteinPerUnit()) / DEFAULT_QUANTITY;
@@ -358,7 +363,6 @@ public class NutritionController implements Initializable {
     public void choseHandler() throws SQLException {
         NutritionServices n = new NutritionServices();
         int cate_id = this.cbFoodCates.getSelectionModel().getSelectedItem().getId();
-        System.out.println("Cate " + cate_id);
         if (cate_id == 0) {
             this.tbFoods.setItems(FXCollections.observableList(n.getFoods("")));
         }
@@ -386,7 +390,7 @@ public class NutritionController implements Initializable {
             // Tạo Alert kiểu CONFIRMATION
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Cảnh báo");
-            alert.setHeaderText("Các chất dinh dưỡng không phù hợp với khuyến nghị.\nBạn có chắc chắn muốn thêm?");
+            alert.setHeaderText("Các chất dinh dưỡng hoặc calo có thể không phù hợp với khuyến nghị.\nBạn có chắc chắn muốn thêm?");
             alert.setContentText("Nhấn OK để xác nhận, hoặc Cancel để hủy.");
 
             // Hiển thị và chờ người dùng chọn
@@ -396,12 +400,8 @@ public class NutritionController implements Initializable {
                 String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
                 LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
                 NutritionServices n = new NutritionServices();
-                float totalCalo = n.calTotalCalories(selectedFs);
-                if (totalCalo == Float.parseFloat(txtTotalCalories.getText())) {
-                    n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
-                    Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
-                }
-
+                n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
+                Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
             } else {
                 return;
             }
@@ -509,8 +509,8 @@ public class NutritionController implements Initializable {
     }
 
     private void loadRecommendedNutrition() throws SQLException {
-        System.out.println("getSelectedDate: "+Utils.getSelectedDate());
-        Goal currentGoal = n.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()),Utils.getSelectedDate());
+        System.out.println("getSelectedDate: " + Utils.getSelectedDate());
+        Goal currentGoal = n.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()), Utils.getSelectedDate());
         if (currentGoal != null) {
             if (currentGoal.getId() != 0) {
                 CalorieResult cr = n.calCaloriesNeeded(Utils.getUser(), currentGoal.getTargetWeight(), currentGoal.getCurrentWeight(), currentGoal.getStartDate(), currentGoal.getEndDate());

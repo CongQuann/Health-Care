@@ -187,7 +187,7 @@ public class NutritionServices {
                     Food food = new Food();
                     food.setId(rs.getInt("id"));
                     food.setFoodName(rs.getString("foodName"));
-                    food.setCaloriesPerUnit(rs.getInt("caloriesPerUnit"));
+                    food.setCaloriesPerUnit(rs.getFloat("caloriesPerUnit"));
                     food.setLipidPerUnit(rs.getFloat("lipidPerUnit"));
                     food.setProteinPerUnit(rs.getFloat("proteinPerUnit"));
                     food.setFiberPerUnit(rs.getFloat("fiberPerUnit"));
