@@ -28,10 +28,11 @@ import org.mockito.Mockito; // Thư viện Mockito
  *
  * @author DELL
  */
-public class AdminFoodTester {
+public class AdminFoodTest {
 
     private AdminFoodServices afs; // đối tượng Service cần test
     private Connection connection;
+
     @BeforeEach
     void setUp() throws SQLException {
         connection = DriverManager.getConnection("jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;", "sa", "");
@@ -277,17 +278,36 @@ public class AdminFoodTester {
     void testUpdateFood_Success() throws SQLException {
         try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
             mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
-
             Food food = new Food();
-            food.setFoodName("Thịt chó");
-            food.setCaloriesPerUnit(0.7f);
-            food.setLipidPerUnit(0.1f);
-            food.setProteinPerUnit(0.1f);
-            food.setFiberPerUnit(0.2f);
-            food.setId(1);
+            food.setId(1); // Đang sửa Táo
+            food.setFoodName("Mận"); // Đổi tên thành không trùng
+            food.setCaloriesPerUnit(0.8f);
+            food.setLipidPerUnit(0.3f);
+            food.setProteinPerUnit(0.4f);
+            food.setFiberPerUnit(0.5f);
 
             boolean result = afs.updateFood(food);
+
             assertTrue(result);
+        }
+    }
+
+//    ===============Kiểm tra cập nhật khi tên đã tồn tại trong csdl
+    @Test
+    void testUpdateFood_NameExisted() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+            Food food = new Food();
+            food.setId(1); // Đang cập nhật Táo
+            food.setFoodName("Cà rốt"); // Đổi tên thành tên đã tồn tại
+            food.setCaloriesPerUnit(0.6f);
+            food.setLipidPerUnit(0.2f);
+            food.setProteinPerUnit(0.2f);
+            food.setFiberPerUnit(0.3f);
+
+            boolean result = afs.updateFood(food);
+
+            assertFalse(result); // Không được update vì tên bị trùng
         }
     }
 
@@ -298,12 +318,13 @@ public class AdminFoodTester {
 
             // Giả lập một thức ăn không tồn tại (ID = 99, chẳng hạn)
             Food food = new Food();
+            food.setId(99);
             food.setFoodName("Thịt cừu");
             food.setCaloriesPerUnit(0.8f);
             food.setLipidPerUnit(0.2f);
             food.setProteinPerUnit(0.1f);
             food.setFiberPerUnit(0.3f);
-            food.setId(99);  // ID không tồn tại
+            // ID không tồn tại
 
             // Khi thức ăn không tồn tại, hàm updateFood phải trả về false
             boolean result = afs.updateFood(food);
@@ -319,16 +340,16 @@ public class AdminFoodTester {
             mockedJdbc.when(JdbcUtils::getConn).thenThrow(new SQLException("Database connection error"));
 
             Food food = new Food();
+            food.setId(1);
             food.setFoodName("Thịt bò");
             food.setCaloriesPerUnit(1.5f);
             food.setLipidPerUnit(0.5f);
             food.setProteinPerUnit(0.3f);
             food.setFiberPerUnit(0.4f);
-            food.setId(1);
 
             // Kiểm tra xem SQLException có được ném ra hay không
             assertThrows(SQLException.class, () -> {
-                afs.deleteFood(99);
+                afs.updateFood(food);
             });
         }
     }

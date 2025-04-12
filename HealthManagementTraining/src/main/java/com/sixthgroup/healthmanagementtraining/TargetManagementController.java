@@ -128,7 +128,7 @@ public class TargetManagementController implements Initializable {
                 try {
                     return Float.parseFloat(value);
                 } catch (NumberFormatException e) {
-                    Utils.getAlert("cân nặng mục tiêu phải là số").show();
+                    Utils.getAlert("Cân nặng hiện tại và mục tiêu phải là số!").show();
                     return null;
                 }
             }
@@ -155,7 +155,7 @@ public class TargetManagementController implements Initializable {
                 try {
                     return Float.parseFloat(value);
                 } catch (NumberFormatException e) {
-                    Utils.getAlert("cân nặng mục tiêu phải là số").show();
+                    Utils.getAlert("Cân nặng hiện tại và mục tiêu phải là số!").show();
                     return null;
                 }
             }
@@ -241,18 +241,20 @@ public class TargetManagementController implements Initializable {
     private void updateGoal(Goal goal, float targetWeight, float currentWeight, LocalDate endDate) {
         try {
             CalorieResult result = ns.calCaloriesNeeded(Utils.getUser(), targetWeight, currentWeight, goal.getStartDate(), endDate);
-            float updateCaloNeeded = result.getDailyCalorieIntake();
-            System.out.println("dailyProteinNeed: "+ result.getDailyProteinIntake());
-            System.out.println("dailyLipidNeed: "+ result.getDailyLipidIntake());
-            boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
-            if (!success) {
-                Utils.getAlert("Ngày kết thúc không thể giảm!").show();
-                loadGoals();
-            } else {
-                goal.setTargetWeight(targetWeight);
-                goal.setCurrentWeight(currentWeight);
-                goal.setEndDate(endDate);
-                loadGoals();
+            if (result != null) {
+                float updateCaloNeeded = result.getDailyCalorieIntake();
+                System.out.println("dailyProteinNeed: " + result.getDailyProteinIntake());
+                System.out.println("dailyLipidNeed: " + result.getDailyLipidIntake());
+                boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
+                if (!success) {
+                    Utils.getAlert("Ngày kết thúc không thể giảm!").show();
+                    loadGoals();
+                } else {
+                    goal.setTargetWeight(targetWeight);
+                    goal.setCurrentWeight(currentWeight);
+                    goal.setEndDate(endDate);
+                    loadGoals();
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

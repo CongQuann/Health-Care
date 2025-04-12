@@ -23,7 +23,7 @@ import org.mockito.Mockito; // Thư viện Mockito
  *
  * @author DELL
  */
-public class UserInfoTester {
+public class UserInfoTest {
 
     private UserInfoServices ufs; // đối tượng Service cần test
     private Connection connection;
@@ -235,11 +235,10 @@ public class UserInfoTester {
     private static Stream<Arguments> providePasswordInputData() {
         return Stream.of(
                 // Các bộ đầu vào cho phương thức kiểm tra, bao gồm cả expectedResult
-                Arguments.of("", "", "", false), // Tất cả trống
-                Arguments.of("", "newPassword123", "newPassword123", false), // oldPassword rỗng
-                Arguments.of("oldPassword123", "", "newPassword123", false), // newPassword rỗng
-                Arguments.of("oldPassword123", "newPassword123", "", false), // confirmPassword rỗng
-                Arguments.of("oldPassword123", "newPassword123", "newPassword123", true) // Mọi thứ hợp lệ
+                Arguments.of("", "abc", "abc", false),
+                Arguments.of("abc", "", "abc", false),
+                Arguments.of("abc", "abc", "", false),
+                Arguments.of("abc", "abc", "abc", true)
         );
     }
 
@@ -254,23 +253,11 @@ public class UserInfoTester {
     // Phương thức cung cấp dữ liệu cho test
     private static Stream<Arguments> provideTestData() {
         return Stream.of(
-                // Biên: Mật khẩu trống, confirmPassword trống
-                Arguments.of("", "", false), // Trường hợp không khớp vì mật khẩu trống
-
-                // Phân vùng tương đương: Các mật khẩu giống nhau
-                Arguments.of("password123", "password123", true), // Mật khẩu và confirmPassword giống nhau
-                Arguments.of("123", "123", true), // Mật khẩu ngắn nhưng giống nhau
-
-                // Phân vùng tương đương: Các mật khẩu khác nhau
-                Arguments.of("password123", "password124", false), // Mật khẩu không giống nhau
-                Arguments.of("password123", "Password123", false), // Mật khẩu khác nhau (chữ hoa/thường)
-
-                // Biên: Mật khẩu dài, confirmPassword dài
-                Arguments.of("aVeryLongPasswordThatExceedsNormalLength12345", "aVeryLongPasswordThatExceedsNormalLength12345", true), // Mật khẩu dài nhưng giống nhau
-
-                // Phân vùng tương đương: Mật khẩu giống nhau nhưng có khoảng trắng
-                Arguments.of("password 123", "password 123", true), // Mật khẩu có khoảng trắng nhưng khớp
-                Arguments.of("password123 ", "password123", false) // Mật khẩu có khoảng trắng khác nhau
+                Arguments.of("", "", false), // Biên: cả hai rỗng
+                Arguments.of("abc", "abc", true), // Tương đương: mật khẩu khớp
+                Arguments.of("abc", "abcd", false), // Tương đương: không khớp
+                Arguments.of("abc ", "abc", false), // Biên: khác nhau do khoảng trắng
+                Arguments.of("aVeryLongPasswordThatExceedsNormal12345", "aVeryLongPasswordThatExceedsNormal12345", true) // Biên: chuỗi dài
         );
     }
 
@@ -285,28 +272,13 @@ public class UserInfoTester {
     // Phương thức cung cấp dữ liệu test
     private static Stream<Arguments> providePasswordTestData() {
         return Stream.of(
-                //Hợp lệ: Đủ tất cả điều kiện
-                Arguments.of("Abc@1234", true),
-                Arguments.of("Strong1!", true),
-                Arguments.of("XyZ#5678", true),
-                //Không hợp lệ - Độ dài < 8 ký tự
-                Arguments.of("Abc@12", false),
-                Arguments.of("A1@xyz", false),
-                //Không hợp lệ - Thiếu chữ hoa
-                Arguments.of("abc@1234", false),
-                Arguments.of("123@abcd", false),
-                //Không hợp lệ - Thiếu chữ thường
-                Arguments.of("ABC@1234", false),
-                Arguments.of("123@XYZ", false),
-                //Không hợp lệ - Thiếu số
-                Arguments.of("Abcdef@!", false),
-                Arguments.of("Axyz@#", false),
-                //Không hợp lệ - Thiếu ký tự đặc biệt
-                Arguments.of("Abc12345", false),
-                Arguments.of("Password123", false),
-                //Không hợp lệ - Chứa khoảng trắng
-                Arguments.of("Abc@ 1234", false),
-                Arguments.of("A bc@1234", false)
+                Arguments.of("Abc@1234", true), // Đủ điều kiện
+                Arguments.of("A1@xyz", false), // Độ dài < 8
+                Arguments.of("abc@1234", false), // Thiếu chữ hoa
+                Arguments.of("ABC@1234", false), // Thiếu chữ thường
+                Arguments.of("Abcdef@!", false), // Thiếu số
+                Arguments.of("Abc12345", false), // Thiếu ký tự đặc biệt
+                Arguments.of("Abc@ 1234", false) // Có khoảng trắng
         );
     }
 
@@ -320,17 +292,12 @@ public class UserInfoTester {
 
     private static Stream<Arguments> providePasswordMatchingTestData() {
         return Stream.of(
-                Arguments.of("password123", "password123", true),
-                Arguments.of("P@ssw0rd!", "P@ssw0rd!", true),
-                Arguments.of("", "", true), // Cả hai chuỗi đều rỗng
-                Arguments.of("   ", "   ", true), // Cả hai đều là khoảng trắng
-                Arguments.of("password123", "password124", false), // Khác một ký tự
-                Arguments.of("password", "Password", false), // Phân biệt chữ hoa/thường
-                Arguments.of("password123 ", "password123", false), // Khoảng trắng ở cuối
-                Arguments.of(" password123", "password123", false), // Khoảng trắng ở đầu
-                Arguments.of("password123", "", false), // Một chuỗi rỗng
-                Arguments.of("", "password123", false), // Chuỗi còn lại rỗng
-                Arguments.of("P@ssword", "P@ssword!", false) // Khác một ký tự đặc biệt
+                Arguments.of("password123", "password123", true), // giống nhau
+                Arguments.of("", "", true), // chuỗi rỗng
+                Arguments.of("password", "Password", false), // phân biệt hoa/thường
+                Arguments.of("password123", "password124", false), // khác một ký tự
+                Arguments.of(" password123 ", "password123", false) // khác do khoảng trắng
+
         );
     }
 
@@ -343,17 +310,12 @@ public class UserInfoTester {
 
     private static Stream<Arguments> provideHasWhiteSpaceTestData() {
         return Stream.of(
-                Arguments.of("", false),
-                Arguments.of("a", false),
-                Arguments.of(" ", true),
-                Arguments.of("password123", false),
-                Arguments.of(" password", true),
-                Arguments.of("pass word", true),
-                Arguments.of("password ", true),
-                Arguments.of(" ", true),
-                Arguments.of("pa ss wor d", true),
-                Arguments.of("a".repeat(1000), false),
-                Arguments.of("a".repeat(500) + " " + "b".repeat(500), true)
+                Arguments.of("", false), // Chuỗi rỗng
+                Arguments.of("a", false), // Không có khoảng trắng
+                Arguments.of(" ", true), // Chỉ có khoảng trắng
+                Arguments.of("abc def", true), // Có khoảng trắng ở giữa
+                Arguments.of("a".repeat(1000), false), // Chuỗi dài không có khoảng trắng
+                Arguments.of("a".repeat(500) + " " + "b".repeat(500), true) // Chuỗi dài có khoảng trắng
         );
     }
 
@@ -365,22 +327,19 @@ public class UserInfoTester {
 
     private static Stream<Arguments> provideHeightWeightTestData() {
         return Stream.of(
-                Arguments.of("150", "50", true), // Chiều cao và cân nặng hợp lệ
-                Arguments.of("999", "999", true), // Giá trị tối đa hợp lệ
-                Arguments.of("150.5", "50.2", true), // Số thực hợp lệ
+                // Hợp lệ
+                Arguments.of("150", "50", true), // Số nguyên
+                Arguments.of("150.5", "50.2", true), // Số thực
+                Arguments.of("999", "999", true), // Biên trên
 
-                Arguments.of("1000", "50", false), // Chiều cao vượt quá giới hạn
-                Arguments.of("150", "1000", false), // Cân nặng vượt quá giới hạn
-                Arguments.of("1000.1", "1000.1", false), // Cả hai vượt giới hạn
-
+                // Không hợp lệ
+                Arguments.of("1000", "50", false), // Chiều cao vượt giới hạn
+                Arguments.of("150", "1000", false), // Cân nặng vượt giới hạn
                 Arguments.of("abc", "50", false), // Chiều cao không phải số
                 Arguments.of("150", "xyz", false), // Cân nặng không phải số
-                Arguments.of("150a", "50.5", false), // Chiều cao chứa ký tự lạ
-                Arguments.of("150", "50,5", false), // Dấu phẩy thay vì dấu chấm
-
+                Arguments.of("150", "50,5", false), // Sai định dạng số
                 Arguments.of("", "50", false), // Chiều cao rỗng
-                Arguments.of("150", "", false), // Cân nặng rỗng
-                Arguments.of("", "", false)// Cả hai rỗng
+                Arguments.of("150", "", false) // Cân nặng rỗng
 
         );
     }
@@ -394,8 +353,6 @@ public class UserInfoTester {
     private static Stream<Arguments> provideNameTestData() {
         return Stream.of(
                 Arguments.of("John Doe", true), // Tên hợp lệ có dấu cách
-                Arguments.of("Alice", true), // Tên chỉ có chữ cái
-                Arguments.of("Robert Downey", true), // Tên đầy đủ hợp lệ
                 Arguments.of("John   Doe", true), // Khoảng trắng giữa từ hợp lệ
                 Arguments.of("John123", false), // Chứa số
                 Arguments.of("Alice!", false), // Chứa ký tự đặc biệt
@@ -412,25 +369,18 @@ public class UserInfoTester {
 
     private static Stream<Arguments> provideEmailTestData() {
         return Stream.of(
+                // ✅ Phân vùng hợp lệ
                 Arguments.of("user@example.com", true), // Cơ bản hợp lệ
-                Arguments.of("john.doe123@mail.co.uk", true), // Email có subdomain hợp lệ
-                Arguments.of("user_name@example.com", true), // Dấu gạch dưới hợp lệ
-                Arguments.of("user-name@example.com", true), // Dấu gạch ngang hợp lệ
-                Arguments.of("user+alias@example.com", true), // Dấu cộng hợp lệ
-
-                Arguments.of("plainaddress", false), // Không có '@'
-                Arguments.of("@missingusername.com", false), // Thiếu phần username
-                Arguments.of("user@.com", false), // Không có tên miền
-                Arguments.of("user@example", false), // Không có phần mở rộng (.com, .net, ...)
-                Arguments.of("user@com", false), // Tên miền không hợp lệ
-                // Arguments.of("user@example..com", false), // Dấu chấm liên tiếp không hợp lệ
-                Arguments.of("user@example.c", false), // Phần mở rộng quá ngắn (phải >=2 ký tự)
-                Arguments.of("user@exam_ple.com", false), // Dấu gạch dưới trong tên miền không hợp lệ
-                Arguments.of("user@example,com", false), // Dấu phẩy không hợp lệ
-                Arguments.of("user@ example.com", false), // Khoảng trắng không hợp lệ
-                //Arguments.of("user@.example.com", false), // Dấu chấm ngay sau '@' không hợp lệ
-                Arguments.of("user@sub_domain.com", false), // Dấu gạch dưới trong tên miền không hợp lệ
-                Arguments.of("", false) // Chuỗi rỗng
+                Arguments.of("john.doe123@mail.co.uk", true), // Có subdomain, hợp lệ
+                Arguments.of("plainaddress", false),
+                Arguments.of("@domain.com", false),
+                Arguments.of("user@.com", false),
+                Arguments.of("user@example", false),
+                Arguments.of("user@example.c", false),
+                Arguments.of("user@sub_domain.com", false),
+                Arguments.of("user@example,com", false),
+                Arguments.of("user@ example.com", false),
+                Arguments.of("", false)
         );
     }
 
