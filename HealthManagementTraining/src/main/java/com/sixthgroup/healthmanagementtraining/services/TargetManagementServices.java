@@ -136,10 +136,16 @@ public class TargetManagementServices {
                         if (newProgress < 0) {
                             newProgress = 0;
                         }
+                        else if (newProgress > 100) {
+                            newProgress = 100;
+                        }
                     } else if ("gain".equals(targetType)) {
                         newProgress = (int) (((currentWeight - initialWeight) / (targetWeight - initialWeight)) * 100);
                         if (newProgress < 0) {
                             newProgress = 0;
+                        }
+                        else if (newProgress > 100) {
+                            newProgress = 100;
                         }
                     }
                 } // Nếu targetWeight thay đổi, reset progress
