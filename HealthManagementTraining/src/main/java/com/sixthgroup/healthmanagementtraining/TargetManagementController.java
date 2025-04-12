@@ -128,7 +128,7 @@ public class TargetManagementController implements Initializable {
                 try {
                     return Float.parseFloat(value);
                 } catch (NumberFormatException e) {
-                    Utils.getAlert("cân nặng mục tiêu phải là số").show();
+                    Utils.getAlert("Cân nặng hiện tại và mục tiêu phải là số!").show();
                     return null;
                 }
             }
@@ -155,7 +155,7 @@ public class TargetManagementController implements Initializable {
                 try {
                     return Float.parseFloat(value);
                 } catch (NumberFormatException e) {
-                    Utils.getAlert("cân nặng mục tiêu phải là số").show();
+                    Utils.getAlert("Cân nặng hiện tại và mục tiêu phải là số!").show();
                     return null;
                 }
             }
