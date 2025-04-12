@@ -40,7 +40,7 @@ public class ExercisesService {
             }
             ResultSet rs = stm.executeQuery();
             while (rs.next()) {
-                Exercise e = new Exercise(rs.getInt("id"), rs.getString("exerciseName"), rs.getInt("caloriesPerMinute"));
+                Exercise e = new Exercise(rs.getInt("id"), rs.getString("exerciseName"), rs.getFloat("caloriesPerMinute"));
                 exs.add(e);
             }
         } catch (SQLException e) {
