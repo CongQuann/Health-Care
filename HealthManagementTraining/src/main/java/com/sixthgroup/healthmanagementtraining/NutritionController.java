@@ -393,11 +393,6 @@ public class NutritionController implements Initializable {
             }
         }
 
-        if (Float.parseFloat(txtTotalCalories.getText()) - recommendedCalo > 300
-                || Float.parseFloat(txtTotalCalories.getText()) - recommendedCalo < 0) {
-            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Lượng calo hấp thụ không phù hợp!");
-            return;
-        }
         if (Float.parseFloat(txtTotalProtein.getText()) - Float.parseFloat(txtRecomendedProtein.getText()) > DIFFERENT_PROTEIN
                 || Float.parseFloat(txtTotalLipid.getText()) - Float.parseFloat(txtRecomendedLipid.getText()) > DIFFERENT_LIPID
                 || Float.parseFloat(txtTotalFiber.getText()) > 0) {
