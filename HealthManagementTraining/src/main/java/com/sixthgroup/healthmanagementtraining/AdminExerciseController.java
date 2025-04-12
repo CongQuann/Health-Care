@@ -105,7 +105,8 @@ public class AdminExerciseController implements Initializable {
     }
 
     private void searchExercises(String keyword) throws SQLException {
-        List<Exercise> list = AdminExerciseServices.searchExercisesByName(keyword);
+        String cleanedKeyword = keyword.trim();
+        List<Exercise> list = AdminExerciseServices.searchExercisesByName(cleanedKeyword);
         ObservableList<Exercise> data = FXCollections.observableArrayList(list);
         goalTableView.setItems(data);
     }
