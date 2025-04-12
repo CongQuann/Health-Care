@@ -12,6 +12,7 @@ import com.sixthgroup.healthmanagementtraining.pojo.JdbcUtils;
 import com.sixthgroup.healthmanagementtraining.services.NutritionServices;
 import com.sixthgroup.healthmanagementtraining.services.Utils;
 import com.sixthgroup.healthmanagementtraining.pojo.NutritionLog;
+import com.sixthgroup.healthmanagementtraining.services.DashboardServices;
 import com.sixthgroup.healthmanagementtraining.services.LoginServices;
 import com.sixthgroup.healthmanagementtraining.services.TargetManagementServices;
 import java.io.IOException;
@@ -102,9 +103,11 @@ public class NutritionController implements Initializable {
     private static float totalProtein;
     private static float totalLipid;
     private static float totalFiber;
+    private static float recommendedCalo;
     private boolean isNavBarVisible = false; //bien dung de kiem tra xem navbar co hien thi khong
     private NutritionServices n = new NutritionServices();
     private TargetManagementServices ts = new TargetManagementServices();
+    private DashboardServices ds = new DashboardServices();
     private static List<Food> selectedFs = new ArrayList<>();
     // 1. Khai báo Map ở cấp controller
     private final Map<Integer, TextField> quantityFieldMap = new HashMap<>();
@@ -142,6 +145,11 @@ public class NutritionController implements Initializable {
         totalLipid = 0;
         totalFiber = 0;
         totalProtein = 0;
+        try {
+            recommendedCalo = ds.getCaloNeededByDate(Utils.getUser(), Utils.getSelectedDate());
+        } catch (SQLException ex) {
+            Logger.getLogger(NutritionController.class.getName()).log(Level.SEVERE, null, ex);
+        }
         // Lấy ngày từ biến tĩnh và hiển thị
         LocalDate date = Utils.getSelectedDate();
         if (date != null) {
@@ -384,13 +392,19 @@ public class NutritionController implements Initializable {
                 break;
             }
         }
+
+        if (Float.parseFloat(txtTotalCalories.getText()) - recommendedCalo > 300
+                || Float.parseFloat(txtTotalCalories.getText()) - recommendedCalo < 0) {
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Lượng calo hấp thụ không phù hợp!");
+            return;
+        }
         if (Float.parseFloat(txtTotalProtein.getText()) - Float.parseFloat(txtRecomendedProtein.getText()) > DIFFERENT_PROTEIN
                 || Float.parseFloat(txtTotalLipid.getText()) - Float.parseFloat(txtRecomendedLipid.getText()) > DIFFERENT_LIPID
                 || Float.parseFloat(txtTotalFiber.getText()) > 0) {
             // Tạo Alert kiểu CONFIRMATION
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Cảnh báo");
-            alert.setHeaderText("Các chất dinh dưỡng hoặc calo có thể không phù hợp với khuyến nghị.\nBạn có chắc chắn muốn thêm?");
+            alert.setHeaderText("Các chất dinh dưỡng có thể không phù hợp với khuyến nghị.\nBạn có chắc chắn muốn thêm?");
             alert.setContentText("Nhấn OK để xác nhận, hoặc Cancel để hủy.");
 
             // Hiển thị và chờ người dùng chọn

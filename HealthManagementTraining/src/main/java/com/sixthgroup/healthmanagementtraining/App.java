@@ -17,10 +17,8 @@ public class App extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
+        stage = primaryStage; // 🔧 Gán giá trị cho biến static
         Parent root = loadFXML("secondary");
-
-
 
         // Không đặt kích thước cố định, JavaFX sẽ tự động lấy từ FXML
         scene = new Scene(root);
