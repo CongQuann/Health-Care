@@ -502,7 +502,7 @@ public class NutritionServices {
                 return false;
             }
             if (unitType.equals("gram")) {
-                minQuantity = 50;
+                minQuantity = 10;
                 maxQuantity = 300;
 
                 if (input >= minQuantity && input <= maxQuantity) {
@@ -512,7 +512,7 @@ public class NutritionServices {
                     return false;
                 }
             } else if (unitType.endsWith("ml")) {
-                minQuantity = 200;
+                minQuantity = 20;
                 maxQuantity = 500;
 
                 if (input >= minQuantity && input <= maxQuantity) {
