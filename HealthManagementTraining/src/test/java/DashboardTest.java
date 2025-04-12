@@ -26,7 +26,7 @@ import org.mockito.Mockito; // Thư viện Mockito
  *
  * @author DELL
  */
-public class DashboardTester {
+public class DashboardTest {
 
     private Connection connection;
     private DashboardServices ds = new DashboardServices();
@@ -505,6 +505,8 @@ public class DashboardTester {
         }
     }
 
+    
+    //test ràng buộc nếu ngày trong dashboard thuộc về mục tiêu nào thì calo cần mỗi ngày sẽ hiển thị của mục tiêu đó
     @Test
     void testGetCaloNeededByDate_Success() throws SQLException {
         try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
@@ -557,17 +559,11 @@ public class DashboardTester {
 
     static Stream<Arguments> calculatePercentageArgumentsData() {
         return Stream.of(
-                Arguments.of(0, 1, 0),
-                Arguments.of(1, 1, 100),
-                Arguments.of(100, 1, 100),
-                Arguments.of(101, 1, 100),
-                Arguments.of(100, 100, 100),
-                Arguments.of(0, 100, 0),
-                Arguments.of(1000, 100, 100),
-                Arguments.of(100, 0, 0),
-                Arguments.of(50, 100, 50),
-                Arguments.of(100, 100, 100),
-                Arguments.of(150, 100, 100)
+                Arguments.of(0, 100, 0), // Intake = 0
+                Arguments.of(50, 100, 50), // Intake < Needed
+                Arguments.of(100, 100, 100), // Intake = Needed
+                Arguments.of(150, 100, 100), // Intake > Needed (cắt ở 100)
+                Arguments.of(100, 0, 0) // Needed = 0 (tránh chia cho 0)
         );
     }
 

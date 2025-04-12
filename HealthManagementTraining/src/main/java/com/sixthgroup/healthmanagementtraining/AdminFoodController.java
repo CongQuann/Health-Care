@@ -1,5 +1,7 @@
+
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+
+* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
 package com.sixthgroup.healthmanagementtraining;
@@ -286,6 +288,7 @@ public class AdminFoodController implements Initializable {
     private void filterFoodByKeywordAndCategory(String keyword, FoodCategory category) {
         try {
             List<Food> filteredList;
+            keyword = keyword.trim();
             if (category == null || category.getId() < 0) {
                 filteredList = foodService.searchFood(keyword); // Chỉ tìm kiếm nếu không chọn loại thức ăn
             } else {
@@ -301,6 +304,7 @@ public class AdminFoodController implements Initializable {
     }
 
     private void filterFood(String keyword) {
+        keyword=keyword.trim();
         FoodCategory selectedCategory = filterByCateButton.getValue();
         filterFoodByKeywordAndCategory(keyword, selectedCategory);
     }

@@ -108,16 +108,29 @@ public class AdminFoodServices {
 
     public boolean updateFood(Food food) throws SQLException {
         try (Connection conn = JdbcUtils.getConn()) {
-            String sql = "UPDATE food SET foodName = ?, caloriesPerUnit = ?, lipidPerUnit = ?, proteinPerUnit = ?, fiberPerUnit = ? WHERE id = ?";
-            PreparedStatement stm = conn.prepareStatement(sql);
-            stm.setString(1, food.getFoodName());
-            stm.setFloat(2, food.getCaloriesPerUnit());
-            stm.setFloat(3, food.getLipidPerUnit());
-            stm.setFloat(4, food.getProteinPerUnit());
-            stm.setFloat(5, food.getFiberPerUnit());
-            stm.setInt(6, food.getId());
+            // Kiểm tra tên món ăn đã tồn tại ở bản ghi khác chưa
+            String checkSql = "SELECT COUNT(*) FROM food WHERE foodName = ? AND id != ?";
+            PreparedStatement checkStm = conn.prepareStatement(checkSql);
+            checkStm.setString(1, food.getFoodName());
+            checkStm.setInt(2, food.getId());
 
-            return stm.executeUpdate() > 0;
+            ResultSet rs = checkStm.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                // Tên đã tồn tại ở một món ăn khác
+                return false;
+            }
+
+            // Thực hiện cập nhật
+            String updateSql = "UPDATE food SET foodName = ?, caloriesPerUnit = ?, lipidPerUnit = ?, proteinPerUnit = ?, fiberPerUnit = ? WHERE id = ?";
+            PreparedStatement updateStm = conn.prepareStatement(updateSql);
+            updateStm.setString(1, food.getFoodName());
+            updateStm.setFloat(2, food.getCaloriesPerUnit());
+            updateStm.setFloat(3, food.getLipidPerUnit());
+            updateStm.setFloat(4, food.getProteinPerUnit());
+            updateStm.setFloat(5, food.getFiberPerUnit());
+            updateStm.setInt(6, food.getId());
+
+            return updateStm.executeUpdate() > 0;
         }
     }
 
@@ -238,5 +251,4 @@ public class AdminFoodServices {
         return null; // Nếu không tìm thấy, trả về null
     }
 
-    
 }
