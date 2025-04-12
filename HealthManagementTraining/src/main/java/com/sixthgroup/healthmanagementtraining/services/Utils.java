@@ -87,7 +87,7 @@ public class Utils {
 
     public static float convertToFloat(double num) {
         float result = (float) num; // Ép kiểu từ double về float
-        return Math.round(result * 10) / 10.0f; // Làm tròn 1 số thập phân
+        return Math.round(result * 100) / 100.0f; // Làm tròn 1 số thập phân
     }
 
     public static String getUUIdByName(String username) {

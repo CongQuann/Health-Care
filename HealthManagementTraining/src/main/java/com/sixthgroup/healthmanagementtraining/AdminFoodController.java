@@ -286,6 +286,7 @@ public class AdminFoodController implements Initializable {
     private void filterFoodByKeywordAndCategory(String keyword, FoodCategory category) {
         try {
             List<Food> filteredList;
+            keyword = keyword.trim();
             if (category == null || category.getId() < 0) {
                 filteredList = foodService.searchFood(keyword); // Chỉ tìm kiếm nếu không chọn loại thức ăn
             } else {
@@ -301,6 +302,7 @@ public class AdminFoodController implements Initializable {
     }
 
     private void filterFood(String keyword) {
+        keyword=keyword.trim();
         FoodCategory selectedCategory = filterByCateButton.getValue();
         filterFoodByKeywordAndCategory(keyword, selectedCategory);
     }
