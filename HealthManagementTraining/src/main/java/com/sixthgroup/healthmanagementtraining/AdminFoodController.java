@@ -102,6 +102,9 @@ public class AdminFoodController implements Initializable {
         UnitType selectedUnit = unitTypeComboBox.getValue();
 
         AdminFoodServices afs = new AdminFoodServices();
+        if (selectedCategory != null && "Meat".equalsIgnoreCase(selectedCategory.getCategoryName())) {
+            fiberText = "0";
+        }
         if (afs.checkInputData(foodName, caloriesText, lipidText, proteinText, fiberText, selectedCategory, selectedUnit) == false) {
             Utils.showAlert(AlertType.ERROR, "Lỗi", "Các trường nhập liệu không được bỏ trống!");
             return null;
@@ -117,7 +120,13 @@ public class AdminFoodController implements Initializable {
             float calories = Float.parseFloat(caloriesText);
             float lipid = Float.parseFloat(lipidText);
             float protein = Float.parseFloat(proteinText);
-            float fiber = Float.parseFloat(fiberText);
+            float fiber;
+            if (foodTypeComboBox.getValue() != null
+                    && "Meat".equalsIgnoreCase(foodTypeComboBox.getValue().getCategoryName())) {
+                fiber = 0;
+            } else {
+                fiber = Float.parseFloat(fiberField.getText().trim());
+            }
 
             //HÀM NÀY TRẢ VỀ MỘT ĐỐI TƯỢNG FOOD ĐỂ THÊM VÀO DATABASE
             return new Food(
@@ -466,6 +475,17 @@ public class AdminFoodController implements Initializable {
 
         // Thiết lập các cột có thể chỉnh sửa và xử lý sự kiện
         setupTableEditable();
+
+        // *** Thêm đoạn lắng nghe thay đổi của foodTypeComboBox ***
+        foodTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            // Kiểm tra nếu FoodCategory được chọn có categoryName là "meat"
+            if (newValue != null && "Meat".equalsIgnoreCase(newValue.getCategoryName())) {
+                fiberField.setDisable(true); // Làm mờ ô nhập liệu chất xơ
+                fiberField.clear();          // Xóa nội dung nếu có
+            } else {
+                fiberField.setDisable(false); // Mở khóa ô nhập liệu khi không phải "meat"
+            }
+        });
     }
 
     public void switchToAdminExercise(ActionEvent event) throws IOException {
