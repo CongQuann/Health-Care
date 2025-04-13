@@ -283,33 +283,47 @@ public class AdminFoodController implements Initializable {
         }
     }
 
-    private void filterFoodByKeywordAndCategory(String keyword, FoodCategory category) {
+//    private void filterFoodByKeywordAndCategory(String keyword, FoodCategory category) {
+//        try {
+//            List<Food> filteredList;
+//            keyword = keyword.trim();
+//            if (category == null || category.getId() < 0) {
+//                filteredList = foodService.searchFood(keyword); // Chỉ tìm kiếm nếu không chọn loại thức ăn
+//            } else {
+//                // Kết hợp tìm kiếm và lọc theo loại thức ăn
+//                filteredList = foodService.searchFoodByCategoryAndKeyword(category.getId(), keyword);
+//            }
+//            ObservableList<Food> observableList = FXCollections.observableArrayList(filteredList);
+//            foodTableView.setItems(observableList);
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//            // Xử lý lỗi nếu cần thiết
+//        }
+//    }
+//
+//    private void filterFood(String keyword) {
+//        keyword=keyword.trim();
+//        FoodCategory selectedCategory = filterByCateButton.getValue();
+//        filterFoodByKeywordAndCategory(keyword, selectedCategory);
+//    }
+//
+//    private void filterFoodByCategory(FoodCategory category) {
+//        String keyword = searchField.getText().trim();
+//        filterFoodByKeywordAndCategory(keyword, category);
+//    }
+    private void filterFood() {
+        String keyword = searchField.getText().trim();
+        FoodCategory category = filterByCateButton.getValue();
+
         try {
-            List<Food> filteredList;
-            keyword = keyword.trim();
-            if (category == null || category.getId() < 0) {
-                filteredList = foodService.searchFood(keyword); // Chỉ tìm kiếm nếu không chọn loại thức ăn
-            } else {
-                // Kết hợp tìm kiếm và lọc theo loại thức ăn
-                filteredList = foodService.searchFoodByCategoryAndKeyword(category.getId(), keyword);
-            }
-            ObservableList<Food> observableList = FXCollections.observableArrayList(filteredList);
-            foodTableView.setItems(observableList);
+            List<Food> filteredList = (category == null || category.getId() < 0)
+                    ? foodService.searchFood(keyword)
+                    : foodService.searchFoodByCategoryAndKeyword(category.getId(), keyword);
+
+            foodTableView.setItems(FXCollections.observableArrayList(filteredList));
         } catch (SQLException e) {
             e.printStackTrace();
-            // Xử lý lỗi nếu cần thiết
         }
-    }
-
-    private void filterFood(String keyword) {
-        keyword=keyword.trim();
-        FoodCategory selectedCategory = filterByCateButton.getValue();
-        filterFoodByKeywordAndCategory(keyword, selectedCategory);
-    }
-
-    private void filterFoodByCategory(FoodCategory category) {
-        String keyword = searchField.getText().trim();
-        filterFoodByKeywordAndCategory(keyword, category);
     }
 
     private void clearInputFields() {
@@ -422,14 +436,13 @@ public class AdminFoodController implements Initializable {
         loadData();
         loadFoodCategories();
         loadUnitTypes();
-        // Thêm sự kiện lắng nghe thay đổi lựa chọn trong filterByCateButton
-        filterByCateButton.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            filterFoodByCategory(newValue);
+        // Trong phương thức initialize()
+        filterByCateButton.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            filterFood();
         });
 
-        // Thêm sự kiện lắng nghe thay đổi văn bản trong TextField tìm kiếm
-        searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-            filterFood(newValue);
+        searchField.textProperty().addListener((obs, oldVal, newVal) -> {
+            filterFood();
         });
 
         foodTableView.setEditable(true);
