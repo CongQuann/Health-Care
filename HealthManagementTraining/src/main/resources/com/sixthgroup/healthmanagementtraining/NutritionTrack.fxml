@@ -113,7 +113,7 @@
           <ComboBox fx:id="cbFoodCates" layoutX="14.0" layoutY="99.0" onAction="#choseHandler" prefHeight="25.0" prefWidth="186.0" promptText="Loại thức ăn" />
         <!-- Navbar (ban đầu ẩn bên trái) -->
         <!--==========================================================-->
-        <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="620.0" prefWidth="250.0" styleClass="nav-bar">
+        <VBox fx:id="navBar" alignment="TOP_LEFT" layoutX="-250.0" layoutY="0.0" prefHeight="769.0" prefWidth="250.0" styleClass="nav-bar">
             <children>
                 <HBox alignment="CENTER_RIGHT" spacing="26">
                     <Button fx:id="closeNavButton" mnemonicParsing="false" styleClass="close-btn" text="✖" />

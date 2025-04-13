@@ -216,6 +216,50 @@ public class UserInfoTest {
         }
     }
 
+    @Test
+    void testIsNewPasswordSameAsOld_Match() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+            // Vì user 'johndoe' có mật khẩu hiện tại là "123456" (đã được hash)
+            // Nếu truyền "123456" cho newPassword, thì nó sẽ trùng
+            boolean result = ufs.isNewPasswordSameAsOld("johndoe", "123456");
+            assertTrue(result);
+        }
+    }
+
+    @Test
+    void testIsNewPasswordSameAsOld_NotMatch() throws SQLException {
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+            // Nếu truyền mật khẩu khác, ví dụ "abc123", thì kết quả là false
+            boolean result = ufs.isNewPasswordSameAsOld("johndoe", "abc123");
+            assertFalse(result);
+        }
+    }
+
+    @Test
+    void testIsNewPasswordSameAsOld_UserNotFound() throws SQLException {
+        // Với một tài khoản không tồn tại
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
+            boolean result = ufs.isNewPasswordSameAsOld("nonexistent", "123456");
+            assertFalse(result);
+        }
+    }
+
+    @Test
+    void testIsNewPasswordSameAsOld_SQLException() throws SQLException {
+        // Giả lập JdbcUtils.getConn() ném SQLException
+        try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
+            mockedJdbc.when(JdbcUtils::getConn).thenThrow(new SQLException("Lỗi kết nối cơ sở dữ liệu"));
+
+            // Kiểm tra xem có ném ngoại lệ SQLException không khi gọi hàm checkExistEmail
+            assertThrows(SQLException.class, () -> {
+                ufs.isNewPasswordSameAsOld("johndoe", "123456");
+            });
+        }
+    }
+
     @ParameterizedTest
     @ValueSource(strings = {"",}) // Các giá trị kiểm tra trường hợp invalid
     void testCheckUserName_Invalid(String userName

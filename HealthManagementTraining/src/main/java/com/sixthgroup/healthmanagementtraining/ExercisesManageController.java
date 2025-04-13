@@ -113,6 +113,9 @@ public class ExercisesManageController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        selectedExs.clear();
+        totalCalories=0;
+        totalDuration=0;
         // Lấy ngày từ biến tĩnh và hiển thị
         LocalDate date = Utils.getSelectedDate();
         if (date != null) {
@@ -248,14 +251,17 @@ public class ExercisesManageController implements Initializable {
                             int duration = Integer.parseInt(tf.getText());
                             exercise.setDuration(duration);
                             // Kiểm tra bài tập tồn tại chưa
-                            if (e.isExistExercise(selectedExs, exercise) == false) {
+                            if (e.isExistExercise(selectedExs, exercise) == false && 
+                                    e.isExerciseAlreadyLogged(Utils.getUUIdByName(Utils.getUser()), Utils.getSelectedDate(), exercise.getId()) == false) {
                                 selectedExs.add(exercise); // Thêm vào biến tĩnh để kiểm tra nếu có thêm lại
                                 int selectedDuration = exercise.getDuration();
+                                System.out.println("calories: "+exercise.getCaloriesPerMinute());
                                 Exercise selectedExercise = new Exercise(exercise.getId(), exercise.getExerciseName(), exercise.getCaloriesPerMinute());
                                 selectedExercise.setDuration(selectedDuration);
                                 tbSelectedExers.getItems().add(selectedExercise);
                                 totalDuration += selectedDuration;
                                 totalCalories += (selectedDuration * exercise.getCaloriesPerMinute() / DEFAULT_MINUTE);
+                                System.out.println("total calo:" +totalCalories);
                                 txtTotalDuration.setText(String.valueOf(totalDuration));
                                 txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalories, 1)));
 

@@ -105,7 +105,8 @@ public class AdminExerciseController implements Initializable {
     }
 
     private void searchExercises(String keyword) throws SQLException {
-        List<Exercise> list = AdminExerciseServices.searchExercisesByName(keyword);
+        String cleanedKeyword = keyword.trim();
+        List<Exercise> list = AdminExerciseServices.searchExercisesByName(cleanedKeyword);
         ObservableList<Exercise> data = FXCollections.observableArrayList(list);
         goalTableView.setItems(data);
     }
@@ -128,6 +129,11 @@ public class AdminExerciseController implements Initializable {
         colName.setOnEditCommit(event -> {
             Exercise exercise = event.getRowValue();
             exercise.setExerciseName(event.getNewValue());
+            if(exercise.getExerciseName().isEmpty()) {
+                Utils.getAlert("Tên bài tập không được để trống!").show();
+                loadExerciseData();
+                return;
+            }
             if (!Pattern.matches("^[a-zA-ZÀ-ỹ\\s]+$", exercise.getExerciseName())) {
                 Utils.getAlert("Tên bài tập không được chứa số hoặc ký tự đặc biệt!").show();
                 loadExerciseData();
@@ -148,6 +154,9 @@ public class AdminExerciseController implements Initializable {
         colCalories.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter(){
             @Override
             public Float fromString(String value){
+                if(value.isEmpty()){
+                    Utils.getAlert("Lượng calo/phút không được để trống").show();
+                    return null;}
                 try{
                     return Float.parseFloat(value);
                 }catch(NumberFormatException e){

@@ -1,5 +1,7 @@
+
 /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+
+* Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/javafx/FXMLController.java to edit this template
  */
 package com.sixthgroup.healthmanagementtraining;
@@ -209,6 +211,13 @@ public class AdminFoodController implements Initializable {
         colFoodName.setCellFactory(TextFieldTableCell.forTableColumn());
         colFoodName.setOnEditCommit(event -> {
             Food food = event.getRowValue();
+            String newName = event.getNewValue().trim();
+            if (!AdminFoodServices.isValidFoodName(newName)) {
+                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi định dạng",
+                        "Tên món ăn không hợp lệ. Không được để trống, vượt quá 50 ký tự, chứa ký tự đặc biệt hoặc chỉ toàn dấu cách!");
+                loadData();
+                return;
+            }
             if (food != null) {
                 food.setFoodName(event.getNewValue());
                 updateFoodInDatabase(food); // Cập nhật vào cơ sở dữ liệu
@@ -218,6 +227,15 @@ public class AdminFoodController implements Initializable {
         colCalo.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
         colCalo.setOnEditCommit(event -> {
             Food food = event.getRowValue();
+            // Lấy chuỗi nhập của người dùng
+            String input = event.getNewValue().toString();
+            // Kiểm tra định dạng: chỉ cho phép số với tối đa 3 chữ số sau dấu thập phân
+            if (!input.matches("^[0-9]+(\\.[0-9]{1,3})?$")) {
+                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi định dạng",
+                        "Giá trị nhập không hợp lệ. Vui lòng nhập số chỉ với tối đa 3 chữ số sau dấu thập phân!");
+                loadData(); // hoặc xử lý theo cách phù hợp (ví dụ, khôi phục lại giá trị cũ)
+                return;
+            }
             if (food != null) {
                 food.setCaloriesPerUnit(event.getNewValue());
                 updateFoodInDatabase(food); // Cập nhật vào cơ sở dữ liệu
@@ -227,6 +245,15 @@ public class AdminFoodController implements Initializable {
         colLipid.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
         colLipid.setOnEditCommit(event -> {
             Food food = event.getRowValue();
+            // Lấy chuỗi nhập của người dùng
+            String input = event.getNewValue().toString();
+            // Kiểm tra định dạng: chỉ cho phép số với tối đa 3 chữ số sau dấu thập phân
+            if (!input.matches("^[0-9]+(\\.[0-9]{1,3})?$")) {
+                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi định dạng",
+                        "Giá trị nhập không hợp lệ. Vui lòng nhập số chỉ với tối đa 3 chữ số sau dấu thập phân!");
+                loadData(); // hoặc xử lý theo cách phù hợp (ví dụ, khôi phục lại giá trị cũ)
+                return;
+            }
             if (food != null) {
                 food.setLipidPerUnit(event.getNewValue());
                 updateFoodInDatabase(food); // Cập nhật vào cơ sở dữ liệu
@@ -236,6 +263,15 @@ public class AdminFoodController implements Initializable {
         colProtein.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
         colProtein.setOnEditCommit(event -> {
             Food food = event.getRowValue();
+            // Lấy chuỗi nhập của người dùng
+            String input = event.getNewValue().toString();
+            // Kiểm tra định dạng: chỉ cho phép số với tối đa 3 chữ số sau dấu thập phân
+            if (!input.matches("^[0-9]+(\\.[0-9]{1,3})?$")) {
+                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi định dạng",
+                        "Giá trị nhập không hợp lệ. Vui lòng nhập số chỉ với tối đa 3 chữ số sau dấu thập phân!");
+                loadData(); // hoặc xử lý theo cách phù hợp (ví dụ, khôi phục lại giá trị cũ)
+                return;
+            }
             if (food != null) {
                 food.setProteinPerUnit(event.getNewValue());
                 updateFoodInDatabase(food); // Cập nhật vào cơ sở dữ liệu
@@ -245,6 +281,15 @@ public class AdminFoodController implements Initializable {
         colFiber.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
         colFiber.setOnEditCommit(event -> {
             Food food = event.getRowValue();
+            // Lấy chuỗi nhập của người dùng
+            String input = event.getNewValue().toString();
+            // Kiểm tra định dạng: chỉ cho phép số với tối đa 3 chữ số sau dấu thập phân
+            if (!input.matches("^[0-9]+(\\.[0-9]{1,3})?$")) {
+                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi định dạng",
+                        "Giá trị nhập không hợp lệ. Vui lòng nhập số chỉ với tối đa 3 chữ số sau dấu thập phân!");
+                loadData(); // hoặc xử lý theo cách phù hợp (ví dụ, khôi phục lại giá trị cũ)
+                return;
+            }
             if (food != null) {
                 food.setFiberPerUnit(event.getNewValue());
                 updateFoodInDatabase(food); // Cập nhật vào cơ sở dữ liệu
@@ -283,34 +328,6 @@ public class AdminFoodController implements Initializable {
         }
     }
 
-//    private void filterFoodByKeywordAndCategory(String keyword, FoodCategory category) {
-//        try {
-//            List<Food> filteredList;
-//            keyword = keyword.trim();
-//            if (category == null || category.getId() < 0) {
-//                filteredList = foodService.searchFood(keyword); // Chỉ tìm kiếm nếu không chọn loại thức ăn
-//            } else {
-//                // Kết hợp tìm kiếm và lọc theo loại thức ăn
-//                filteredList = foodService.searchFoodByCategoryAndKeyword(category.getId(), keyword);
-//            }
-//            ObservableList<Food> observableList = FXCollections.observableArrayList(filteredList);
-//            foodTableView.setItems(observableList);
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//            // Xử lý lỗi nếu cần thiết
-//        }
-//    }
-//
-//    private void filterFood(String keyword) {
-//        keyword=keyword.trim();
-//        FoodCategory selectedCategory = filterByCateButton.getValue();
-//        filterFoodByKeywordAndCategory(keyword, selectedCategory);
-//    }
-//
-//    private void filterFoodByCategory(FoodCategory category) {
-//        String keyword = searchField.getText().trim();
-//        filterFoodByKeywordAndCategory(keyword, category);
-//    }
     private void filterFood() {
         String keyword = searchField.getText().trim();
         FoodCategory category = filterByCateButton.getValue();
