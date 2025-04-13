@@ -120,6 +120,7 @@ public class UserInfoServices {
                 if (!Utils.checkPassword(oldPassword, hashedPassword)) {
                     return false; // Sai mật khẩu cũ
                 }
+
             } else {
                 return false; // Không tìm thấy tài khoản
             }
@@ -137,6 +138,22 @@ public class UserInfoServices {
         } catch (SQLException e) {
             e.printStackTrace();
             return false;
+        }
+    }
+
+    public boolean isNewPasswordSameAsOld(String userName, String newPassword) throws SQLException {
+        try (Connection conn = JdbcUtils.getConn()) {
+            String sql = "SELECT password FROM userinfo WHERE userName = ?";
+            PreparedStatement stm = conn.prepareStatement(sql);
+            stm.setString(1, userName);
+            ResultSet rs = stm.executeQuery();
+
+            if (rs.next()) {
+                String hashedPassword = rs.getString("password");
+                return Utils.checkPassword(newPassword, hashedPassword); // Trả về true nếu trùng
+            } else {
+                return false; // Không tìm thấy tài khoản => xem như không trùng
+            }
         }
     }
 

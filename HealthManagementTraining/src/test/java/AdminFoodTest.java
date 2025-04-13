@@ -529,7 +529,8 @@ public class AdminFoodTest {
                 Arguments.of("200.5", "50.7", "60.3", "10", "Carrot", true), // Số thập phân hợp lệ
                 Arguments.of("200.5abc", "50.7", "60.3", "10", "Carrot", false), // Calories có ký tự không hợp lệ
                 Arguments.of("200", "50", "60", "10", "Fresh Carrot", true), // Tên thực phẩm có khoảng trắng
-                Arguments.of("", "50", "60", "10", "Carrot", false) // Calories rỗng
+                Arguments.of("", "50", "60", "10", "Carrot", false), // Calories rỗng
+                Arguments.of("30.4545","50","60","20","Carrot",false)
         );
     }
 

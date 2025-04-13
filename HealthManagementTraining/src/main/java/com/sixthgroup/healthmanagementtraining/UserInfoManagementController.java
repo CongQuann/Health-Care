@@ -146,6 +146,7 @@ public class UserInfoManagementController implements Initializable {
         }
         //thuc hien cap nhat neu khong trung
         if (userInfoServices.updateUserInfo(userInfo)) {
+
             NutritionServices ns = new NutritionServices();
             TargetManagementServices ts = new TargetManagementServices();
             Goal currentGoal = ts.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()));
@@ -154,6 +155,7 @@ public class UserInfoManagementController implements Initializable {
             ts.updateGoal(Utils.getUUIdByName(Utils.getUser()), currentGoal.getId(),  currentGoal.getTargetWeight(), currentGoal.getCurrentWeight(),caloResult.getDailyCalorieIntake(), currentGoal.getEndDate());
             Utils.showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Cập nhật thành công!");
             
+
         } else {
             Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Cập nhật thất bại!");
             // Hiển thị thông báo thất bại cho người dùng
@@ -181,7 +183,7 @@ public class UserInfoManagementController implements Initializable {
         });
     }
 
-    public void handlerChangePass(ActionEvent event) {
+    public void handlerChangePass(ActionEvent event) throws SQLException {
         UserInfoServices userInfoServices = new UserInfoServices();
         String oldPassword = oldPasswordField.getText();
         String newPassword = newPasswordField.getText();
@@ -214,6 +216,12 @@ public class UserInfoManagementController implements Initializable {
             Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Mật khẩu mới phải có ít nhất 8 ký tự, bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt!");
             return;
         }
+        //kiểm tra mật khẩu mới có trùng với mật khẩu cũ không
+        if (userInfoServices.isNewPasswordSameAsOld(userName, newPassword)) {
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Mật khẩu mới không được trùng với mật khẩu cũ!");
+            return;
+        }
+
 //         Gọi phương thức đổi mật khẩu từ services
         boolean isUpdated = userInfoServices.updateUserPassword(userName, oldPassword, newPassword);
 

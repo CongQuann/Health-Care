@@ -106,6 +106,17 @@ public class AdminFoodServices {
         }
     }
 
+    // Trong AdminFoodServices.java (hoặc Utils.java nếu bạn muốn gom logic tiện ích)
+    public static boolean isValidFoodName(String foodName) {
+        if (foodName == null) {
+            return false;
+        }
+        String trimmed = foodName.trim();
+        return !trimmed.isEmpty()
+                && trimmed.length() <= 50
+                && trimmed.matches("^[\\p{L}\\s]+$"); // Chỉ chữ cái và dấu cách
+    }
+
     public boolean updateFood(Food food) throws SQLException {
         try (Connection conn = JdbcUtils.getConn()) {
             // Kiểm tra tên món ăn đã tồn tại ở bản ghi khác chưa
@@ -212,11 +223,12 @@ public class AdminFoodServices {
     }
 
     public static boolean checkValidInput(String caloriesText, String lipidText, String proteinText, String fiberText, String foodName) {
-        return caloriesText.matches("^[0-9]+(\\.[0-9]+)?$")
-                && lipidText.matches("^[0-9]+(\\.[0-9]+)?$")
-                && proteinText.matches("^[0-9]+(\\.[0-9]+)?$")
-                && fiberText.matches("^[0-9]+(\\.[0-9]+)?$")
-                && foodName.matches("^[a-zA-Z\\s]+$")
+        return caloriesText.matches("^[0-9]+(\\.[0-9]{1,3})?$")
+                && lipidText.matches("^[0-9]+(\\.[0-9]{1,3})?$")
+                && proteinText.matches("^[0-9]+(\\.[0-9]{1,3})?$")
+                && fiberText.matches("^[0-9]+(\\.[0-9]{1,3})?$")
+                && foodName.matches("^[\\p{L}\\s]+$")
+                && foodName.length() <= 50
                 && Float.parseFloat(caloriesText) <= 1000
                 && Float.parseFloat(lipidText) <= 1000
                 && Float.parseFloat(proteinText) <= 1000
