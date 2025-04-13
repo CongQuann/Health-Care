@@ -592,14 +592,14 @@ public class NutritionTest {
                 Arguments.of("10.5", "gram", false), // nhập không phải số nguyên
 
                 // ==== GRAM ==== 50 <=x <= 300
-                Arguments.of("49", "gram", false), // dưới min
-                Arguments.of("50", "gram", true), // min
+                Arguments.of("9", "gram", false), // dưới min
+                Arguments.of("10", "gram", true), // min
                 Arguments.of("300", "gram", true), // max
                 Arguments.of("301", "gram", false), // trên max
 
                 // ==== ML ==== 200 <=x <=500
-                Arguments.of("199", "ml", false), // dưới min
-                Arguments.of("200", "ml", true), // min    
+                Arguments.of("19", "ml", false), // dưới min
+                Arguments.of("20", "ml", true), // min    
                 Arguments.of("500", "ml", true), // max
                 Arguments.of("501", "ml", false), // trên max
 

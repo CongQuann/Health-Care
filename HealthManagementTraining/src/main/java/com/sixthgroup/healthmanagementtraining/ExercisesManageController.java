@@ -159,7 +159,7 @@ public class ExercisesManageController implements Initializable {
         loadColumnsForSelectedTable();
         loadTableData(null);
         txtSearch.textProperty().addListener((e) -> {
-            loadTableData(txtSearch.getText());
+            loadTableData(txtSearch.getText().trim());
         });
     }
 

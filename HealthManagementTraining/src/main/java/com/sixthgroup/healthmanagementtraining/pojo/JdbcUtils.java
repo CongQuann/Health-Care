@@ -31,7 +31,7 @@ public class JdbcUtils {
             return testConnection;
         }
 
-        return DriverManager.getConnection("jdbc:mysql://localhost/healthcaredb", "root", "123456");
+        return DriverManager.getConnection("jdbc:mysql://localhost/healthcaredb", "root", "Admin@123");
         
 
     }

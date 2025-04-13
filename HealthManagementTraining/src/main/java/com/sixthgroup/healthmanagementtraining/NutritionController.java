@@ -202,7 +202,7 @@ public class NutritionController implements Initializable {
         loadColumnsForSelectedTable();
         loadTableData(null);
         txtSearch.textProperty().addListener((e) -> {
-            loadTableData(txtSearch.getText());
+            loadTableData(txtSearch.getText().trim());
         });
 
     }
@@ -414,6 +414,14 @@ public class NutritionController implements Initializable {
             } else {
                 return;
             }
+        } else if (Float.parseFloat(txtTotalProtein.getText()) == Float.parseFloat(txtRecomendedProtein.getText())
+                && Float.parseFloat(txtTotalLipid.getText()) == Float.parseFloat(txtRecomendedLipid.getText())
+                && Float.parseFloat(txtTotalFiber.getText()) == Float.parseFloat(txtRecomendedFiber.getText())) {
+            String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
+            LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
+            NutritionServices n = new NutritionServices();
+            n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
+            Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
         }
 
     }

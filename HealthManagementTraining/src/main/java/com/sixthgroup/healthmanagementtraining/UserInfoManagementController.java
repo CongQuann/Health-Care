@@ -5,8 +5,12 @@
 package com.sixthgroup.healthmanagementtraining;
 
 import com.sixthgroup.healthmanagementtraining.pojo.ActivityLevel;
+import com.sixthgroup.healthmanagementtraining.pojo.CalorieResult;
+import com.sixthgroup.healthmanagementtraining.pojo.Goal;
 import com.sixthgroup.healthmanagementtraining.pojo.UserInfo;
 import com.sixthgroup.healthmanagementtraining.services.NavbarServices;
+import com.sixthgroup.healthmanagementtraining.services.NutritionServices;
+import com.sixthgroup.healthmanagementtraining.services.TargetManagementServices;
 import com.sixthgroup.healthmanagementtraining.services.UserInfoServices;
 import com.sixthgroup.healthmanagementtraining.services.Utils;
 import java.io.IOException;
@@ -94,7 +98,7 @@ public class UserInfoManagementController implements Initializable {
         }
     }
 
-    public void handleSaveUserInfo() {
+    public void handleSaveUserInfo() throws SQLException {
         UserInfoServices userInfoServices = new UserInfoServices();
         UserInfo userInfo = new UserInfo();
         System.out.println("Đang cập nhật thông tin cho userName: " + Utils.getUser());
@@ -142,7 +146,13 @@ public class UserInfoManagementController implements Initializable {
         }
         //thuc hien cap nhat neu khong trung
         if (userInfoServices.updateUserInfo(userInfo)) {
-            Utils.showAlert(Alert.AlertType.INFORMATION, "Lỗi", "Cập nhật thành công!");
+            NutritionServices ns = new NutritionServices();
+            TargetManagementServices ts = new TargetManagementServices();
+            Goal currentGoal = ts.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()));
+            CalorieResult caloResult = ns.calCaloriesNeeded(Utils.getUser(), currentGoal.getTargetWeight(), currentGoal.getTargetWeight(), currentGoal.getStartDate(), currentGoal.getEndDate());
+//            System.out.println("After update:" + caloResult.getDailyCalorieIntake());
+            ts.updateGoal(Utils.getUUIdByName(Utils.getUser()), currentGoal.getId(),  currentGoal.getTargetWeight(), currentGoal.getCurrentWeight(),caloResult.getDailyCalorieIntake(), currentGoal.getEndDate());
+            Utils.showAlert(Alert.AlertType.INFORMATION, "Thông báo", "Cập nhật thành công!");
             
         } else {
             Utils.showAlert(Alert.AlertType.ERROR, "Lỗi", "Cập nhật thất bại!");
