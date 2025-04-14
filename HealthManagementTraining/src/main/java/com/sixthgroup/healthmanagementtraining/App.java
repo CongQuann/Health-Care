@@ -6,6 +6,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
+import javafx.scene.image.Image;
 
 /**
  * JavaFX App
@@ -24,6 +25,7 @@ public class App extends Application {
         scene = new Scene(root);
         stage.setScene(scene);
         stage.sizeToScene(); // Cập nhật kích thước theo FXML
+        stage.setResizable(false);
         stage.show();
     }
 

@@ -287,18 +287,68 @@ public class AdminFoodController implements Initializable {
             }
         });
 
-        colFiber.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
+//        colFiber.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
+//        colFiber.setOnEditCommit(event -> {
+//            Food food = event.getRowValue();
+//            // Lấy chuỗi nhập của người dùng
+//            String input = event.getNewValue().toString();
+//            // Kiểm tra định dạng: chỉ cho phép số với tối đa 3 chữ số sau dấu thập phân
+//            if (!input.matches("^[0-9]+(\\.[0-9]{1,3})?$")) {
+//                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi định dạng",
+//                        "Giá trị nhập không hợp lệ. Vui lòng nhập số chỉ với tối đa 3 chữ số sau dấu thập phân!");
+//                loadData(); // hoặc xử lý theo cách phù hợp (ví dụ, khôi phục lại giá trị cũ)
+//                return;
+//            }
+//            if (food != null) {
+//                food.setFiberPerUnit(event.getNewValue());
+//                updateFoodInDatabase(food); // Cập nhật vào cơ sở dữ liệu
+//            }
+//        });
+//======================================
+// Tùy chỉnh cell factory cho cột fiber
+        colFiber.setCellFactory(column -> new TextFieldTableCell<Food, Float>(new FloatStringConverter()) {
+            @Override
+            public void updateItem(Float item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || getTableRow() == null || getTableRow().getItem() == null) {
+                    setText(null);
+                    setGraphic(null);
+                    setDisable(false);
+                } else {
+                    Food food = (Food) getTableRow().getItem();
+                    // Nếu loại thức ăn là "Meat" thì disable cell và áp dụng style mờ
+                    if ("Meat".equalsIgnoreCase(food.getCategoryName())) {
+                        setDisable(true);
+                        setStyle("-fx-opacity: 0.5;");
+                    } else {
+                        setDisable(false);
+                        setStyle("");
+                    }
+                    setText(item == null ? "" : item.toString());
+                }
+            }
+        });
+
+// Xử lý khi người dùng commit chỉnh sửa ở cột fiber
         colFiber.setOnEditCommit(event -> {
             Food food = event.getRowValue();
-            // Lấy chuỗi nhập của người dùng
+            // Lấy chuỗi nhập của người dùng và kiểm tra định dạng
             String input = event.getNewValue().toString();
-            // Kiểm tra định dạng: chỉ cho phép số với tối đa 3 chữ số sau dấu thập phân
             if (!input.matches("^[0-9]+(\\.[0-9]{1,3})?$")) {
                 Utils.showAlert(Alert.AlertType.ERROR, "Lỗi định dạng",
                         "Giá trị nhập không hợp lệ. Vui lòng nhập số chỉ với tối đa 3 chữ số sau dấu thập phân!");
-                loadData(); // hoặc xử lý theo cách phù hợp (ví dụ, khôi phục lại giá trị cũ)
+                loadData(); // Reset lại dữ liệu nếu có lỗi định dạng
                 return;
             }
+
+            // Nếu loại thức ăn là "Meat" thì không cho phép cập nhật
+            if (food != null && "Meat".equalsIgnoreCase(food.getCategoryName())) {
+                Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không được chỉnh sửa chất xơ cho món ăn thuộc loại Meat!");
+                loadData();
+                return;
+            }
+
+            // Nếu không phải là Meat, tiến hành cập nhật giá trị chất xơ
             if (food != null) {
                 food.setFiberPerUnit(event.getNewValue());
                 updateFoodInDatabase(food); // Cập nhật vào cơ sở dữ liệu
