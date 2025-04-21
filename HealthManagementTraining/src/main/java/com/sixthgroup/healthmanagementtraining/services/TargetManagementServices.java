@@ -126,6 +126,7 @@ public class TargetManagementServices {
                 if (newEndDate.isBefore(currentEndDate)) {
                     return false; // Không cho phép giảm ngày kết thúc
                 }
+                
 
                 int newProgress = 0;
 
@@ -153,7 +154,7 @@ public class TargetManagementServices {
                     newProgress = 0;
                     initialWeight = currentWeight;
                 }
-
+                
                 // Cập nhật cơ sở dữ liệu
                 String updateSql = "UPDATE goal SET targetWeight = ?, currentWeight = ?, endDate = ?, currentProgress = ?, initialWeight = ?, dailyCaloNeeded = ? WHERE id = ? AND userInfo_id = ?";
                 try (PreparedStatement stmt = conn.prepareStatement(updateSql)) {
@@ -215,5 +216,32 @@ public class TargetManagementServices {
         }
         return false;
     }
+    
+    public static boolean isDateOverlapUp(String userId, LocalDate newStartDate, LocalDate newEndDate, Integer excludeGoalId) throws SQLException {
+    Connection conn = JdbcUtils.getConn();
+    String query = "SELECT COUNT(*) FROM goal WHERE userInfo_id = ? "
+            + "AND id != ? "
+            + "AND (? BETWEEN startDate AND endDate OR "
+            + "? BETWEEN startDate AND endDate OR "
+            + "startDate BETWEEN ? AND ? OR "
+            + "endDate BETWEEN ? AND ?)";
+
+    try (PreparedStatement stmt = conn.prepareStatement(query)) {
+        stmt.setString(1, userId);
+        stmt.setInt(2, excludeGoalId);
+        stmt.setDate(3, Date.valueOf(newStartDate));
+        stmt.setDate(4, Date.valueOf(newEndDate));
+        stmt.setDate(5, Date.valueOf(newStartDate));
+        stmt.setDate(6, Date.valueOf(newEndDate));
+        stmt.setDate(7, Date.valueOf(newStartDate));
+        stmt.setDate(8, Date.valueOf(newEndDate));
+
+        ResultSet rs = stmt.executeQuery();
+        if (rs.next()) {
+            return rs.getInt(1) > 0;
+        }
+    }
+    return false;
+}
 
 }
