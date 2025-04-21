@@ -245,15 +245,22 @@ public class TargetManagementController implements Initializable {
                 float updateCaloNeeded = result.getDailyCalorieIntake();
                 System.out.println("dailyProteinNeed: " + result.getDailyProteinIntake());
                 System.out.println("dailyLipidNeed: " + result.getDailyLipidIntake());
-                boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
-                if (!success) {
-                    Utils.getAlert("Ngày kết thúc không thể giảm!").show();
+                boolean checkDateOverlap = TargetManagementServices.isDateOverlapUp(userInfoId, goal.getStartDate(), endDate, goal.getId());
+                if(checkDateOverlap){
+                    Utils.getAlert("Thời gian của mục tiêu bị trùng, không thể chỉnh sửa").show();
                     loadGoals();
-                } else {
-                    goal.setTargetWeight(targetWeight);
-                    goal.setCurrentWeight(currentWeight);
-                    goal.setEndDate(endDate);
-                    loadGoals();
+                }
+                else{
+                    boolean success = TargetManagementServices.updateGoal(userInfoId, goal.getId(), targetWeight, currentWeight, updateCaloNeeded, endDate);
+                    if (!success) {
+                        Utils.getAlert("Ngày kết thúc không thể giảm!").show();
+                        loadGoals();
+                    } else {
+                        goal.setTargetWeight(targetWeight);
+                        goal.setCurrentWeight(currentWeight);
+                        goal.setEndDate(endDate);
+                        loadGoals();
+                    }
                 }
             }
         } catch (SQLException e) {
@@ -320,7 +327,10 @@ public class TargetManagementController implements Initializable {
             Utils.getAlert("Cân Nặng Hiện Tại Và Cân Nặng Mục Tiêu Không Được Bằng Nhau").show();
             return false;
         }
-
+        if(endDate.isBefore(LocalDate.now())){
+            Utils.getAlert("Ngày kết thúc không thể trong quá khứ!").show();
+            return false;
+        }
         if (endDate.isBefore(startDate)) {
             Utils.getAlert("Ngày kết thúc không thể trước ngày bắt đầu!").show();
             return false;
