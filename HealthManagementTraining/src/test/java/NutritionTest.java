@@ -277,7 +277,7 @@ public class NutritionTest {
 
         LocalDate servingDate = LocalDate.now();
         // Bật cờ bỏ qua kiểm tra bài tập đã được thêm vào trước
-        ns.setBypassExerciseCheck(true);
+        ns.setBypassNutritionCheck(true);
 
         // Thực thi phương thức addFoodToLog
         ns.addFoodToLog(selectedFoods, userId, servingDate);
@@ -309,7 +309,7 @@ public class NutritionTest {
         LocalDate servingDate = LocalDate.now();
 
         // Bật cờ bypass
-        ns.setBypassExerciseCheck(true);
+        ns.setBypassNutritionCheck(true);
         // Thực thi phương thức
         ns.addFoodToLog(selectedFoods, userId, servingDate);
         // Kiểm tra kết nối trước khi truy vấn
@@ -339,7 +339,7 @@ public class NutritionTest {
         selectedFoods.add(food);
 
         LocalDate servingDate = LocalDate.now();
-        ns.setBypassExerciseCheck(true); // Bỏ kiểm tra để cho phép insert
+        ns.setBypassNutritionCheck(true); // Bỏ kiểm tra để cho phép insert
 
         Assertions.assertDoesNotThrow(() -> {
             ns.addFoodToLog(selectedFoods, userId, servingDate);
@@ -592,14 +592,14 @@ public class NutritionTest {
                 Arguments.of("10.5", "gram", false), // nhập không phải số nguyên
 
                 // ==== GRAM ==== 50 <=x <= 300
-                Arguments.of("9", "gram", false), // dưới min
-                Arguments.of("10", "gram", true), // min
+                Arguments.of("49", "gram", false), // dưới min
+                Arguments.of("50", "gram", true), // min
                 Arguments.of("300", "gram", true), // max
                 Arguments.of("301", "gram", false), // trên max
 
                 // ==== ML ==== 200 <=x <=500
-                Arguments.of("19", "ml", false), // dưới min
-                Arguments.of("20", "ml", true), // min    
+                Arguments.of("199", "ml", false), // dưới min
+                Arguments.of("200", "ml", true), // min    
                 Arguments.of("500", "ml", true), // max
                 Arguments.of("501", "ml", false), // trên max
 

@@ -84,6 +84,7 @@ public class DashboardController implements Initializable {
             DashboardServices dashboardServices = new DashboardServices();
             calorieIntake = dashboardServices.getDailyCalorieIntake(userName, localDate);
             caloriesBurn = dashboardServices.getDailyCalorieBurn(userName, localDate);
+            System.out.println("caloriesBurn: " + caloriesBurn);
             lipidIntake = dashboardServices.getDailyLipidIntake(userName, localDate);
             fiberIntake = dashboardServices.getDailyFiberIntake(userName, localDate);
             proteinIntake = dashboardServices.getDailyProteinIntake(userName, localDate);
