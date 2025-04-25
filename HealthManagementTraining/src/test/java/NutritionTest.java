@@ -142,7 +142,7 @@ public class NutritionTest {
                 insertNutritionLogStmt.setInt(4, 200);  // numberOfUnit
 
                 insertNutritionLogStmt.executeUpdate();
-                System.out.println("Inserted into nutritionlog with userId: " + userId);
+                
             }
 
             String insertGoalSQL = "INSERT INTO goal (id, targetWeight, currentWeight, initialWeight,"

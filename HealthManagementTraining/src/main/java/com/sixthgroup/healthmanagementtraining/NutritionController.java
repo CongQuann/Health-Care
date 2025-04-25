@@ -140,11 +140,13 @@ public class NutritionController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        selectedFs.clear();
-        totalCalo = 0;
-        totalLipid = 0;
-        totalFiber = 0;
-        totalProtein = 0;
+//        selectedFs.clear();
+//        selectedFs.clear();
+//        totalCalo = 0;
+//        totalLipid = 0;
+//        totalFiber = 0;
+//        totalProtein = 0;
+// đoạn issue
         try {
             recommendedCalo = ds.getCaloNeededByDate(Utils.getUser(), Utils.getSelectedDate());
         } catch (SQLException ex) {
@@ -202,9 +204,10 @@ public class NutritionController implements Initializable {
         loadColumnsForSelectedTable();
         loadTableData(null);
         txtSearch.textProperty().addListener((e) -> {
-            loadTableData(txtSearch.getText().trim());
+            loadTableData(txtSearch.getText());
         });
-
+//                    loadTableData(txtSearch.getText().trim());
+// đoạn issue
     }
 
     public void loadFoodCate() {
@@ -417,11 +420,30 @@ public class NutritionController implements Initializable {
         } else if (Float.parseFloat(txtTotalProtein.getText()) == Float.parseFloat(txtRecomendedProtein.getText())
                 && Float.parseFloat(txtTotalLipid.getText()) == Float.parseFloat(txtRecomendedLipid.getText())
                 && Float.parseFloat(txtTotalFiber.getText()) == Float.parseFloat(txtRecomendedFiber.getText())) {
-            String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
-            LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
-            NutritionServices n = new NutritionServices();
-            n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
-            Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
+//            String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
+//            LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
+//            NutritionServices n = new NutritionServices();
+//            n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
+//            Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
+//             đoạn issue
+            // Tạo Alert kiểu CONFIRMATION
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Cảnh báo");
+            alert.setHeaderText("Các chất dinh dưỡng có thể không phù hợp với khuyến nghị.\nBạn có chắc chắn muốn thêm?");
+            alert.setContentText("Nhấn OK để xác nhận, hoặc Cancel để hủy.");
+
+            // Hiển thị và chờ người dùng chọn
+            Optional<ButtonType> result = alert.showAndWait();  // modal, blocking :contentReference[oaicite:0]{index=0}
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
+                LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
+                NutritionServices n = new NutritionServices();
+                n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
+                Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
+            } else {
+                return;
+            }
         }
 
     }

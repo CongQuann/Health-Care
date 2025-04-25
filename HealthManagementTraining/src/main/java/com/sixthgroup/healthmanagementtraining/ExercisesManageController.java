@@ -113,9 +113,10 @@ public class ExercisesManageController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        selectedExs.clear();
-        totalCalories=0;
-        totalDuration=0;
+//        selectedExs.clear();
+//        totalCalories=0;
+//        totalDuration=0;
+// đoạn issue
         // Lấy ngày từ biến tĩnh và hiển thị
         LocalDate date = Utils.getSelectedDate();
         if (date != null) {
@@ -159,8 +160,10 @@ public class ExercisesManageController implements Initializable {
         loadColumnsForSelectedTable();
         loadTableData(null);
         txtSearch.textProperty().addListener((e) -> {
-            loadTableData(txtSearch.getText().trim());
+            loadTableData(txtSearch.getText());
         });
+//                    loadTableData(txtSearch.getText().trim());
+
     }
 
     public void loadTableData(String kw) {
@@ -317,7 +320,7 @@ public class ExercisesManageController implements Initializable {
         Exercise selectedExercise = tbSelectedExers.getSelectionModel().getSelectedItem();
 
         if (selectedExercise == null) {
-            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Vui lòng chọn bài tập cần xóa!");
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Danh sách bài tập đang trống");
             return;
         }
         String userId = Utils.getUUIdByName(Utils.getUser());

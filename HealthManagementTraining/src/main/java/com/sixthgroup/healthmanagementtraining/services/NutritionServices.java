@@ -362,7 +362,7 @@ public class NutritionServices {
             UserInfo u = s.getUserInfo(username);
             double BMR;
             int age = calculateAge((Date) u.getDOB());
-            System.out.println("age: " + age);
+//            System.out.println("age: " + age);
             if (u.getGender().equalsIgnoreCase("Nam")) {
                 BMR = baseMaleBMR + (maleWeightCoefficient * currentWeight)
                         + (maleHeightCoefficient * u.getHeight()) - (maleAgeCoefficient * calculateAge((Date) u.getDOB()));
@@ -370,16 +370,16 @@ public class NutritionServices {
                 BMR = baseFemaleBMR + (femaleWeightCoefficient * currentWeight)
                         + (femaleHeightCoefficient * u.getHeight()) - (femaleAgeCoefficient * calculateAge((Date) u.getDOB()));
             }
-            System.out.println("BMR: " + BMR);
+//            System.out.println("BMR: " + BMR);
             float activityLevel = Utils.parseDoubleToFloat(getActivityCoefficient(u.getActivityLevel()), 3);
             float TDEE = Utils.roundFloat(Utils.parseDoubleToFloat(BMR, 2) * activityLevel, 3);
-            System.out.println("TDEE: " + TDEE);
+//            System.out.println("TDEE: " + TDEE);
             float weightChange = targetWeight - currentWeight;
-            System.out.println("weightChange: " + weightChange);
+//            System.out.println("weightChange: " + weightChange);
             float totalCaloriesNeeded = weightChange * caloriesPerWeight;
-            System.out.println("totalCaloriesNeeded: " + totalCaloriesNeeded);
+//            System.out.println("totalCaloriesNeeded: " + totalCaloriesNeeded);
             long totalDays = ChronoUnit.DAYS.between(startDate, endDate);
-            System.out.println("totalDays : " + totalDays);
+//            System.out.println("totalDays : " + totalDays);
             if (totalDays <= 0) {
                 throw new IllegalArgumentException("End date must be after start date.");
             }
@@ -387,17 +387,17 @@ public class NutritionServices {
             float dailyCalorieChange = totalCaloriesNeeded / totalDays;
 //        System.out.println("dailyCalorieChange: " + dailyCalorieChange);
             float dailyCalorieIntake = Utils.roundFloat(TDEE + dailyCalorieChange, 1);
-            System.out.println("dailyCalorieIntake: " + dailyCalorieIntake);
+//            System.out.println("dailyCalorieIntake: " + dailyCalorieIntake);
 
             String targetType = currentWeight > targetWeight ? "loss" : "gain";
             float dailyProteinIntake;
             float dailyLipidIntake;
             if (targetType.equalsIgnoreCase("loss")) {
                 dailyProteinIntake = Utils.roundFloat(TDEE * baseProteinLossWeight, 1);
-                System.out.println("dailyProteinIntake " + dailyProteinIntake);
+//                System.out.println("dailyProteinIntake " + dailyProteinIntake);
 
                 dailyLipidIntake = Utils.roundFloat(TDEE * baseLipidLossWeight, 1);
-                System.out.println("dailyLipidIntake " + dailyLipidIntake);
+//                System.out.println("dailyLipidIntake " + dailyLipidIntake);
             } else {
                 dailyProteinIntake = Utils.roundFloat(TDEE * baseProteinGainWeight, 1);
                 dailyLipidIntake = Utils.roundFloat(TDEE * baseLipidGainWeight, 1);
