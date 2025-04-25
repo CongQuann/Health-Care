@@ -113,10 +113,10 @@ public class ExercisesManageController implements Initializable {
     @FXML
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-//        selectedExs.clear();
-//        totalCalories=0;
-//        totalDuration=0;
-// đoạn issue
+        selectedExs.clear();
+        totalCalories=0;
+        totalDuration=0;
+
         // Lấy ngày từ biến tĩnh và hiển thị
         LocalDate date = Utils.getSelectedDate();
         if (date != null) {
@@ -160,9 +160,9 @@ public class ExercisesManageController implements Initializable {
         loadColumnsForSelectedTable();
         loadTableData(null);
         txtSearch.textProperty().addListener((e) -> {
-            loadTableData(txtSearch.getText());
+            loadTableData(txtSearch.getText().trim());
         });
-//                    loadTableData(txtSearch.getText().trim());
+                    
 
     }
 
@@ -258,13 +258,13 @@ public class ExercisesManageController implements Initializable {
                                     e.isExerciseAlreadyLogged(Utils.getUUIdByName(Utils.getUser()), Utils.getSelectedDate(), exercise.getId()) == false) {
                                 selectedExs.add(exercise); // Thêm vào biến tĩnh để kiểm tra nếu có thêm lại
                                 int selectedDuration = exercise.getDuration();
-                                System.out.println("calories: "+exercise.getCaloriesPerMinute());
+//                                System.out.println("calories: "+exercise.getCaloriesPerMinute());
                                 Exercise selectedExercise = new Exercise(exercise.getId(), exercise.getExerciseName(), exercise.getCaloriesPerMinute());
                                 selectedExercise.setDuration(selectedDuration);
                                 tbSelectedExers.getItems().add(selectedExercise);
                                 totalDuration += selectedDuration;
                                 totalCalories += (selectedDuration * exercise.getCaloriesPerMinute() / DEFAULT_MINUTE);
-                                System.out.println("total calo:" +totalCalories);
+//                                System.out.println("total calo:" +totalCalories);
                                 txtTotalDuration.setText(String.valueOf(totalDuration));
                                 txtTotalCalories.setText(String.valueOf(Utils.roundFloat(totalCalories, 1)));
 
@@ -368,10 +368,10 @@ public class ExercisesManageController implements Initializable {
         totalDuration = 0;
 
         for (Exercise e : selectedExercise) {
-            totalCalories += (e.getCaloriesPerMinute() * e.getDuration()) / DEFAULT_MINUTE;
+            totalCalories += (e.getCaloriesPerMinute() * e.getDuration());
             totalDuration += e.getDuration();
         }
-
+        System.out.println("totalCalo: " + totalCalories);
         txtTotalCalories.setText(String.valueOf(totalCalories));
         txtTotalDuration.setText(String.valueOf(totalDuration));
 

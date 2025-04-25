@@ -72,7 +72,7 @@ public class ExercisesService {
                     Exercise exercise = new Exercise();
                     exercise.setId(rs.getInt("id"));
                     exercise.setExerciseName(rs.getString("exerciseName"));
-                    exercise.setCaloriesPerMinute(rs.getInt("caloriesPerMinute"));
+                    exercise.setCaloriesPerMinute(rs.getFloat("caloriesPerMinute"));
                     exercise.setDuration(rs.getInt("duration")); // Lưu thời gian tập đã chọn
 
                     selectedExercises.add(exercise);
