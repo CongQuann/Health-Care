@@ -121,8 +121,8 @@ public class UserInfoManagementController implements Initializable {
         userInfo.setName(nameField.getText());
         userInfo.setEmail(emailField.getText());
 
-        userInfo.setHeight(Float.parseFloat(heightField.getText()));
-        userInfo.setWeight(Float.parseFloat(weightField.getText()));
+        userInfo.setHeight(Float.parseFloat(heightText));
+        userInfo.setWeight(Float.parseFloat(weightText));
 
         if (localDate != null) {
             userInfo.setDOB(Date.valueOf(localDate)); // Chuyển đổi LocalDate thành Date
