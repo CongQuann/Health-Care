@@ -194,7 +194,7 @@ public class UserInfoServices {
     }
 
     public boolean isNameValid(String name) {
-        return name.matches("^[a-zA-Z\\s]+$");
+        return name.matches("^[\\p{L}\\s]+$");
     }
 
     public boolean isEmailValid(String email) {

@@ -88,10 +88,10 @@ public class AdminFoodTest {
             mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
             List<Food> foods = afs.getAllFood();
 
-            //kiem tra xem co bao nhieu thuc an trong db
+            // kiem tra xem co bao nhieu thuc an trong db
             assertEquals(2, foods.size());
 
-            //kiem tra tung mon an
+            // kiem tra tung mon an
             Food apple = foods.get(0);
             assertEquals("Táo", apple.getFoodName());
             assertEquals(52.0, apple.getCaloriesPerUnit(), 0.0001f);
@@ -174,25 +174,37 @@ public class AdminFoodTest {
             });
         }
     }
-    // Phương thức cung cấp các tham số đầu vào và kết quả mong đợi dưới dạng Stream<Arguments>
+    // Phương thức cung cấp các tham số đầu vào và kết quả mong đợi dưới dạng
+    // Stream<Arguments>
 
     private static Stream<Arguments> provideInputData() {
         return Stream.of(
-                Arguments.of("", "10.0", "5.0", "4.0", "2.0", null, null, false), // foodName rỗng, category và unit là null
-                Arguments.of("food", "", "5.0", "4.0", "2.0", new FoodCategory(1, "meat"), UnitType.gram, false), // caloriesText rỗng
-                Arguments.of("food", "10.0", "", "4.0", "2.0", new FoodCategory(1, "meat"), UnitType.gram, false), // lipidText rỗng
-                Arguments.of("food", "10.0", "5.0", "", "2.0", new FoodCategory(1, "meat"), UnitType.gram, false), // proteinText rỗng
-                Arguments.of("food", "10.0", "5.0", "4.0", "", new FoodCategory(1, "meat"), UnitType.gram, false), // fiberText rỗng
+                Arguments.of("", "10.0", "5.0", "4.0", "2.0", null, null, false), // foodName rỗng, category và unit là
+                                                                                  // null
+                Arguments.of("food", "", "5.0", "4.0", "2.0", new FoodCategory(1, "meat"), UnitType.gram, false), // caloriesText
+                                                                                                                  // rỗng
+                Arguments.of("food", "10.0", "", "4.0", "2.0", new FoodCategory(1, "meat"), UnitType.gram, false), // lipidText
+                                                                                                                   // rỗng
+                Arguments.of("food", "10.0", "5.0", "", "2.0", new FoodCategory(1, "meat"), UnitType.gram, false), // proteinText
+                                                                                                                   // rỗng
+                Arguments.of("food", "10.0", "5.0", "4.0", "", new FoodCategory(1, "meat"), UnitType.gram, false), // fiberText
+                                                                                                                   // rỗng
                 Arguments.of("food", "10.0", "5.0", "4.0", "2.0", null, UnitType.gram, false), // category null
-                Arguments.of("food", "10.0", "5.0", "4.0", "2.0", new FoodCategory(1, "meat"), null, false), // unit null
-                Arguments.of("food", "10.0", "5.0", "4.0", "2.0", new FoodCategory(1, "meat"), UnitType.gram, true) // Tất cả hợp lệ
+                Arguments.of("food", "10.0", "5.0", "4.0", "2.0", new FoodCategory(1, "meat"), null, false), // unit
+                                                                                                             // null
+                Arguments.of("food", "10.0", "5.0", "4.0", "2.0", new FoodCategory(1, "meat"), UnitType.gram, true) // Tất
+                                                                                                                    // cả
+                                                                                                                    // hợp
+                                                                                                                    // lệ
         );
     }
 
     @ParameterizedTest
     @MethodSource("provideInputData")
-    void testCheckInputData(String foodName, String caloriesText, String lipidText, String proteinText, String fiberText, FoodCategory selectedCategory, UnitType selectedUnit, boolean expectedResult) {
-        assertEquals(expectedResult, afs.checkInputData(foodName, caloriesText, lipidText, proteinText, fiberText, selectedCategory, selectedUnit));
+    void testCheckInputData(String foodName, String caloriesText, String lipidText, String proteinText,
+            String fiberText, FoodCategory selectedCategory, UnitType selectedUnit, boolean expectedResult) {
+        assertEquals(expectedResult, afs.checkInputData(foodName, caloriesText, lipidText, proteinText, fiberText,
+                selectedCategory, selectedUnit));
     }
 
     @Test
@@ -292,7 +304,7 @@ public class AdminFoodTest {
         }
     }
 
-//    ===============Kiểm tra cập nhật khi tên đã tồn tại trong csdl
+    // ===============Kiểm tra cập nhật khi tên đã tồn tại trong csdl
     @Test
     void testUpdateFood_NameExisted() throws SQLException {
         try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
@@ -329,7 +341,7 @@ public class AdminFoodTest {
             // Khi thức ăn không tồn tại, hàm updateFood phải trả về false
             boolean result = afs.updateFood(food);
 
-            assertFalse(result);  // Kiểm tra xem kết quả trả về có phải là false không
+            assertFalse(result); // Kiểm tra xem kết quả trả về có phải là false không
         }
     }
 
@@ -377,7 +389,7 @@ public class AdminFoodTest {
         }
     }
 
-    //kiểm tra không tìm thấy dữ liệu nào 
+    // kiểm tra không tìm thấy dữ liệu nào
     @Test
     void testGetFoodCategory_Empty() throws SQLException {
         try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
@@ -487,10 +499,12 @@ public class AdminFoodTest {
         try (MockedStatic<JdbcUtils> mockedJdbc = Mockito.mockStatic(JdbcUtils.class)) {
             mockedJdbc.when(JdbcUtils::getConn).thenReturn(connection);
             Statement stmt = connection.createStatement();
-            stmt.execute("INSERT INTO food ( foodName, caloriesPerUnit, lipidPerUnit, proteinPerUnit, fiberPerUnit, foodCategory_id, unitType) "
-                    + "VALUES ('Thịt heo', 120, 12, 22, 6, 1, 'gram')");
-            stmt.execute("INSERT INTO food ( foodName, caloriesPerUnit, lipidPerUnit, proteinPerUnit, fiberPerUnit, foodCategory_id, unitType) "
-                    + "VALUES ('Thịt gà', 130, 9, 19, 4, 1, 'gram')");
+            stmt.execute(
+                    "INSERT INTO food ( foodName, caloriesPerUnit, lipidPerUnit, proteinPerUnit, fiberPerUnit, foodCategory_id, unitType) "
+                            + "VALUES ('Thịt heo', 120, 12, 22, 6, 1, 'gram')");
+            stmt.execute(
+                    "INSERT INTO food ( foodName, caloriesPerUnit, lipidPerUnit, proteinPerUnit, fiberPerUnit, foodCategory_id, unitType) "
+                            + "VALUES ('Thịt gà', 130, 9, 19, 4, 1, 'gram')");
 
             List<Food> result = afs.searchFoodByCategoryAndKeyword(1, "Thịt");
             assertNotNull(result);
@@ -530,8 +544,7 @@ public class AdminFoodTest {
                 Arguments.of("200.5abc", "50.7", "60.3", "10", "Carrot", false), // Calories có ký tự không hợp lệ
                 Arguments.of("200", "50", "60", "10", "Fresh Carrot", true), // Tên thực phẩm có khoảng trắng
                 Arguments.of("", "50", "60", "10", "Carrot", false), // Calories rỗng
-                Arguments.of("30.4545","50","60","20","Carrot",false)
-        );
+                Arguments.of("30.4545", "50", "60", "20", "Carrot", false));
     }
 
     @ParameterizedTest
