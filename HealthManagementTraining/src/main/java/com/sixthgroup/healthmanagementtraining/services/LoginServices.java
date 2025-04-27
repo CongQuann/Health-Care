@@ -17,11 +17,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LoginServices {
-
+    
     public enum Role {
         USER, ADMIN
     }
-
+    
     public static Role checkLogin(String username, String password) throws SQLException {
         Connection conn = JdbcUtils.getConn();
         String sql = "SELECT password, role, userName FROM userinfo WHERE userName = ?";

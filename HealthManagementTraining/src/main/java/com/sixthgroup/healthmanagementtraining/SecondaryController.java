@@ -44,6 +44,7 @@ public class SecondaryController {
     private void handleLogin(ActionEvent event) throws IOException {
         String username = txtUsername.getText();
         String password = txtPassword.getText();
+        System.out.println(username);
         boolean check = checkLogin(username, password);
         if (check) {
             try {
