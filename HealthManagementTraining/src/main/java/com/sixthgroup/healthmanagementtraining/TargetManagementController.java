@@ -227,7 +227,7 @@ public class TargetManagementController implements Initializable {
             try {
                 CurrentGoal = TargetManagementServices.getCurrentGoal(userInfoId);
             } catch (SQLException ex) {
-                Logger.getLogger(TargetManagementController.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
             }
 
             boolean check = checkProgressWarning(CurrentGoal); // kiem tra tien do
