@@ -413,7 +413,6 @@ public class UserInfoTest {
 
     private static Stream<Arguments> provideEmailTestData() {
         return Stream.of(
-                // ✅ Phân vùng hợp lệ
                 Arguments.of("user@example.com", true), // Cơ bản hợp lệ
                 Arguments.of("john.doe123@mail.co.uk", true), // Có subdomain, hợp lệ
                 Arguments.of("plainaddress", false),
