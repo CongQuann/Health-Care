@@ -146,7 +146,7 @@ public class UserInfoManagementController implements Initializable {
         }
         //thuc hien cap nhat neu khong trung
         if (userInfoServices.updateUserInfo(userInfo)) {
-
+            currentEmail = emailField.getText();
             NutritionServices ns = new NutritionServices();
             TargetManagementServices ts = new TargetManagementServices();
             Goal currentGoal = ts.getCurrentGoal(Utils.getUUIdByName(Utils.getUser()));
