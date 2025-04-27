@@ -33,9 +33,9 @@ public class LoginServices {
                 String hashedPassword = rs.getString("password"); // Lấy mật khẩu đã mã hóa từ DB
                 String role = rs.getString("role");
                 String UserName = rs.getString("userName");
-                
+
                 //kiểm tra chữ hoa
-                if (!username.equals(UserName)){
+                if (!username.equals(UserName)) {
                     return null;
                 }
                 // Kiểm tra mật khẩu nhập vào với mật khẩu đã mã hóa
