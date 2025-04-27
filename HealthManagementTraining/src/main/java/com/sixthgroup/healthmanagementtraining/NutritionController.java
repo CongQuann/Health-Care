@@ -96,8 +96,6 @@ public class NutritionController implements Initializable {
     private final float DEFAULT_QUANTITY = 1;
 
     private final float DIFFERENT_CALO = 235;
-    private final float DIFFERENT_PROTEIN = 200;
-    private final float DIFFERENT_LIPID = 200;
 
     private static float totalCalo;
     private static float totalProtein;
@@ -205,7 +203,7 @@ public class NutritionController implements Initializable {
         txtSearch.textProperty().addListener((e) -> {
             loadTableData(txtSearch.getText().trim());
         });
-                    
+
     }
 
     public void loadFoodCate() {
@@ -394,9 +392,21 @@ public class NutritionController implements Initializable {
             }
         }
 
-        if (Float.parseFloat(txtTotalProtein.getText()) - Float.parseFloat(txtRecomendedProtein.getText()) > DIFFERENT_PROTEIN
-                || Float.parseFloat(txtTotalLipid.getText()) - Float.parseFloat(txtRecomendedLipid.getText()) > DIFFERENT_LIPID
-                || Float.parseFloat(txtTotalFiber.getText()) > 0) {
+        if (Float.parseFloat(txtTotalProtein.getText()) < Float.parseFloat(txtRecomendedProtein.getText())
+                || Float.parseFloat(txtTotalLipid.getText()) < Float.parseFloat(txtRecomendedLipid.getText())
+                || Float.parseFloat(txtTotalFiber.getText()) < Float.parseFloat(txtRecomendedFiber.getText())) {
+            Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Không thể lưu lịch ăn");
+            return;
+        } else if (Float.parseFloat(txtTotalProtein.getText()) == Float.parseFloat(txtRecomendedProtein.getText())
+                && Float.parseFloat(txtTotalLipid.getText()) == Float.parseFloat(txtRecomendedLipid.getText())
+                && Float.parseFloat(txtTotalFiber.getText()) == Float.parseFloat(txtRecomendedFiber.getText())) {
+            String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
+            LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
+            NutritionServices n = new NutritionServices();
+            n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
+            Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
+        } else if (Float.parseFloat(txtTotalProtein.getText()) > Float.parseFloat(txtRecomendedProtein.getText())
+                || Float.parseFloat(txtTotalLipid.getText()) > Float.parseFloat(txtRecomendedLipid.getText())) {
             // Tạo Alert kiểu CONFIRMATION
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Cảnh báo");
@@ -415,31 +425,20 @@ public class NutritionController implements Initializable {
             } else {
                 return;
             }
-        } else if (Float.parseFloat(txtTotalProtein.getText()) == Float.parseFloat(txtRecomendedProtein.getText())
-                && Float.parseFloat(txtTotalLipid.getText()) == Float.parseFloat(txtRecomendedLipid.getText())
-                && Float.parseFloat(txtTotalFiber.getText()) == Float.parseFloat(txtRecomendedFiber.getText())) {
-            String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
-            LocalDate servingDate = Utils.getSelectedDate(); // Lấy ngày ăn
-            NutritionServices n = new NutritionServices();
-            n.addFoodToLog(tbSelectedFood.getItems(), userId, servingDate);
-            Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Lưu thành công lịch ăn");
-        } else if (Float.parseFloat(txtTotalProtein.getText()) < Float.parseFloat(txtRecomendedProtein.getText())
-                || Float.parseFloat(txtTotalLipid.getText()) < Float.parseFloat(txtRecomendedLipid.getText())
-                || Float.parseFloat(txtTotalFiber.getText()) < Float.parseFloat(txtRecomendedFiber.getText())) {
-
-            Utils.showAlert(Alert.AlertType.CONFIRMATION, "Thông báo", "Không thể lưu lịch ăn");
-            return;
         }
-
     }
 
     public void deleteHandler() {
         Food selectedFood = tbSelectedFood.getSelectionModel().getSelectedItem();
-
-        if (selectedFood == null) {
+        if (tbSelectedFood.getItems().isEmpty()) {
             Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Danh sách thức ăn đang trống");
             return;
         }
+        if (selectedFood == null) {
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Vui lòng chọn thức ăn cần xóa");
+            return;
+        }
+
         String userId = Utils.getUUIdByName(Utils.getUser());
         LocalDate servingDate = Utils.getSelectedDate();
 

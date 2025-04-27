@@ -114,8 +114,8 @@ public class ExercisesManageController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         selectedExs.clear();
-        totalCalories=0;
-        totalDuration=0;
+        totalCalories = 0;
+        totalDuration = 0;
 
         // Lấy ngày từ biến tĩnh và hiển thị
         LocalDate date = Utils.getSelectedDate();
@@ -162,7 +162,6 @@ public class ExercisesManageController implements Initializable {
         txtSearch.textProperty().addListener((e) -> {
             loadTableData(txtSearch.getText().trim());
         });
-                    
 
     }
 
@@ -254,8 +253,8 @@ public class ExercisesManageController implements Initializable {
                             int duration = Integer.parseInt(tf.getText());
                             exercise.setDuration(duration);
                             // Kiểm tra bài tập tồn tại chưa
-                            if (e.isExistExercise(selectedExs, exercise) == false && 
-                                    e.isExerciseAlreadyLogged(Utils.getUUIdByName(Utils.getUser()), Utils.getSelectedDate(), exercise.getId()) == false) {
+                            if (e.isExistExercise(selectedExs, exercise) == false
+                                    && e.isExerciseAlreadyLogged(Utils.getUUIdByName(Utils.getUser()), Utils.getSelectedDate(), exercise.getId()) == false) {
                                 selectedExs.add(exercise); // Thêm vào biến tĩnh để kiểm tra nếu có thêm lại
                                 int selectedDuration = exercise.getDuration();
 //                                System.out.println("calories: "+exercise.getCaloriesPerMinute());
@@ -302,8 +301,8 @@ public class ExercisesManageController implements Initializable {
         }
         String userId = Utils.getUUIdByName(Utils.getUser()); // Lấy ID người dùng
         LocalDate workoutDate = Utils.getSelectedDate(); // Lấy ngày tập
-        for(Exercise exe : selectedExs){
-            if (!e.isPositiveDuration(exe.getDuration())){
+        for (Exercise exe : selectedExs) {
+            if (!e.isPositiveDuration(exe.getDuration())) {
                 Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Thời gian tập không được âm!");
                 break;
             }
@@ -318,11 +317,17 @@ public class ExercisesManageController implements Initializable {
 
     public void deleteHandler() {
         Exercise selectedExercise = tbSelectedExers.getSelectionModel().getSelectedItem();
-
-        if (selectedExercise == null) {
+        if (tbSelectedExers.getItems().isEmpty()) {
             Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Danh sách bài tập đang trống");
             return;
         }
+
+        // Kiểm tra xem có bài tập nào được chọn không
+        if (selectedExercise == null) {
+            Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Vui lòng chọn bài tập cần xóa");
+            return;
+        }
+
         String userId = Utils.getUUIdByName(Utils.getUser());
         LocalDate workoutDate = Utils.getSelectedDate();
 
