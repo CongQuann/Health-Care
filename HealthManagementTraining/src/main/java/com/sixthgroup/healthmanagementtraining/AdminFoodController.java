@@ -102,7 +102,7 @@ public class AdminFoodController implements Initializable {
         UnitType selectedUnit = unitTypeComboBox.getValue();
 
         AdminFoodServices afs = new AdminFoodServices();
-        if (selectedCategory != null && "Meat".equalsIgnoreCase(selectedCategory.getCategoryName())) {
+        if (selectedCategory != null && "Thịt cá".equalsIgnoreCase(selectedCategory.getCategoryName())) {
             fiberText = "0";
         }
         if (afs.checkInputData(foodName, caloriesText, lipidText, proteinText, fiberText, selectedCategory, selectedUnit) == false) {
@@ -122,7 +122,7 @@ public class AdminFoodController implements Initializable {
             float protein = Float.parseFloat(proteinText);
             float fiber;
             if (foodTypeComboBox.getValue() != null
-                    && "Meat".equalsIgnoreCase(foodTypeComboBox.getValue().getCategoryName())) {
+                    && "Thịt cá".equalsIgnoreCase(foodTypeComboBox.getValue().getCategoryName())) {
                 fiber = 0;
             } else {
                 fiber = Float.parseFloat(fiberField.getText().trim());
@@ -287,24 +287,7 @@ public class AdminFoodController implements Initializable {
             }
         });
 
-//        colFiber.setCellFactory(TextFieldTableCell.forTableColumn(new FloatStringConverter()));
-//        colFiber.setOnEditCommit(event -> {
-//            Food food = event.getRowValue();
-//            // Lấy chuỗi nhập của người dùng
-//            String input = event.getNewValue().toString();
-//            // Kiểm tra định dạng: chỉ cho phép số với tối đa 3 chữ số sau dấu thập phân
-//            if (!input.matches("^[0-9]+(\\.[0-9]{1,3})?$")) {
-//                Utils.showAlert(Alert.AlertType.ERROR, "Lỗi định dạng",
-//                        "Giá trị nhập không hợp lệ. Vui lòng nhập số chỉ với tối đa 3 chữ số sau dấu thập phân!");
-//                loadData(); // hoặc xử lý theo cách phù hợp (ví dụ, khôi phục lại giá trị cũ)
-//                return;
-//            }
-//            if (food != null) {
-//                food.setFiberPerUnit(event.getNewValue());
-//                updateFoodInDatabase(food); // Cập nhật vào cơ sở dữ liệu
-//            }
-//        });
-//======================================
+
 // Tùy chỉnh cell factory cho cột fiber
         colFiber.setCellFactory(column -> new TextFieldTableCell<Food, Float>(new FloatStringConverter()) {
             @Override
@@ -316,8 +299,8 @@ public class AdminFoodController implements Initializable {
                     setDisable(false);
                 } else {
                     Food food = (Food) getTableRow().getItem();
-                    // Nếu loại thức ăn là "Meat" thì disable cell và áp dụng style mờ
-                    if ("Meat".equalsIgnoreCase(food.getCategoryName())) {
+                    // Nếu loại thức ăn là "Thịt cá" thì disable cell và áp dụng style mờ
+                    if ("Thịt cá".equalsIgnoreCase(food.getCategoryName())) {
                         setDisable(true);
                         setStyle("-fx-opacity: 0.5;");
                     } else {
@@ -339,19 +322,6 @@ public class AdminFoodController implements Initializable {
                         "Giá trị nhập không hợp lệ. Vui lòng nhập số chỉ với tối đa 3 chữ số sau dấu thập phân!");
                 loadData(); // Reset lại dữ liệu nếu có lỗi định dạng
                 return;
-            }
-
-            // Nếu loại thức ăn là "Meat" thì không cho phép cập nhật
-            if (food != null && "Meat".equalsIgnoreCase(food.getCategoryName())) {
-                Utils.showAlert(Alert.AlertType.WARNING, "Cảnh báo", "Không được chỉnh sửa chất xơ cho món ăn thuộc loại Meat!");
-                loadData();
-                return;
-            }
-
-            // Nếu không phải là Meat, tiến hành cập nhật giá trị chất xơ
-            if (food != null) {
-                food.setFiberPerUnit(event.getNewValue());
-                updateFoodInDatabase(food); // Cập nhật vào cơ sở dữ liệu
             }
         });
 
@@ -528,12 +498,12 @@ public class AdminFoodController implements Initializable {
 
         // *** Thêm đoạn lắng nghe thay đổi của foodTypeComboBox ***
         foodTypeComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            // Kiểm tra nếu FoodCategory được chọn có categoryName là "meat"
-            if (newValue != null && "Meat".equalsIgnoreCase(newValue.getCategoryName())) {
+            // Kiểm tra nếu FoodCategory được chọn có categoryName là "Thịt cá"
+            if (newValue != null && "Thịt cá".equalsIgnoreCase(newValue.getCategoryName())) {
                 fiberField.setDisable(true); // Làm mờ ô nhập liệu chất xơ
                 fiberField.clear();          // Xóa nội dung nếu có
             } else {
-                fiberField.setDisable(false); // Mở khóa ô nhập liệu khi không phải "meat"
+                fiberField.setDisable(false); // Mở khóa ô nhập liệu khi không phải "Thịt cá"
             }
         });
     }
