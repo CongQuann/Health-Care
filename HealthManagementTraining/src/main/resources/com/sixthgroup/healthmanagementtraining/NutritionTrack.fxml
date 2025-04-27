@@ -42,7 +42,7 @@
                                 <Label prefHeight="30.0" prefWidth="151.0" styleClass="labelStyle" text="Tổng calo:" />
                             </children>
                         </HBox>
-                        <HBox prefHeight="31.0" prefWidth="335.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="335.0">
                             <children>
                                 <Text fx:id="txtTotalCalories" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="286.13671875" />
                             </children>
@@ -56,7 +56,7 @@
                                 <Label prefHeight="30.0" prefWidth="176.0" styleClass="labelStyle" text="Tổng chất béo:" />
                             </children>
                         </HBox>
-                        <HBox prefHeight="31.0" prefWidth="335.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="335.0">
                             <children>
                                 <Text fx:id="txtTotalLipid" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="286.13671875" />
                             </children>
@@ -70,7 +70,7 @@
                                 <Label prefHeight="30.0" prefWidth="180.0" styleClass="labelStyle" text="Tổng chất đạm:" />
                             </children>
                         </HBox>
-                        <HBox prefHeight="31.0" prefWidth="335.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="335.0">
                             <children>
                                 <Text fx:id="txtTotalProtein" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="286.13671875" />
                             </children>
@@ -84,7 +84,7 @@
                                 <Label prefHeight="30.0" prefWidth="180.0" styleClass="labelStyle" text="Tổng chất xơ:" />
                             </children>
                         </HBox>
-                        <HBox prefHeight="31.0" prefWidth="335.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="31.0" prefWidth="335.0">
                             <children>
                                 <Text fx:id="txtTotalFiber" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="286.13671875" />
                             </children>
@@ -156,12 +156,12 @@
          <children>
             <HBox prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <HBox prefHeight="58.0" prefWidth="95.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="95.0">
                      <children>
-                        <Label styleClass="labelStyle" text="Chất béo" />
+                        <Label styleClass="labelStyle" text="Chất béo:" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="58.0" prefWidth="105.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="105.0">
                      <children>
                         <Text fx:id="txtRecomendedLipid" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                      </children>
@@ -170,12 +170,12 @@
             </HBox>
             <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <HBox prefHeight="58.0" prefWidth="95.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="121.0">
                      <children>
-                        <Label styleClass="labelStyle" text="Chất đạm" />
+                        <Label styleClass="labelStyle" text="Chất đạm:" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="58.0" prefWidth="105.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="105.0">
                      <children>
                         <Text fx:id="txtRecomendedProtein" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
                      </children>
@@ -184,14 +184,14 @@
             </HBox>
             <HBox layoutX="210.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
                <children>
-                  <HBox prefHeight="58.0" prefWidth="95.0">
+                  <HBox alignment="CENTER_LEFT" prefHeight="58.0" prefWidth="86.0">
                      <children>
-                        <Label styleClass="labelStyle" text="Chất xơ" />
+                        <Label prefHeight="30.0" prefWidth="196.0" styleClass="labelStyle" text="Chất xơ:" />
                      </children>
                   </HBox>
-                  <HBox prefHeight="58.0" prefWidth="105.0">
+                  <HBox alignment="CENTER" prefHeight="13.0" prefWidth="63.0">
                      <children>
-                        <Text fx:id="txtRecomendedFiber" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" />
+                        <Text fx:id="txtRecomendedFiber" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" textOrigin="CENTER" wrappingWidth="62.13671875" />
                      </children>
                   </HBox>
                </children>

@@ -30,12 +30,12 @@
             <children>
                 <HBox prefHeight="54.0" prefWidth="408.0">
                     <children>
-                        <HBox prefHeight="54.0" prefWidth="206.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="206.0">
                             <children>
                                 <Label styleClass="labelStyle" text="Tổng thời gian tập:" />
                             </children>
                         </HBox>
-                        <HBox prefHeight="20.0" prefWidth="153.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="20.0" prefWidth="153.0">
                             <children>
                                 <Text fx:id="txtTotalDuration" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="84.13671875" />
                             </children>
@@ -44,12 +44,12 @@
                 </HBox>
                 <HBox layoutX="10.0" layoutY="10.0" prefHeight="54.0" prefWidth="408.0">
                     <children>
-                        <HBox prefHeight="54.0" prefWidth="203.0">
+                        <HBox alignment="CENTER_LEFT" prefHeight="54.0" prefWidth="203.0">
                             <children>
                                 <Label prefHeight="30.0" prefWidth="180.0" styleClass="labelStyle" text="Tổng calo tiêu thụ:" />
                             </children>
                         </HBox>
-                        <HBox prefHeight="100.0" prefWidth="200.0" styleClass="caloriesText">
+                        <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" styleClass="caloriesText">
                             <children>
                                 <Text fx:id="txtTotalCalories" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="64.0498046875" />
                             </children>
